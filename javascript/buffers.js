@@ -41,11 +41,13 @@ export function initFramebuffers (webGLContext) {
   buffers.curl = createFBO(gl, simRes.width, simRes.height, r.internalFormat, r.format, texType, gl.NEAREST)
   buffers.pressure = createDoubleFBO(gl, simRes.width, simRes.height, r.internalFormat, r.format, texType, gl.NEAREST)
 
-  initBloomFramebuffers(gl, config, ext)
-  initSunraysFramebuffers(gl, config, ext)
+  initBloomFramebuffers(webGLContext)
+  initSunraysFramebuffers(webGLContext)
 }
 
-function initBloomFramebuffers (gl, config, ext) {
+function initBloomFramebuffers (webGLContext) {
+  const gl = webGLContext.gl
+  const ext = webGLContext.ext
   const res = getResolution(gl, config.BLOOM_RESOLUTION)
 
   const texType = ext.halfFloatTexType
@@ -66,7 +68,9 @@ function initBloomFramebuffers (gl, config, ext) {
   }
 }
 
-function initSunraysFramebuffers (gl, config, ext) {
+function initSunraysFramebuffers (webGLContext) {
+  const gl = webGLContext.gl
+  const ext = webGLContext.ext
   const res = getResolution(gl, config.SUNRAYS_RESOLUTION)
 
   const texType = ext.halfFloatTexType

@@ -1,36 +1,36 @@
 import { createFBO } from './FBO.js'
 import render from './render.js'
 
-export default function captureScreenshot (webGLContext, config, canvas) {
+export default function captureScreenshot (webGLContext, config) {
   const gl = webGLContext.gl
   const ext = webGLContext.ext
-  var res = getResolution(gl, config.CAPTURE_RESOLUTION)
-  var target = createFBO(gl, res.width, res.height, ext.formatRGBA.internalFormat, ext.formatRGBA.format, ext.halfFloatTexType, gl.NEAREST)
-  render(gl, config, canvas, target)
+  const res = getResolution(gl, config.CAPTURE_RESOLUTION)
+  const target = createFBO(gl, res.width, res.height, ext.formatRGBA.internalFormat, ext.formatRGBA.format, ext.halfFloatTexType, gl.NEAREST)
+  render(webGLContext, config, target)
 
-  var texture = framebufferToTexture(gl, target)
+  let texture = framebufferToTexture(gl, target)
   texture = normalizeTexture(texture, target.width, target.height)
 
-  var captureCanvas = textureToCanvas(texture, target.width, target.height)
-  var datauri = captureCanvas.toDataURL()
+  const captureCanvas = textureToCanvas(texture, target.width, target.height)
+  const datauri = captureCanvas.toDataURL()
   downloadURI('fluid.png', datauri)
   URL.revokeObjectURL(datauri)
 }
 
 function framebufferToTexture (gl, target) {
   gl.bindFramebuffer(gl.FRAMEBUFFER, target.fbo)
-  var length = target.width * target.height * 4
-  var texture = new Float32Array(length)
+  const length = target.width * target.height * 4
+  const texture = new Float32Array(length)
   gl.readPixels(0, 0, target.width, target.height, gl.RGBA, gl.FLOAT, texture)
   return texture
 }
 
 function normalizeTexture (texture, width, height) {
-  var result = new Uint8Array(texture.length)
-  var id = 0
-  for (var i = height - 1; i >= 0; i--) {
-    for (var j = 0; j < width; j++) {
-      var nid = i * width * 4 + j * 4
+  const result = new Uint8Array(texture.length)
+  let id = 0
+  for (let i = height - 1; i >= 0; i--) {
+    for (let j = 0; j < width; j++) {
+      const nid = i * width * 4 + j * 4
       result[nid + 0] = clamp01(texture[id + 0]) * 255
       result[nid + 1] = clamp01(texture[id + 1]) * 255
       result[nid + 2] = clamp01(texture[id + 2]) * 255
@@ -46,12 +46,12 @@ function clamp01 (input) {
 }
 
 function textureToCanvas (texture, width, height) {
-  var captureCanvas = document.createElement('canvas')
-  var ctx = captureCanvas.getContext('2d')
+  const captureCanvas = document.createElement('canvas')
+  const ctx = captureCanvas.getContext('2d')
   captureCanvas.width = width
   captureCanvas.height = height
 
-  var imageData = ctx.createImageData(width, height)
+  const imageData = ctx.createImageData(width, height)
   imageData.data.set(texture)
   ctx.putImageData(imageData, 0, 0)
 
@@ -59,7 +59,7 @@ function textureToCanvas (texture, width, height) {
 }
 
 function downloadURI (filename, uri) {
-  var link = document.createElement('a')
+  const link = document.createElement('a')
   link.download = filename
   link.href = uri
   document.body.appendChild(link)

@@ -3,7 +3,8 @@ import { drawColor, drawCheckerboard, drawDisplay } from './draw.js'
 import { buffers } from './buffers.js'
 import blit from './blit.js'
 
-export default function render (gl, config, canvas, target) {
+export default function render (webGLContext, config, target) {
+  const gl = webGLContext.gl
   if (config.BLOOM) {
     applyBloom(gl, config, buffers.dye.read, buffers.bloom)
   }
@@ -19,27 +20,31 @@ export default function render (gl, config, canvas, target) {
     gl.disable(gl.BLEND)
   }
 
-  var width = target == null ? gl.drawingBufferWidth : target.width
-  var height = target == null ? gl.drawingBufferHeight : target.height
+  const width = target == null ? gl.drawingBufferWidth : target.width
+  const height = target == null ? gl.drawingBufferHeight : target.height
   gl.viewport(0, 0, width, height)
 
-  var fbo = target == null ? null : target.fbo
-  if (!config.TRANSPARENT) { drawColor(gl, fbo, normalizeColor(config.BACK_COLOR)) }
-  if (target == null && config.TRANSPARENT) { drawCheckerboard(gl, canvas, fbo) }
+  const fbo = target == null ? null : target.fbo
+  if (!config.TRANSPARENT) {
+    drawColor(gl, fbo, normalizeColor(config.BACK_COLOR))
+  }
+  if (target == null && config.TRANSPARENT) {
+    drawCheckerboard(webGLContext, fbo)
+  }
   drawDisplay(gl, config, fbo, width, height)
 }
 
 function applyBloom (gl, config, source, destination) {
   if (buffers.bloomFramebuffers.length < 2) { return }
 
-  var last = destination
+  let last = destination
 
   gl.disable(gl.BLEND)
   programs.bloomPrefilter.bind()
-  var knee = config.BLOOM_THRESHOLD * config.BLOOM_SOFT_KNEE + 0.0001
-  var curve0 = config.BLOOM_THRESHOLD - knee
-  var curve1 = knee * 2
-  var curve2 = 0.25 / knee
+  const knee = config.BLOOM_THRESHOLD * config.BLOOM_SOFT_KNEE + 0.0001
+  const curve0 = config.BLOOM_THRESHOLD - knee
+  const curve1 = knee * 2
+  const curve2 = 0.25 / knee
   gl.uniform3f(programs.bloomPrefilter.uniforms.curve, curve0, curve1, curve2)
   gl.uniform1f(programs.bloomPrefilter.uniforms.threshold, config.BLOOM_THRESHOLD)
   gl.uniform1i(programs.bloomPrefilter.uniforms.uTexture, source.attach(0))
@@ -47,8 +52,8 @@ function applyBloom (gl, config, source, destination) {
   blit(gl, last.fbo)
 
   programs.bloomBlur.bind()
-  for (var i = 0; i < buffers.bloomFramebuffers.length; i++) {
-    var dest = buffers.bloomFramebuffers[i]
+  for (let i = 0; i < buffers.bloomFramebuffers.length; i++) {
+    const dest = buffers.bloomFramebuffers[i]
     gl.uniform2f(programs.bloomBlur.uniforms.texelSize, last.texelSizeX, last.texelSizeY)
     gl.uniform1i(programs.bloomBlur.uniforms.uTexture, last.attach(0))
     gl.viewport(0, 0, dest.width, dest.height)
@@ -59,8 +64,8 @@ function applyBloom (gl, config, source, destination) {
   gl.blendFunc(gl.ONE, gl.ONE)
   gl.enable(gl.BLEND)
 
-  for (var i$1 = buffers.bloomFramebuffers.length - 2; i$1 >= 0; i$1--) {
-    var baseTex = buffers.bloomFramebuffers[i$1]
+  for (let i$1 = buffers.bloomFramebuffers.length - 2; i$1 >= 0; i$1--) {
+    const baseTex = buffers.bloomFramebuffers[i$1]
     gl.uniform2f(programs.bloomBlur.uniforms.texelSize, last.texelSizeX, last.texelSizeY)
     gl.uniform1i(programs.bloomBlur.uniforms.uTexture, last.attach(0))
     gl.viewport(0, 0, baseTex.width, baseTex.height)
@@ -93,7 +98,7 @@ function applySunrays (gl, config, source, mask, destination) {
 
 function blur (gl, target, temp, iterations) {
   programs.blur.bind()
-  for (var i = 0; i < iterations; i++) {
+  for (let i = 0; i < iterations; i++) {
     gl.uniform2f(programs.blur.uniforms.texelSize, target.texelSizeX, 0.0)
     gl.uniform1i(programs.blur.uniforms.uTexture, target.attach(0))
     blit(gl, temp.fbo)
@@ -105,7 +110,7 @@ function blur (gl, target, temp, iterations) {
 }
 
 function normalizeColor (input) {
-  var output = {
+  const output = {
     r: input.r / 255,
     g: input.g / 255,
     b: input.b / 255

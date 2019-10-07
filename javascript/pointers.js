@@ -28,13 +28,13 @@ export function updatePointerUpData (pointer) {
 }
 
 function correctDeltaX (canvas, delta) {
-  var aspectRatio = canvas.width / canvas.height
+  const aspectRatio = canvas.width / canvas.height
   if (aspectRatio < 1) { delta *= aspectRatio }
   return delta
 }
 
 function correctDeltaY (canvas, delta) {
-  var aspectRatio = canvas.width / canvas.height
+  const aspectRatio = canvas.width / canvas.height
   if (aspectRatio > 1) { delta /= aspectRatio }
   return delta
 }

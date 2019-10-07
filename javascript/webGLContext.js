@@ -1,9 +1,17 @@
 export default function getWebGLContext (canvas) {
-  const params = { alpha: true, depth: false, stencil: false, antialias: false, preserveDrawingBuffer: false }
+  const params = {
+    alpha: true,
+    depth: false,
+    stencil: false,
+    antialias: false,
+    preserveDrawingBuffer: false
+  }
 
   let gl = canvas.getContext('webgl2', params)
   const isWebGL2 = !!gl
-  if (!isWebGL2) { gl = canvas.getContext('webgl', params) || canvas.getContext('experimental-webgl', params) }
+  if (!isWebGL2) {
+    gl = canvas.getContext('webgl', params) || canvas.getContext('experimental-webgl', params)
+  }
 
   let halfFloat
   let supportLinearFiltering
@@ -63,7 +71,7 @@ function getSupportedFormat (gl, internalFormat, format, type) {
 }
 
 function supportRenderTextureFormat (gl, internalFormat, format, type) {
-  var texture = gl.createTexture()
+  const texture = gl.createTexture()
   gl.bindTexture(gl.TEXTURE_2D, texture)
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST)
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST)
@@ -71,10 +79,10 @@ function supportRenderTextureFormat (gl, internalFormat, format, type) {
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
   gl.texImage2D(gl.TEXTURE_2D, 0, internalFormat, 4, 4, 0, format, type, null)
 
-  var fbo = gl.createFramebuffer()
+  const fbo = gl.createFramebuffer()
   gl.bindFramebuffer(gl.FRAMEBUFFER, fbo)
   gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0)
 
-  var status = gl.checkFramebufferStatus(gl.FRAMEBUFFER)
+  const status = gl.checkFramebufferStatus(gl.FRAMEBUFFER)
   return status === gl.FRAMEBUFFER_COMPLETE
 }

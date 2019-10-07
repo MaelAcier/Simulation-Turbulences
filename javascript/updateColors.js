@@ -1,6 +1,6 @@
 import { config } from './GUI.js'
 
-var colorUpdateTimer = 0.0
+let colorUpdateTimer = 0.0
 
 export function updateColors (pointers, dt) {
   if (!config.COLORFUL) { return }
@@ -15,7 +15,7 @@ export function updateColors (pointers, dt) {
 }
 
 export function generateColor () {
-  var c = HSVtoRGB(Math.random(), 1.0, 1.0)
+  const c = HSVtoRGB(Math.random(), 1.0, 1.0)
   c.r *= 0.15
   c.g *= 0.15
   c.b *= 0.15
@@ -23,12 +23,12 @@ export function generateColor () {
 }
 
 function HSVtoRGB (h, s, v) {
-  var r, g, b, i, f, p, q, t
-  i = Math.floor(h * 6)
-  f = h * 6 - i
-  p = v * (1 - s)
-  q = v * (1 - f * s)
-  t = v * (1 - (1 - f) * s)
+  let r, g, b
+  const i = Math.floor(h * 6)
+  const f = h * 6 - i
+  const p = v * (1 - s)
+  const q = v * (1 - f * s)
+  const t = v * (1 - (1 - f) * s)
 
   switch (i % 6) {
     case 0: r = v; g = t; b = p; break
@@ -47,7 +47,7 @@ function HSVtoRGB (h, s, v) {
 }
 
 function wrap (value, min, max) {
-  var range = max - min
+  const range = max - min
   if (range === 0) { return min }
   return (value - min) % range + min
 }

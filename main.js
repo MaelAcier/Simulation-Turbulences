@@ -6,6 +6,7 @@ import { loadShaders } from './javascript/shaders.js'
 import { loadPrograms } from './javascript/programs.js'
 import { loadMaterials } from './javascript/materials.js'
 import { initFramebuffers } from './javascript/buffers.js'
+import { multipleSplats } from './javascript/splats.js'
 import update from './javascript/update.js'
 import initEvents from './javascript/events.js'
 
@@ -13,7 +14,6 @@ const canvas = document.getElementById('glCanvas')
 
 const webGLContext = getWebGLContext(canvas)
 const gl = webGLContext.gl
-// const ext = webGLContext.ext
 
 initBlit(gl)
 resizeCanvas(canvas)
@@ -42,9 +42,10 @@ loadShaders(gl, 'shaders', [
 ], () => {
   loadPrograms(gl)
   loadMaterials(gl)
-  startGUI(webGLContext, canvas)
+  startGUI(webGLContext)
   updateKeywords()
   initFramebuffers(webGLContext)
-  update(webGLContext, canvas)
+  multipleSplats(webGLContext, parseInt(Math.random() * 20) + 5)
+  update(webGLContext)
   initEvents(canvas)
 })

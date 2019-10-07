@@ -1,7 +1,6 @@
 /* global XMLHttpRequest */
 
 export const shaders = {}
-export let gl
 
 function loadFiles (path, names, callback) {
   const queue = names.map(name => path + '/' + name)
@@ -74,8 +73,7 @@ function compileShaders (gl, list) {
   }
 }
 
-export function loadShaders (gl2, path, names, callback) {
-  gl = gl2
+export function loadShaders (gl, path, names, callback) {
   return loadFiles(path, names, (content) => {
     compileShaders(gl, content)
     callback()

@@ -34,21 +34,23 @@ class Program {
 }
 
 function createProgram (gl, vertexShader, fragmentShader) {
-  var program = gl.createProgram()
+  const program = gl.createProgram()
   gl.attachShader(program, vertexShader)
   gl.attachShader(program, fragmentShader)
   gl.linkProgram(program)
 
-  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) { throw gl.getProgramInfoLog(program) }
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+    throw gl.getProgramInfoLog(program)
+  }
 
   return program
 }
 
 function getUniforms (gl, program) {
-  var uniforms = []
-  var uniformCount = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS)
-  for (var i = 0; i < uniformCount; i++) {
-    var uniformName = gl.getActiveUniform(program, i).name
+  const uniforms = []
+  const uniformCount = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS)
+  for (let i = 0; i < uniformCount; i++) {
+    const uniformName = gl.getActiveUniform(program, i).name
     uniforms[uniformName] = gl.getUniformLocation(program, uniformName)
   }
   return uniforms

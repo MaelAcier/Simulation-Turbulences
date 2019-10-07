@@ -12,24 +12,29 @@ export function drawColor (gl, fbo, color) {
   blit(gl, fbo)
 }
 
-export function drawCheckerboard (gl, canvas, fbo) {
+export function drawCheckerboard (webGLContext, fbo) {
+  const gl = webGLContext.gl
   programs.checkerboard.bind()
-  gl.uniform1f(programs.checkerboard.uniforms.aspectRatio, canvas.width / canvas.height)
+  gl.uniform1f(programs.checkerboard.uniforms.aspectRatio, gl.canvas.width / gl.canvas.height)
   blit(gl, fbo)
 }
 
 export function drawDisplay (gl, config, fbo, width, height) {
   displayMaterial.bind()
-  if (config.SHADING) { gl.uniform2f(displayMaterial.uniforms.texelSize, 1.0 / width, 1.0 / height) }
+  if (config.SHADING) {
+    gl.uniform2f(displayMaterial.uniforms.texelSize, 1.0 / width, 1.0 / height)
+  }
   gl.uniform1i(displayMaterial.uniforms.uTexture, buffers.dye.read.attach(0))
   if (config.BLOOM) {
     ditheringTexture = ditheringTexture || createTextureAsync(gl, 'LDR_LLL1_0.png')
     gl.uniform1i(displayMaterial.uniforms.uBloom, buffers.bloom.attach(1))
     gl.uniform1i(displayMaterial.uniforms.uDithering, ditheringTexture.attach(2))
-    var scale = getTextureScale(ditheringTexture, width, height)
+    const scale = getTextureScale(ditheringTexture, width, height)
     gl.uniform2f(displayMaterial.uniforms.ditherScale, scale.x, scale.y)
   }
-  if (config.SUNRAYS) { gl.uniform1i(displayMaterial.uniforms.uSunrays, buffers.sunrays.attach(3)) }
+  if (config.SUNRAYS) {
+    gl.uniform1i(displayMaterial.uniforms.uSunrays, buffers.sunrays.attach(3))
+  }
   blit(gl, fbo)
 }
 
@@ -41,7 +46,7 @@ function getTextureScale (texture, width, height) {
 }
 
 function createTextureAsync (gl, url) {
-  var texture = gl.createTexture()
+  const texture = gl.createTexture()
   gl.bindTexture(gl.TEXTURE_2D, texture)
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
@@ -49,7 +54,7 @@ function createTextureAsync (gl, url) {
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT)
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, 1, 1, 0, gl.RGB, gl.UNSIGNED_BYTE, new Uint8Array([255, 255, 255]))
 
-  var obj = {
+  const obj = {
     texture: texture,
     width: 1,
     height: 1,
@@ -60,7 +65,7 @@ function createTextureAsync (gl, url) {
     }
   }
 
-  var image = new Image()
+  const image = new Image()
   image.onload = function () {
     obj.width = image.width
     obj.height = image.height
