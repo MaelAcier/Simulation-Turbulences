@@ -1,5 +1,3 @@
-console.log('webGLContext.js called')
-
 export default function getWebGLContext (canvas) {
   const params = { alpha: true, depth: false, stencil: false, antialias: false, preserveDrawingBuffer: false }
 

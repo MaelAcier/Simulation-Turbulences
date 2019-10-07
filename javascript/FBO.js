@@ -1,7 +1,5 @@
-import { copyProgram } from './programs.js'
+import { programs } from './programs.js'
 import blit from './blit.js'
-
-console.log('FBO.js called')
 
 export function createFBO (gl, w, h, internalFormat, format, type, param) {
   gl.activeTexture(gl.TEXTURE0)
@@ -68,8 +66,8 @@ export function createDoubleFBO (gl, w, h, internalFormat, format, type, param) 
 
 export function resizeFBO (gl, target, w, h, internalFormat, format, type, param) {
   const newFBO = createFBO(gl, w, h, internalFormat, format, type, param)
-  copyProgram.bind()
-  gl.uniform1i(copyProgram.uniforms.uTexture, target.attach(0))
+  programs.copy.bind()
+  gl.uniform1i(programs.copy.uniforms.uTexture, target.attach(0))
   blit(gl, newFBO.fbo)
   return newFBO
 }

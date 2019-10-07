@@ -3,8 +3,6 @@ import { displayMaterial } from './materials.js'
 import captureScreenshot from './screenshot.js'
 /* global dat */
 
-console.log('GUI.js called')
-
 export const config = {
   SIM_RESOLUTION: 128,
   DYE_RESOLUTION: 1024,
@@ -33,14 +31,12 @@ export const config = {
   SUNRAYS_WEIGHT: 1.0
 }
 
-const splatStack = []
+export const splatStack = []
 
 export function startGUI (webGLContext, canvas) {
-  const gl = webGLContext.gl
-  const ext = webGLContext.ext
   const gui = new dat.GUI({ width: 300 })
-  gui.add(config, 'DYE_RESOLUTION', { high: 1024, medium: 512, low: 256, 'very low': 128 }).name('quality').onFinishChange(() => initFramebuffers(gl, config, ext))
-  gui.add(config, 'SIM_RESOLUTION', { 32: 32, 64: 64, 128: 128, 256: 256 }).name('sim resolution').onFinishChange(() => initFramebuffers(gl, config, ext))
+  gui.add(config, 'DYE_RESOLUTION', { high: 1024, medium: 512, low: 256, 'very low': 128 }).name('quality').onFinishChange(() => initFramebuffers(webGLContext))
+  gui.add(config, 'SIM_RESOLUTION', { 32: 32, 64: 64, 128: 128, 256: 256 }).name('sim resolution').onFinishChange(() => initFramebuffers(webGLContext))
   gui.add(config, 'DENSITY_DISSIPATION', 0, 4.0).name('density diffusion')
   gui.add(config, 'VELOCITY_DISSIPATION', 0, 4.0).name('velocity diffusion')
   gui.add(config, 'PRESSURE', 0.0, 1.0).name('pressure')
@@ -68,12 +64,12 @@ export function startGUI (webGLContext, canvas) {
   const captureFolder = gui.addFolder('Capture')
   captureFolder.addColor(config, 'BACK_COLOR').name('background color')
   captureFolder.add(config, 'TRANSPARENT').name('transparent')
-  captureFolder.add({ fun: () => captureScreenshot(gl, config, canvas, ext) }, 'fun').name('take screenshot')
+  captureFolder.add({ fun: () => captureScreenshot(webGLContext, config, canvas) }, 'fun').name('take screenshot')
 
   if (isMobile()) { gui.close() }
 }
 
-function updateKeywords () {
+export function updateKeywords () {
   var displayKeywords = []
   if (config.SHADING) { displayKeywords.push('SHADING') }
   if (config.BLOOM) { displayKeywords.push('BLOOM') }

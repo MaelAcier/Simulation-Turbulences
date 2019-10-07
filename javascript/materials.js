@@ -1,41 +1,46 @@
-import { gl, shaders } from './shaders.js'
+import { shaders } from './shaders.js'
 
-console.log('materials.js called')
+export let displayMaterial
 
 var displayShaderSource = '\n    precision highp float;\n    precision highp sampler2D;\n\n    varying vec2 vUv;\n    varying vec2 vL;\n    varying vec2 vR;\n    varying vec2 vT;\n    varying vec2 vB;\n    uniform sampler2D uTexture;\n    uniform sampler2D uBloom;\n    uniform sampler2D uSunrays;\n    uniform sampler2D uDithering;\n    uniform vec2 ditherScale;\n    uniform vec2 texelSize;\n\n    vec3 linearToGamma (vec3 color) {\n        color = max(color, vec3(0));\n        return max(1.055 * pow(color, vec3(0.416666667)) - 0.055, vec3(0));\n    }\n\n    void main () {\n        vec3 c = texture2D(uTexture, vUv).rgb;\n\n    #ifdef SHADING\n        vec3 lc = texture2D(uTexture, vL).rgb;\n        vec3 rc = texture2D(uTexture, vR).rgb;\n        vec3 tc = texture2D(uTexture, vT).rgb;\n        vec3 bc = texture2D(uTexture, vB).rgb;\n\n        float dx = length(rc) - length(lc);\n        float dy = length(tc) - length(bc);\n\n        vec3 n = normalize(vec3(dx, dy, length(texelSize)));\n        vec3 l = vec3(0.0, 0.0, 1.0);\n\n        float diffuse = clamp(dot(n, l) + 0.7, 0.7, 1.0);\n        c *= diffuse;\n    #endif\n\n    #ifdef BLOOM\n        vec3 bloom = texture2D(uBloom, vUv).rgb;\n    #endif\n\n    #ifdef SUNRAYS\n        float sunrays = texture2D(uSunrays, vUv).r;\n        c *= sunrays;\n    #ifdef BLOOM\n        bloom *= sunrays;\n    #endif\n    #endif\n\n    #ifdef BLOOM\n        float noise = texture2D(uDithering, vUv * ditherScale).r;\n        noise = noise * 2.0 - 1.0;\n        bloom += noise / 255.0;\n        bloom = linearToGamma(bloom);\n        c += bloom;\n    #endif\n\n        float a = max(c.r, max(c.g, c.b));\n        gl_FragColor = vec4(c, a);\n    }\n'
 
-var Material = function Material (vertexShader, fragmentShaderSource) {
-  this.vertexShader = vertexShader
-  this.fragmentShaderSource = fragmentShaderSource
-  this.programs = []
-  this.activeProgram = null
-  this.uniforms = []
+export function loadMaterials (gl) {
+  displayMaterial = new Material(gl, shaders.baseVertex, displayShaderSource)
 }
 
-Material.prototype.setKeywords = function setKeywords (keywords) {
-  var hash = 0
-  for (var i = 0; i < keywords.length; i++) { hash += hashCode(keywords[i]) }
-
-  var program = this.programs[hash]
-  if (program == null) {
-    var fragmentShader = compileShader(gl.FRAGMENT_SHADER, this.fragmentShaderSource, keywords)
-    program = createProgram(this.vertexShader, fragmentShader)
-    this.programs[hash] = program
+class Material {
+  constructor (gl, vertexShader, fragmentShaderSource) {
+    this.gl = gl
+    this.vertexShader = vertexShader
+    this.fragmentShaderSource = fragmentShaderSource
+    this.programs = []
+    this.activeProgram = null
+    this.uniforms = []
   }
 
-  if (program === this.activeProgram) { return }
+  setKeywords (keywords) {
+    var hash = 0
+    for (var i = 0; i < keywords.length; i++) { hash += hashCode(keywords[i]) }
 
-  this.uniforms = getUniforms(program)
-  this.activeProgram = program
+    var program = this.programs[hash]
+    if (program == null) {
+      var fragmentShader = compileShader(this.gl, this.gl.FRAGMENT_SHADER, this.fragmentShaderSource, keywords)
+      program = createProgram(this.gl, this.vertexShader, fragmentShader)
+      this.programs[hash] = program
+    }
+
+    if (program === this.activeProgram) { return }
+
+    this.uniforms = getUniforms(this.gl, program)
+    this.activeProgram = program
+  }
+
+  bind () {
+    this.gl.useProgram(this.activeProgram)
+  }
 }
 
-Material.prototype.bind = function bind () {
-  gl.useProgram(this.activeProgram)
-}
-
-export const displayMaterial = new Material(shaders.baseVertex, displayShaderSource)
-
-function compileShader (type, source, keywords) {
+function compileShader (gl, type, source, keywords) {
   source = addKeywords(source, keywords)
 
   var shader = gl.createShader(type)
@@ -47,7 +52,7 @@ function compileShader (type, source, keywords) {
   return shader
 }
 
-function createProgram (vertexShader, fragmentShader) {
+function createProgram (gl, vertexShader, fragmentShader) {
   var program = gl.createProgram()
   gl.attachShader(program, vertexShader)
   gl.attachShader(program, fragmentShader)
@@ -58,7 +63,7 @@ function createProgram (vertexShader, fragmentShader) {
   return program
 }
 
-function getUniforms (program) {
+function getUniforms (gl, program) {
   var uniforms = []
   var uniformCount = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS)
   for (var i = 0; i < uniformCount; i++) {

@@ -1,6 +1,5 @@
 import { createFBO, createDoubleFBO, resizeDoubleFBO } from './FBO.js'
-
-console.log('buffers.js called')
+import { config } from './GUI.js'
 
 export const buffers = {
   dye: undefined,
@@ -14,7 +13,9 @@ export const buffers = {
   sunraysTemp: undefined
 }
 
-export function initFramebuffers (gl, config, ext) {
+export function initFramebuffers (webGLContext) {
+  const gl = webGLContext.gl
+  const ext = webGLContext.ext
   const simRes = getResolution(gl, config.SIM_RESOLUTION)
   const dyeRes = getResolution(gl, config.DYE_RESOLUTION)
 
@@ -60,7 +61,7 @@ function initBloomFramebuffers (gl, config, ext) {
 
     if (width < 2 || height < 2) { break }
 
-    const fbo = createFBO(width, height, rgba.internalFormat, rgba.format, texType, filtering)
+    const fbo = createFBO(gl, width, height, rgba.internalFormat, rgba.format, texType, filtering)
     buffers.bloomFramebuffers.push(fbo)
   }
 }

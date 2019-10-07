@@ -1,11 +1,13 @@
 import getWebGLContext from './javascript/webGLContext.js'
 import resizeCanvas from './javascript/resizeCanvas.js'
 import { initBlit } from './javascript/blit.js'
-import { startGUI } from './javascript/GUI.js'
+import { startGUI, updateKeywords } from './javascript/GUI.js'
 import { loadShaders } from './javascript/shaders.js'
 import { loadPrograms } from './javascript/programs.js'
-
-console.log('main.js called')
+import { loadMaterials } from './javascript/materials.js'
+import { initFramebuffers } from './javascript/buffers.js'
+import update from './javascript/update.js'
+import initEvents from './javascript/events.js'
 
 const canvas = document.getElementById('glCanvas')
 
@@ -39,5 +41,10 @@ loadShaders(gl, 'shaders', [
   'vorticity.fs'
 ], () => {
   loadPrograms(gl)
+  loadMaterials(gl)
   startGUI(webGLContext, canvas)
+  updateKeywords()
+  initFramebuffers(webGLContext)
+  update(webGLContext, canvas)
+  initEvents(canvas)
 })

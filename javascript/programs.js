@@ -1,24 +1,24 @@
 import { shaders } from './shaders.js'
 
-console.log('programs.js called')
-
-export let blurProgram
-export let copyProgram
-export let clearProgram
-export let colorProgram
-export let checkerboardProgram
-export let bloomPrefilterProgram
-export let bloomBlurProgram
-export let bloomFinalProgram
-export let sunraysMaskProgram
-export let sunraysProgram
-export let splatProgram
-export let advectionProgram
-export let divergenceProgram
-export let curlProgram
-export let vorticityProgram
-export let pressureProgram
-export let gradienSubtractProgram
+export const programs = {
+  blur: undefined,
+  copy: undefined,
+  clear: undefined,
+  color: undefined,
+  checkerboard: undefined,
+  bloomPrefilter: undefined,
+  bloomBlur: undefined,
+  bloomFinal: undefined,
+  sunraysMask: undefined,
+  sunrays: undefined,
+  splat: undefined,
+  advection: undefined,
+  divergence: undefined,
+  curl: undefined,
+  vorticity: undefined,
+  pressure: undefined,
+  gradientSubtract: undefined
+}
 
 class Program {
   constructor (gl, vertexShader, fragmentShader) {
@@ -55,21 +55,21 @@ function getUniforms (gl, program) {
 }
 
 export function loadPrograms (gl) {
-  blurProgram = new Program(gl, shaders.blurVertex, shaders.blur)
-  copyProgram = new Program(gl, shaders.baseVertex, shaders.copy)
-  clearProgram = new Program(gl, shaders.baseVertex, shaders.clear)
-  colorProgram = new Program(gl, shaders.baseVertex, shaders.color)
-  checkerboardProgram = new Program(gl, shaders.baseVertex, shaders.checkerboard)
-  bloomPrefilterProgram = new Program(gl, shaders.baseVertex, shaders.bloomPrefilter)
-  bloomBlurProgram = new Program(gl, shaders.baseVertex, shaders.bloomBlur)
-  bloomFinalProgram = new Program(gl, shaders.baseVertex, shaders.bloomFinal)
-  sunraysMaskProgram = new Program(gl, shaders.baseVertex, shaders.sunraysMask)
-  sunraysProgram = new Program(gl, shaders.baseVertex, shaders.sunrays)
-  splatProgram = new Program(gl, shaders.baseVertex, shaders.splat)
-  advectionProgram = new Program(gl, shaders.baseVertex, shaders.advection)
-  divergenceProgram = new Program(gl, shaders.baseVertex, shaders.divergence)
-  curlProgram = new Program(gl, shaders.baseVertex, shaders.curl)
-  vorticityProgram = new Program(gl, shaders.baseVertex, shaders.vorticity)
-  pressureProgram = new Program(gl, shaders.baseVertex, shaders.pressure)
-  gradienSubtractProgram = new Program(gl, shaders.baseVertex, shaders.gradientSubtract)
+  programs.blur = new Program(gl, shaders.blurVertex, shaders.blur)
+  programs.copy = new Program(gl, shaders.baseVertex, shaders.copy)
+  programs.clear = new Program(gl, shaders.baseVertex, shaders.clear)
+  programs.color = new Program(gl, shaders.baseVertex, shaders.color)
+  programs.checkerboard = new Program(gl, shaders.baseVertex, shaders.checkerboard)
+  programs.bloomPrefilter = new Program(gl, shaders.baseVertex, shaders.bloomPrefilter)
+  programs.bloomBlur = new Program(gl, shaders.baseVertex, shaders.bloomBlur)
+  programs.bloomFinal = new Program(gl, shaders.baseVertex, shaders.bloomFinal)
+  programs.sunraysMask = new Program(gl, shaders.baseVertex, shaders.sunraysMask)
+  programs.sunrays = new Program(gl, shaders.baseVertex, shaders.sunrays)
+  programs.splat = new Program(gl, shaders.baseVertex, shaders.splat)
+  programs.advection = new Program(gl, shaders.baseVertex, shaders.advection)
+  programs.divergence = new Program(gl, shaders.baseVertex, shaders.divergence)
+  programs.curl = new Program(gl, shaders.baseVertex, shaders.curl)
+  programs.vorticity = new Program(gl, shaders.baseVertex, shaders.vorticity)
+  programs.pressure = new Program(gl, shaders.baseVertex, shaders.pressure)
+  programs.gradientSubtract = new Program(gl, shaders.baseVertex, shaders.gradientSubtract)
 }

@@ -1,23 +1,21 @@
-import { colorProgram, checkerboardProgram } from './programs.js'
+import { programs } from './programs.js'
 import { displayMaterial } from './materials.js'
 import { buffers } from './buffers.js'
 import blit from './blit.js'
 /* global Image */
 
-console.log('draw.js called')
-
 let ditheringTexture
 
 export function drawColor (gl, fbo, color) {
-  colorProgram.bind()
-  gl.uniform4f(colorProgram.uniforms.color, color.r, color.g, color.b, 1)
-  blit(fbo)
+  programs.color.bind()
+  gl.uniform4f(programs.color.uniforms.color, color.r, color.g, color.b, 1)
+  blit(gl, fbo)
 }
 
 export function drawCheckerboard (gl, canvas, fbo) {
-  checkerboardProgram.bind()
-  gl.uniform1f(checkerboardProgram.uniforms.aspectRatio, canvas.width / canvas.height)
-  blit(fbo)
+  programs.checkerboard.bind()
+  gl.uniform1f(programs.checkerboard.uniforms.aspectRatio, canvas.width / canvas.height)
+  blit(gl, fbo)
 }
 
 export function drawDisplay (gl, config, fbo, width, height) {
@@ -25,14 +23,14 @@ export function drawDisplay (gl, config, fbo, width, height) {
   if (config.SHADING) { gl.uniform2f(displayMaterial.uniforms.texelSize, 1.0 / width, 1.0 / height) }
   gl.uniform1i(displayMaterial.uniforms.uTexture, buffers.dye.read.attach(0))
   if (config.BLOOM) {
-    ditheringTexture = ditheringTexture | createTextureAsync(gl, 'LDR_LLL1_0.png')
+    ditheringTexture = ditheringTexture || createTextureAsync(gl, 'LDR_LLL1_0.png')
     gl.uniform1i(displayMaterial.uniforms.uBloom, buffers.bloom.attach(1))
     gl.uniform1i(displayMaterial.uniforms.uDithering, ditheringTexture.attach(2))
     var scale = getTextureScale(ditheringTexture, width, height)
     gl.uniform2f(displayMaterial.uniforms.ditherScale, scale.x, scale.y)
   }
   if (config.SUNRAYS) { gl.uniform1i(displayMaterial.uniforms.uSunrays, buffers.sunrays.attach(3)) }
-  blit(fbo)
+  blit(gl, fbo)
 }
 
 function getTextureScale (texture, width, height) {

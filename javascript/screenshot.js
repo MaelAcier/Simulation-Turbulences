@@ -1,11 +1,11 @@
 import { createFBO } from './FBO.js'
 import render from './render.js'
 
-console.log('screenshot.js called')
-
-export default function captureScreenshot (gl, config, canvas, ext) {
-  var res = getResolution(config.CAPTURE_RESOLUTION)
-  var target = createFBO(res.width, res.height, ext.formatRGBA.internalFormat, ext.formatRGBA.format, ext.halfFloatTexType, gl.NEAREST)
+export default function captureScreenshot (webGLContext, config, canvas) {
+  const gl = webGLContext.gl
+  const ext = webGLContext.ext
+  var res = getResolution(gl, config.CAPTURE_RESOLUTION)
+  var target = createFBO(gl, res.width, res.height, ext.formatRGBA.internalFormat, ext.formatRGBA.format, ext.halfFloatTexType, gl.NEAREST)
   render(gl, config, canvas, target)
 
   var texture = framebufferToTexture(gl, target)

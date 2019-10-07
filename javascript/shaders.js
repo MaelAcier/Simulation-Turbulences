@@ -1,7 +1,5 @@
 /* global XMLHttpRequest */
 
-console.log('shaders.js called')
-
 export const shaders = {}
 export let gl
 
