@@ -33,7 +33,7 @@ class Program {
   }
 }
 
-function createProgram (gl, vertexShader, fragmentShader) {
+export function createProgram (gl, vertexShader, fragmentShader) {
   const program = gl.createProgram()
   gl.attachShader(program, vertexShader)
   gl.attachShader(program, fragmentShader)
@@ -46,7 +46,7 @@ function createProgram (gl, vertexShader, fragmentShader) {
   return program
 }
 
-function getUniforms (gl, program) {
+export function getUniforms (gl, program) {
   const uniforms = []
   const uniformCount = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS)
   for (let i = 0; i < uniformCount; i++) {

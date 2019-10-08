@@ -1,10 +1,10 @@
 import { initFramebuffers } from './initBuffers.js'
-import { displayMaterial } from './materials.js'
+import updateKeywords from './updateKeywords.js'
 import captureScreenshot from './screenshot.js'
 import { splatStack, config } from './data.js'
 /* global dat */
 
-export function startGUI (webGLContext) {
+export default function startGUI (webGLContext) {
   const gui = new dat.GUI({ width: 300 })
   gui.add(config, 'DYE_RESOLUTION', { high: 1024, medium: 512, low: 256, 'very low': 128 }).name('quality').onFinishChange(() => initFramebuffers(webGLContext))
   gui.add(config, 'SIM_RESOLUTION', { 32: 32, 64: 64, 128: 128, 256: 256 }).name('sim resolution').onFinishChange(() => initFramebuffers(webGLContext))
@@ -38,14 +38,9 @@ export function startGUI (webGLContext) {
   captureFolder.add({ fun: () => captureScreenshot(webGLContext, config) }, 'fun').name('take screenshot')
 
   if (isMobile()) { gui.close() }
-}
 
-export function updateKeywords () {
-  const displayKeywords = []
-  if (config.SHADING) { displayKeywords.push('SHADING') }
-  if (config.BLOOM) { displayKeywords.push('BLOOM') }
-  if (config.SUNRAYS) { displayKeywords.push('SUNRAYS') }
-  displayMaterial.setKeywords(displayKeywords)
+  updateKeywords()
+  initFramebuffers(webGLContext)
 }
 
 function isMobile () {

@@ -38,7 +38,9 @@ function loadFiles (path, names, callback) {
   }
 }
 
-function compileShader (gl, shaderType, source) {
+export function compileShader (gl, shaderType, source, keywords) {
+  source = addKeywords(source, keywords)
+
   // Create the shader object
   const shader = gl.createShader(shaderType)
 
@@ -78,4 +80,13 @@ export function loadShaders (gl, path, names, callback) {
     compileShaders(gl, content)
     callback()
   })
+}
+
+function addKeywords (source, keywords) {
+  if (keywords == null) { return source }
+  let keywordsString = ''
+  keywords.forEach(function (keyword) {
+    keywordsString += '#define ' + keyword + '\n'
+  })
+  return keywordsString + source
 }

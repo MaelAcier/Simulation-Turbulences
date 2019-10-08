@@ -9,3 +9,11 @@ madge('main.js')
   .then((writtenImagePath) => {
     console.log('Image written to ' + writtenImagePath)
   })
+
+/* madge('main.js').then((res) => {
+  console.log(res.depends('javascript/blit.js'))
+})
+
+madge('main.js').then((res) => {
+  console.log(res.depends('javascript/data.js'))
+}) */
