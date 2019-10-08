@@ -1,5 +1,5 @@
 import { config } from './data.js'
-import displayMaterial from './materials.js'
+import { displayMaterial } from './materials.js'
 
 export default function updateKeywords () {
   const displayKeywords = []

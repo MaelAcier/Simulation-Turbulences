@@ -23,7 +23,6 @@ export const programs = {
 class Program {
   constructor (gl, vertexShader, fragmentShader) {
     this.gl = gl
-    this.uniforms = {}
     this.program = createProgram(gl, vertexShader, fragmentShader)
     this.uniforms = getUniforms(gl, this.program)
   }

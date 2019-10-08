@@ -2,39 +2,54 @@
 
 export const shaders = {}
 
-function loadFiles (path, names, callback) {
-  const queue = names.map(name => path + '/' + name)
-  const content = {}
-  let filesRemaining = queue.length
+export function loadShaders (gl, path, names) {
+  return new Promise((resolve) => {
+    const queue = names.map(name => path + '/' + name)
+    const content = {}
+    let filesRemaining = queue.length
 
-  const fileLoaded = function (file, text) {
-    const name = file.split('.')[0]
-    const extension = file.split('.')[1]
-    content[name] = {
-      text: text,
-      extension: extension
-    }
-    filesRemaining--
-    if (filesRemaining === 0) {
-      callback(content)
-    }
-  }
-
-  const loadFile = function (file, name) {
-    const request = new XMLHttpRequest()
-    request.onload = function () {
-      if (request.status === 200) {
-        fileLoaded(name, request.responseText)
-      } else {
-        console.log(`Erreur avec le fichier ${file}, erreur ${request.status}`)
+    const fileLoaded = function (file, text) {
+      const name = file.split('.')[0]
+      const extension = file.split('.')[1]
+      content[name] = {
+        text: text,
+        extension: extension
+      }
+      filesRemaining--
+      if (filesRemaining === 0) {
+        compileShaders(gl, content)
+        resolve()
       }
     }
-    request.open('GET', file, true)
-    request.send()
-  }
 
-  for (var i = 0; i < queue.length; i++) {
-    loadFile(queue[i], names[i])
+    for (var i = 0; i < queue.length; i++) {
+      loadFile(queue[i], names[i], fileLoaded)
+    }
+  })
+}
+
+export function loadFile (file, name, callback) {
+  const request = new XMLHttpRequest()
+  request.onload = function () {
+    if (request.status === 200) {
+      callback(name, request.responseText)
+    } else {
+      console.log(`Erreur avec le fichier ${file}, erreur ${request.status}`)
+    }
+  }
+  request.open('GET', file, true)
+  request.send()
+}
+
+function compileShaders (gl, list) {
+  for (const shader in list) {
+    if (list[shader].extension === 'fs') {
+      shaders[shader] = compileShader(gl, gl.FRAGMENT_SHADER, list[shader].text)
+    } else if (list[shader].extension === 'vs') {
+      shaders[shader] = compileShader(gl, gl.VERTEX_SHADER, list[shader].text)
+    } else {
+      console.log(`Mauvaise extension avec ${shader}: ${shader.extension}`)
+    }
   }
 }
 
@@ -61,25 +76,6 @@ export function compileShader (gl, shaderType, source, keywords) {
   }
 
   return shader
-}
-
-function compileShaders (gl, list) {
-  for (const shader in list) {
-    if (list[shader].extension === 'fs') {
-      shaders[shader] = compileShader(gl, gl.FRAGMENT_SHADER, list[shader].text)
-    } else if (list[shader].extension === 'vs') {
-      shaders[shader] = compileShader(gl, gl.VERTEX_SHADER, list[shader].text)
-    } else {
-      console.log(`Mauvaise extension avec ${shader}: ${shader.extension}`)
-    }
-  }
-}
-
-export function loadShaders (gl, path, names, callback) {
-  return loadFiles(path, names, (content) => {
-    compileShaders(gl, content)
-    callback()
-  })
 }
 
 function addKeywords (source, keywords) {

@@ -6,7 +6,7 @@ import { updateColors } from './updateColors.js'
 import { applyInputs } from './splats.js'
 import render from './render.js'
 import blit from './blit.js'
-/* global requestAnimationFrame */
+/* global requestAnimationFrame, Stats */
 
 let lastUpdateTime = Date.now()
 
@@ -26,7 +26,12 @@ export function PointerPrototype () {
 export const pointers = []
 pointers.push(new PointerPrototype())
 
+var stats = new Stats()
+stats.showPanel(0) // 0: fps, 1: ms, 2: mb, 3+: custom
+document.body.appendChild(stats.dom)
+
 export default function update (webGLContext) {
+  stats.begin()
   const gl = webGLContext.gl
   const dt = calcDeltaTime()
   if (resizeCanvas(gl.canvas)) { initFramebuffers(webGLContext) }
@@ -34,6 +39,7 @@ export default function update (webGLContext) {
   applyInputs(webGLContext, pointers)
   if (!config.PAUSED) { step(webGLContext, dt) }
   render(webGLContext, config, null)
+  stats.end()
   requestAnimationFrame(() => update(webGLContext))
 }
 
