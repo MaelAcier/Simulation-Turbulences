@@ -1,6 +1,5 @@
-import { config, splatStack } from './GUI.js'
+import { config, splatStack, buffers } from './data.js'
 import { generateColor } from './updateColors.js'
-import { buffers } from './buffers.js'
 import { programs } from './programs.js'
 import blit from './blit.js'
 

@@ -1,6 +1,6 @@
 import { programs } from './programs.js'
 import { drawColor, drawCheckerboard, drawDisplay } from './draw.js'
-import { buffers } from './buffers.js'
+import { buffers } from './data.js'
 import blit from './blit.js'
 
 export default function render (webGLContext, config, target) {

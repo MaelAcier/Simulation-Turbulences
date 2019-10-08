@@ -1,6 +1,6 @@
 import resizeCanvas from './resizeCanvas.js'
-import { initFramebuffers, buffers } from './buffers.js'
-import { config } from './GUI.js'
+import { initFramebuffers } from './initBuffers.js'
+import { config, buffers } from './data.js'
 import { programs } from './programs.js'
 import { updateColors } from './updateColors.js'
 import { applyInputs } from './splats.js'

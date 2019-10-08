@@ -1,4 +1,4 @@
-import { config } from './GUI.js'
+import { config } from './data.js'
 
 let colorUpdateTimer = 0.0
 

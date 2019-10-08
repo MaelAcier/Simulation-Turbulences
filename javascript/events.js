@@ -1,5 +1,5 @@
 import { pointers, PointerPrototype } from './update.js'
-import { splatStack, config } from './GUI.js'
+import { splatStack, config } from './data.js'
 import { updatePointerDownData, updatePointerMoveData, updatePointerUpData } from './pointers.js'
 
 export default function initEvents (canvas) {

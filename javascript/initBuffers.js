@@ -1,17 +1,5 @@
 import { createFBO, createDoubleFBO, resizeDoubleFBO } from './FBO.js'
-import { config } from './GUI.js'
-
-export const buffers = {
-  dye: undefined,
-  velocity: undefined,
-  divergence: undefined,
-  curl: undefined,
-  pressure: undefined,
-  bloom: undefined,
-  bloomFramebuffers: [],
-  sunrays: undefined,
-  sunraysTemp: undefined
-}
+import { config, buffers } from './data.js'
 
 export function initFramebuffers (webGLContext) {
   const gl = webGLContext.gl

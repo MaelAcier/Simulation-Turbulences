@@ -1,0 +1,25 @@
+{
+  "name": "simulation-turbulences",
+  "version": "1.0.0",
+  "description": "TIPE sur les turbulences océaniques",
+  "main": "main.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MaelAcier/Simulation-Turbulences.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MaelAcier/Simulation-Turbulences/issues"
+  },
+  "homepage": "https://github.com/MaelAcier/Simulation-Turbulences#readme",
+  "dependencies": {
+    "madge": "^3.4.4"
+  }
+}

@@ -1,6 +1,6 @@
 import { programs } from './programs.js'
 import { displayMaterial } from './materials.js'
-import { buffers } from './buffers.js'
+import { buffers } from './data.js'
 import blit from './blit.js'
 /* global Image */
 
