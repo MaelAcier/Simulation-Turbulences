@@ -41,6 +41,21 @@ export function loadFile (file, name, callback) {
   request.send()
 }
 
+function loadFile2 (file, name) {
+  const request = new XMLHttpRequest()
+  request.onload = function () {
+    if (request.status === 200) {
+      return (name, request.responseText)
+    } else {
+      console.log(`Erreur avec le fichier ${file}, erreur ${request.status}`)
+    }
+  }
+  request.open('GET', file, true)
+  request.send()
+}
+
+console.log(loadFile2('javascript/splats.js', 'name'))
+
 function compileShaders (gl, list) {
   for (const shader in list) {
     if (list[shader].extension === 'fs') {

@@ -2,6 +2,7 @@ import { initFramebuffers } from './initBuffers.js'
 import updateKeywords from './updateKeywords.js'
 import captureScreenshot from './screenshot.js'
 import { splatStack, config } from './data.js'
+import { initStats } from './stats.js'
 /* global dat */
 
 export default function startGUI (webGLContext) {
@@ -40,6 +41,10 @@ export default function startGUI (webGLContext) {
   captureFolder.add({ fun: () => captureScreenshot(webGLContext, config) }, 'fun').name("Capture d'écran")
 
   if (isMobile()) { gui.close() }
+
+  const statsFolder = gui.addFolder('Stats')
+  statsFolder.add({ fun: () => {} }, 'fun').name('statistiques')
+  initStats()
 
   updateKeywords()
   initFramebuffers(webGLContext)

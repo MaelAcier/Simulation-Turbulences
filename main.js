@@ -1,3 +1,8 @@
+import * as THREE from './js/three.module.js'
+
+import { OrbitControls } from './js/OrbitControls.js'
+/* global requestAnimationFrame */
+
 import getWebGLContext from './javascript/webGLContext.js'
 import resizeCanvas from './javascript/resizeCanvas.js'
 import startGUI from './javascript/GUI.js'
@@ -20,7 +25,7 @@ gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array([0, 1, 2, 0, 2, 3]), gl.S
 gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0)
 gl.enableVertexAttribArray(0)
 
-resizeCanvas(canvas)
+// resizeCanvas(canvas)
 
 loadShaders(gl, 'shaders', [
   'advection.fs',
@@ -53,3 +58,64 @@ loadShaders(gl, 'shaders', [
       initEvents(canvas)
     })
 })
+
+var camera, scene, renderer, controls, mesh, material
+// var drawStartPos = new THREE.Vector2()
+
+init()
+setupCanvasDrawing()
+animate()
+
+function init () {
+  camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 2000)
+  camera.position.z = 500
+
+  scene = new THREE.Scene()
+
+  material = new THREE.MeshBasicMaterial({ side: THREE.DoubleSide, transparent: true })
+
+  // mesh = new THREE.Mesh( new THREE.BoxBufferGeometry( 200, 200, 200 ), material )
+  for (let i = 0; i < 128; i++) {
+    mesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(128, 128, 128), material)
+    mesh.position.z = i
+    scene.add(mesh)
+  }
+
+  renderer = new THREE.WebGLRenderer({ antialias: true })
+
+  controls = new OrbitControls(camera, renderer.domElement)
+
+  renderer.setPixelRatio(window.devicePixelRatio)
+  renderer.setSize(window.innerWidth, window.innerHeight)
+  document.body.appendChild(renderer.domElement)
+
+  window.addEventListener('resize', onWindowResize, false)
+}
+
+// Sets up the drawing canvas and adds it as the material map
+
+function setupCanvasDrawing () {
+  // get canvas and context
+
+  var drawingCanvas = document.getElementById('glCanvas')
+  material.map = new THREE.CanvasTexture(drawingCanvas)
+}
+
+function onWindowResize () {
+  camera.aspect = window.innerWidth / window.innerHeight
+  camera.updateProjectionMatrix()
+
+  renderer.setSize(window.innerWidth, window.innerHeight)
+}
+
+function animate () {
+  requestAnimationFrame(animate)
+  material.map.needsUpdate = true
+
+  // controls.update()
+
+  // mesh.rotation.x += 0.01;
+  // mesh.rotation.y += 0.01;
+
+  renderer.render(scene, camera)
+}

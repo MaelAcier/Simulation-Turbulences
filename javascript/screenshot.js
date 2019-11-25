@@ -5,7 +5,7 @@ export default function captureScreenshot (webGLContext, config) {
   const gl = webGLContext.gl
   const ext = webGLContext.ext
   const res = getResolution(gl, config.CAPTURE_RESOLUTION)
-  const target = createFBO(gl, res.width, res.height, ext.formatRGBA.internalFormat, ext.formatRGBA.format, ext.halfFloatTexType, gl.NEAREST)
+  const target = createFBO(gl, res.width, res.height, ext.formats.formatRGBA.internalFormat, ext.formats.formatRGBA.format, ext.halfFloatTexType, gl.NEAREST)
   render(webGLContext, config, target)
 
   let texture = framebufferToTexture(gl, target)

@@ -7,49 +7,45 @@ export default function getWebGLContext (canvas) {
     preserveDrawingBuffer: false
   }
 
-  let gl = canvas.getContext('webgl2', params)
-  const isWebGL2 = !!gl
-  if (!isWebGL2) {
-    gl = canvas.getContext('webgl', params) || canvas.getContext('experimental-webgl', params)
-  }
+  const isWebGL2 = Boolean(canvas.getContext('webgl2', params))
+  const gl = canvas.getContext('webgl2', params) || canvas.getContext('webgl', params) || canvas.getContext('experimental-webgl', params)
 
-  let halfFloat
-  let supportLinearFiltering
-  if (isWebGL2) {
-    gl.getExtension('EXT_color_buffer_float')
-    supportLinearFiltering = gl.getExtension('OES_texture_float_linear')
-  } else {
-    halfFloat = gl.getExtension('OES_texture_half_float')
-    supportLinearFiltering = gl.getExtension('OES_texture_half_float_linear')
-  }
+  if (isWebGL2) gl.getExtension('EXT_color_buffer_float')
 
   gl.clearColor(0.0, 0.0, 0.0, 1.0)
 
-  const halfFloatTexType = isWebGL2 ? gl.HALF_FLOAT : halfFloat.HALF_FLOAT_OES
-  let formatRGBA
-  let formatRG
-  let formatR
-
-  if (isWebGL2) {
-    formatRGBA = getSupportedFormat(gl, gl.RGBA16F, gl.RGBA, halfFloatTexType)
-    formatRG = getSupportedFormat(gl, gl.RG16F, gl.RG, halfFloatTexType)
-    formatR = getSupportedFormat(gl, gl.R16F, gl.RED, halfFloatTexType)
-  } else {
-    formatRGBA = getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType)
-    formatRG = getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType)
-    formatR = getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType)
-  }
+  const supportLinearFiltering = isWebGL2
+    ? gl.getExtension('OES_texture_float_linear')
+    : gl.getExtension('OES_texture_half_float_linear')
+  const halfFloat = isWebGL2
+    ? undefined
+    : gl.getExtension('OES_texture_half_float')
+  const halfFloatTexType = isWebGL2
+    ? gl.HALF_FLOAT
+    : halfFloat.HALF_FLOAT_OES
 
   return {
     gl: gl,
     ext: {
-      formatRGBA: formatRGBA,
-      formatRG: formatRG,
-      formatR: formatR,
+      formats: getFormats(gl, isWebGL2, halfFloatTexType),
       halfFloatTexType: halfFloatTexType,
       supportLinearFiltering: supportLinearFiltering
     }
   }
+}
+
+function getFormats (gl, isWebGL2, halfFloatTexType) {
+  return isWebGL2
+    ? {
+      formatRGBA: getSupportedFormat(gl, gl.RGBA16F, gl.RGBA, halfFloatTexType),
+      formatRG: getSupportedFormat(gl, gl.RG16F, gl.RG, halfFloatTexType),
+      formatR: getSupportedFormat(gl, gl.R16F, gl.RED, halfFloatTexType)
+    }
+    : {
+      formatRGBA: getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType),
+      formatRG: getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType),
+      formatR: getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType)
+    }
 }
 
 function getSupportedFormat (gl, internalFormat, format, type) {

@@ -8,9 +8,9 @@ export function initFramebuffers (webGLContext) {
   const dyeRes = getResolution(gl, config.DYE_RESOLUTION)
 
   const texType = ext.halfFloatTexType
-  const rgba = ext.formatRGBA
-  const rg = ext.formatRG
-  const r = ext.formatR
+  const rgba = ext.formats.formatRGBA
+  const rg = ext.formats.formatRG
+  const r = ext.formats.formatR
   const filtering = ext.supportLinearFiltering ? gl.LINEAR : gl.NEAREST
 
   if (buffers.dye == null) {
@@ -39,7 +39,7 @@ function initBloomFramebuffers (webGLContext) {
   const res = getResolution(gl, config.BLOOM_RESOLUTION)
 
   const texType = ext.halfFloatTexType
-  const rgba = ext.formatRGBA
+  const rgba = ext.formats.formatRGBA
   const filtering = ext.supportLinearFiltering ? gl.LINEAR : gl.NEAREST
 
   buffers.bloom = createFBO(gl, res.width, res.height, rgba.internalFormat, rgba.format, texType, filtering)
@@ -62,7 +62,7 @@ function initSunraysFramebuffers (webGLContext) {
   const res = getResolution(gl, config.SUNRAYS_RESOLUTION)
 
   const texType = ext.halfFloatTexType
-  const r = ext.formatR
+  const r = ext.formats.formatR
   const filtering = ext.supportLinearFiltering ? gl.LINEAR : gl.NEAREST
 
   buffers.sunrays = createFBO(gl, res.width, res.height, r.internalFormat, r.format, texType, filtering)
