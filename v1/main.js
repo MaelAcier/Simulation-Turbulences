@@ -1,7 +1,7 @@
-import * as THREE from './js/three.module.js'
+/* import * as THREE from './js/three.module.js'
 
 import { OrbitControls } from './js/OrbitControls.js'
-/* global requestAnimationFrame */
+*/
 
 import getWebGLContext from './javascript/webGLContext.js'
 import resizeCanvas from './javascript/resizeCanvas.js'
@@ -25,7 +25,7 @@ gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array([0, 1, 2, 0, 2, 3]), gl.S
 gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0)
 gl.enableVertexAttribArray(0)
 
-// resizeCanvas(canvas)
+resizeCanvas(canvas)
 
 loadShaders(gl, 'shaders', [
   'advection.fs',
@@ -59,7 +59,7 @@ loadShaders(gl, 'shaders', [
     })
 })
 
-var camera, scene, renderer, controls, mesh, material
+/* var camera, scene, renderer, controls, mesh, material
 // var drawStartPos = new THREE.Vector2()
 
 init()
@@ -75,9 +75,9 @@ function init () {
   material = new THREE.MeshBasicMaterial({ side: THREE.DoubleSide, transparent: true })
 
   // mesh = new THREE.Mesh( new THREE.BoxBufferGeometry( 200, 200, 200 ), material )
-  for (let i = 0; i < 128; i++) {
+  for (let i = 0; i < 2; i++) {
     mesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(128, 128, 128), material)
-    mesh.position.z = i
+    mesh.position.z = 50 * i
     scene.add(mesh)
   }
 
@@ -96,7 +96,6 @@ function init () {
 
 function setupCanvasDrawing () {
   // get canvas and context
-
   var drawingCanvas = document.getElementById('glCanvas')
   material.map = new THREE.CanvasTexture(drawingCanvas)
 }
@@ -118,4 +117,4 @@ function animate () {
   // mesh.rotation.y += 0.01;
 
   renderer.render(scene, camera)
-}
+} */
