@@ -1,33 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
     <head>
-        <title>three.js webgl - instanced particles - billboards - colors</title>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-        <link type="text/css" rel="stylesheet" href="main.css">
-        <style>
-            a {
-                color: #08f;
-            }
+		<meta charset="utf-8">
+		<meta http-equiv="Content-Type" content="text/html">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 
-            #notSupported {
-                width: 50%;
-                margin: auto;
-                background-color: #f00;
-                margin-top: 20px;
-                padding: 10px;
-            }
-        </style>
+		<title>TIPE Fluide & Turbulences</title>
+		<meta name="description" content="Simulateur de turbulences">
+		
+		<link rel="stylesheet" href="css/main.css" type="text/css">
+		<link rel="stylesheet" href="css/dat-gui-theme.css" type="text/css">
+
     </head>
 
     <body>
 
         <div id="info">
-            <a href="http://threejs.org" target="_blank" rel="noopener">three.js</a> - instanced circle billboards -
-            colors
-            <div id="notSupported" style="display:none">Sorry, your graphics card + browser does not support hardware
-                instancing</div>
+            TIPE Fluide & Turbulences
+            <div id="notSupported" style="display:none">Votre carte graphique et votre navigateur ne supportent pas l'instanciation matérielle.</div>
         </div>
 
         <script id="vshader" type="x-shader/x-vertex">
@@ -50,7 +41,8 @@
 			vUv = uv;
 			gl_Position = projectionMatrix * mvPosition;
 		}
-	</script>
+		</script>
+
         <script id="fshader" type="x-shader/x-fragment">
 		precision highp float;
 		uniform sampler2D map;
@@ -74,9 +66,9 @@
 			gl_FragColor = vec4( diffuseColor.xyz * HSLtoRGB(vec3(vScale/5.0, 1.0, 0.5)), diffuseColor.w );
 			if ( diffuseColor.w < 0.5 ) discard;
 		}
-	</script>
+		</script>
 
-        <script type="module" src="main.js"></script>
+    	<script type="module" src="main.js"></script>
 
     </body>
 
