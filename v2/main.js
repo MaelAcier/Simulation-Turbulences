@@ -45,7 +45,7 @@ function init () {
   cameraPerspective = new THREE.PerspectiveCamera(50, 0.5 * window.innerWidth / window.innerHeight, 1, 5000)
   cameraPerspective.position.z = 2000
 
-  cameraClip = new THREE.OrthographicCamera(0.5 * 600 * window.innerWidth / window.innerHeight / -2, 0.5 * 600 * window.innerWidth / window.innerHeight / 2, 600 / 2, 600 / -2, 150, 1000)
+  cameraClip = new THREE.OrthographicCamera(0.5 * 600 * window.innerWidth / window.innerHeight / -2, 0.5 * 600 * window.innerWidth / window.innerHeight / 2, 600 / 2, 600 / -2, 150, 100)
   cameraClipHelper = new THREE.CameraHelper(cameraClip)
   scene.add(cameraClipHelper)
 
