@@ -1,23 +1,14 @@
 import { GUI } from '../lib/dat.gui.module.js'
 
 import { config, cameras, objects } from './data.js'
-import { setupMesh } from './mesh.js'
+import { loadMeshes } from './meshes.js'
+import { newGeometry } from './geometry.js'
 
-export default function setupGUI () {
+export function setupGUI (scene) {
   const gui = new GUI({ width: 350 })
 
-  gui.add(config, 'distribution', { Grille: 'grid', Crystal: 'crystal', Aléatoire: 'random' }).name('Répartition').onChange(() => setupMesh(config))
-  gui.add(config, 'density', 2, 200).step(1).name('Densité').onChange(() => setupMesh(config))
-
-  gui.add(config, 'planeConstant', -500, 500).step(10).name('Coordonnées plans').onChange(function (value) {
-    for (var j = 0; j < objects.clipPlanes.length; j++) {
-      objects.clipPlanes[j].constant = value
-    }
-  })
-  gui.add(config, 'clipIntersection').name('Découpage').onChange(function (value) {
-    objects.mesh.material.clipIntersection = value
-  })
-  gui.add(config, 'showPlaneHelpers').name('Afficher les plans').onChange((value) => { objects.planesClipHelpers.visible = value })
+  gui.add(config, 'distribution', { Grille: 'grid', Crystal: 'crystal', Aléatoire: 'random' }).name('Répartition').onChange(() => loadMeshes(scene, newGeometry(config)))
+  gui.add(config, 'density', 2, 200).step(1).name('Densité').onChange(() => loadMeshes(scene, newGeometry(config)))
 
   const clipFolder = gui.addFolder('Section plan')
   clipFolder.add(config, 'clipping').name('Activé').onChange((value) => {

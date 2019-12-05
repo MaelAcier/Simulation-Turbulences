@@ -2,27 +2,18 @@ import * as THREE from './lib/three.module.js'
 import Stats from './lib/stats.module.js'
 import { OrbitControls } from './lib/OrbitControls.js'
 
-import { config, objects, cameras } from './js/data.js'
-import { loadMeshes } from './js/meshes.js'
-import { setupGUI } from './js/gui.js'
-import { loadMaterials, materials } from './js/materials.js'
-import { newGeometry } from './js/geometry.js'
+import { config, objects, cameras, scene, renderer } from './js/data.js'
+import { setupMesh, material } from './js/mesh.js'
+import setupGUI from './js/gui.js'
 
 /* global requestAnimationFrame, performance */
 
-const stats = new Stats()
-const scene = new THREE.Scene()
-const renderer = new THREE.WebGLRenderer()
+let container, stats
 
 const controls = {
   perspective: new OrbitControls(cameras.perspective, renderer.domElement),
   orthographic: new OrbitControls(cameras.orthographic, renderer.domElement)
 }
-
-loadMaterials(() => {
-  init()
-  animate()
-})
 
 function init () {
   if (renderer.extensions.get('ANGLE_instanced_arrays') === null) {
@@ -30,8 +21,10 @@ function init () {
     return false
   }
 
-  const container = document.createElement('div')
+  container = document.createElement('div')
   document.body.appendChild(container)
+
+  stats = new Stats()
 
   cameras.perspective.position.z = 2000
   objects.orthographicHelper.visible = config.showOrthographicHelper
@@ -49,10 +42,16 @@ function init () {
 
   window.addEventListener('resize', onWindowResize, false)
 
-  scene.add(objects.orthographicHelper)
+  objects.planesClipHelpers.add(new THREE.PlaneHelper(objects.clipPlanes[0], 1100, 0xff0000))
+  objects.planesClipHelpers.add(new THREE.PlaneHelper(objects.clipPlanes[1], 1100, 0x00ff00))
+  objects.planesClipHelpers.add(new THREE.PlaneHelper(objects.clipPlanes[2], 1100, 0x0000ff))
+  objects.planesClipHelpers.visible = config.showPlaneHelpers
 
-  loadMeshes(scene, newGeometry({ density: config.density }))
-  setupGUI(scene)
+  scene.add(objects.orthographicHelper)
+  scene.add(objects.planesClipHelpers)
+
+  setupMesh({ density: config.density })
+  setupGUI()
 
   return true
 }
@@ -71,12 +70,11 @@ function animate () {
   render()
 }
 
-let time = 0
 function render () {
-  // const time = performance.now() * 0.0005
+  const time = performance.now() * 0.0005
   if (!config.pause) {
-    time += 0.005
-    materials.sin.uniforms['time'].value = time
+    material.uniforms['time'].value = time
+    material.uniforms['planeConstant'].value = -config.planeConstant / 500
   }
   if (config.autoRotation) {
     controls.perspective.update()
@@ -96,4 +94,10 @@ window.addEventListener('keydown', (event) => {
   if (event.code === 'KeyP') {
     config.pause = !config.pause
   }
+  /* if (e.key === ' ') {
+    splatStack.push(parseInt(Math.random() * 20) + 5)
+  } */
 })
+
+init()
+animate()

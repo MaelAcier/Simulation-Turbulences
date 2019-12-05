@@ -1,12 +1,7 @@
 import * as THREE from '../lib/three.module.js'
-import { config, objects, scene } from './data.js'
 
-export let material
-
-export function setupMesh ({ density, distribution = 'grid' }) {
-  if (objects.mesh) scene.remove(objects.mesh)
-
-  const circleGeometry = new THREE.CircleBufferGeometry(1, 4)
+export function newGeometry ({ density, distribution = 'grid' }) {
+  const circleGeometry = new THREE.PlaneBufferGeometry(2, 2)
   const geometry = new THREE.InstancedBufferGeometry()
   geometry.index = circleGeometry.index
   geometry.attributes = circleGeometry.attributes
@@ -25,21 +20,8 @@ export function setupMesh ({ density, distribution = 'grid' }) {
   }
 
   geometry.setAttribute('translate', new THREE.InstancedBufferAttribute(translateArray, 3))
-  material = new THREE.RawShaderMaterial({
-    uniforms: {
-      map: { value: new THREE.TextureLoader().load('circle3.png') },
-      time: { value: 0.0 },
-      planeConstant: { value: config.planeConstant }
-    },
-    vertexShader: document.getElementById('vshader').textContent,
-    fragmentShader: document.getElementById('fshader').textContent,
-    depthTest: true,
-    depthWrite: true
-  })
 
-  objects.mesh = new THREE.Mesh(geometry, material)
-  objects.mesh.scale.set(500, 500, 500)
-  scene.add(objects.mesh)
+  return geometry
 }
 
 function particlesRandom (density) {

@@ -20,15 +20,5 @@ export const cameras = {
 }
 
 export const objects = {
-  mesh: undefined,
-  clipPlanes: [
-    new THREE.Plane(new THREE.Vector3(1, 0, 0), 0),
-    new THREE.Plane(new THREE.Vector3(0, -1, 0), 0),
-    new THREE.Plane(new THREE.Vector3(0, 0, -1), 0)
-  ],
-  planesClipHelpers: new THREE.Group(),
   orthographicHelper: new THREE.CameraHelper(cameras.orthographic)
 }
-
-export const renderer = new THREE.WebGLRenderer()
-export const scene = new THREE.Scene()
