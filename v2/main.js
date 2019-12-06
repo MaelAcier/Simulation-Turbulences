@@ -1,23 +1,15 @@
-import * as THREE from './lib/three.module.js'
 import Stats from './lib/stats.module.js'
-import { OrbitControls } from './lib/OrbitControls.js'
 
-import { config, objects, cameras } from './js/data.js'
+import { config, objects, cameras, scene, renderer, controls } from './js/data.js'
 import { loadMeshes } from './js/meshes.js'
 import { setupGUI } from './js/gui.js'
-import { loadMaterials, materials } from './js/materials.js'
+import { loadMaterials } from './js/materials.js'
 import { newGeometry } from './js/geometry.js'
+import { render } from './js/render.js'
 
-/* global requestAnimationFrame, performance */
+/* global requestAnimationFrame */
 
 const stats = new Stats()
-const scene = new THREE.Scene()
-const renderer = new THREE.WebGLRenderer()
-
-const controls = {
-  perspective: new OrbitControls(cameras.perspective, renderer.domElement),
-  orthographic: new OrbitControls(cameras.orthographic, renderer.domElement)
-}
 
 loadMaterials(() => {
   init()
@@ -33,7 +25,12 @@ function init () {
   const container = document.createElement('div')
   document.body.appendChild(container)
 
-  cameras.perspective.position.z = 2000
+  const distance = 1100
+  cameras.perspective.position.x = distance
+  cameras.perspective.position.y = distance
+  cameras.perspective.position.z = distance
+  controls.perspective.update()
+
   objects.orthographicHelper.visible = config.showOrthographicHelper
   controls.perspective.enablePan = false
   controls.perspective.autoRotate = true
@@ -69,27 +66,6 @@ function animate () {
   requestAnimationFrame(animate)
   stats.update()
   render()
-}
-
-let time = 0
-function render () {
-  // const time = performance.now() * 0.0005
-  if (!config.pause) {
-    time += 0.005
-    materials.sin.uniforms['time'].value = time
-  }
-  if (config.autoRotation) {
-    controls.perspective.update()
-  }
-  if (config.clipping) {
-    renderer.setViewport(0, 0, window.innerWidth / 2, window.innerHeight)
-    renderer.render(scene, cameras.perspective)
-    renderer.setViewport(window.innerWidth / 2, 0, window.innerWidth / 2, window.innerHeight)
-    renderer.render(scene, cameras.orthographic)
-  } else {
-    renderer.setViewport(0, 0, window.innerWidth, window.innerHeight)
-    renderer.render(scene, cameras.perspective)
-  }
 }
 
 window.addEventListener('keydown', (event) => {

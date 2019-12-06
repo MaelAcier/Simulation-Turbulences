@@ -9,14 +9,12 @@ export function loadMaterials (callback) {
   let shaderLoaded = 0
   for (const key in programs) {
     const program = programs[key]
-    loadShader(program.vertexShader, (shader) => {
-      const vertexShader = shader
-      loadShader(program.fragmentShader, (shader) => {
-        const fragmentShader = shader
+    loadShader(program.vertexShader, (vertexShader) => {
+      loadShader(program.fragmentShader, (fragmentShader) => {
         materials[key] = new THREE.RawShaderMaterial({
           uniforms: program.uniforms,
-          vertexShader: vertexShader,
-          fragmentShader: fragmentShader,
+          vertexShader,
+          fragmentShader,
           depthTest: true,
           depthWrite: true
         })

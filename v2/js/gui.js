@@ -3,6 +3,7 @@ import { GUI } from '../lib/dat.gui.module.js'
 import { config, cameras, objects } from './data.js'
 import { loadMeshes } from './meshes.js'
 import { newGeometry } from './geometry.js'
+import { materials } from './materials.js'
 
 export function setupGUI (scene) {
   const gui = new GUI({ width: 350 })
@@ -47,6 +48,13 @@ export function setupGUI (scene) {
     cameras.orthographic.position[config.cameraClipAxis] = value
   })
 
-  gui.add(config, 'pause').name('Pause').listen()
-  gui.add(config, 'autoRotation').name('Rotation automatique').listen()
+  gui.add(config, 'transparent').name('Transparence').onChange((value) => {
+    for (const key in materials) {
+      const material = materials[key]
+      material.transparent = value
+    }
+  })
+
+  gui.add(config, 'pause').name('Pause')
+  gui.add(config, 'autoRotation').name('Rotation automatique')
 }

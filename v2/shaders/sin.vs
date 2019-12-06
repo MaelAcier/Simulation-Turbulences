@@ -2,8 +2,6 @@ precision highp float;
 uniform mat4 modelViewMatrix;
 uniform mat4 projectionMatrix;
 uniform float time;
-uniform float planeConstant;
-attribute vec3 position;
 attribute vec2 uv;
 attribute vec3 translate;
 varying vec2 vUv;
@@ -15,10 +13,7 @@ void main() {
 	float scale =  sin( trTime.x * 2.1 ) + sin( trTime.y * 3.2 ) + sin( trTime.z * 4.3 );
 	vScale = scale;
 	scale = scale * 10.0 + 10.0;
-/* 	if (translate.x > planeConstant) {
-		scale = 0.;
-	} */
-	mvPosition.xyz += position * scale;
+	mvPosition.xyz += vec3(uv, 0.0) * scale;
 	vUv = uv;
 	gl_Position = projectionMatrix * mvPosition;
 }

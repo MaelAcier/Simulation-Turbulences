@@ -1,15 +1,14 @@
 import * as THREE from '../lib/three.module.js'
+import { OrbitControls } from '../lib/OrbitControls.js'
 
 export const config = {
-  clipIntersection: true,
-  planeConstant: 0.0,
-  showPlaneHelpers: false,
   showOrthographicHelper: false,
   cameraClipAxis: 'z',
   cameraClipOffset: 0,
   clipping: false,
   density: 40,
   distribution: 'grid',
+  transparent: false,
   pause: false,
   autoRotation: false
 }
@@ -21,4 +20,11 @@ export const cameras = {
 
 export const objects = {
   orthographicHelper: new THREE.CameraHelper(cameras.orthographic)
+}
+
+export const scene = new THREE.Scene()
+export const renderer = new THREE.WebGLRenderer()
+export const controls = {
+  perspective: new OrbitControls(cameras.perspective, renderer.domElement),
+  orthographic: new OrbitControls(cameras.orthographic, renderer.domElement)
 }
