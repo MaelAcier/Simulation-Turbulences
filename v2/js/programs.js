@@ -8,5 +8,14 @@ export const programs = {
     },
     vertexShader: 'sin.vs',
     fragmentShader: 'sin.fs'
+  },
+  main: {
+    uniforms: {
+      map: { value: new THREE.TextureLoader().load('circle3.png') },
+      time: { value: 0.0 },
+      textureMap: { value: null }
+    },
+    vertexShader: 'main.vs',
+    fragmentShader: 'main.fs'
   }
 }

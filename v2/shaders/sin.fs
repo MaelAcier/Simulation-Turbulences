@@ -16,7 +16,5 @@ vec3 HSLtoRGB(vec3 HSL){
 	return (RGB - 0.5) * C + HSL.z;
 }
 void main() {
-	vec4 diffuseColor = texture2D( map, vUv );
-	if ( diffuseColor.w < 0.5 ) discard;
-	gl_FragColor = vec4( diffuseColor.xyz * HSLtoRGB(vec3(vScale/5.0, 1.0, 0.5)), diffuseColor.w );
+	gl_FragColor = vec4( HSLtoRGB(vec3(vScale/5.0, 1.0, 0.5)), 1 );
 }
