@@ -1,7 +1,7 @@
 import Stats from './lib/stats.module.js'
 
 import { config, objects, cameras, scene, renderer, controls } from './js/data.js'
-import { loadMeshes, meshes } from './js/meshes.js'
+import { loadMeshes } from './js/meshes.js'
 import { setupGUI } from './js/gui.js'
 import { loadMaterials } from './js/materials.js'
 import { newGeometry } from './js/geometry.js'
@@ -25,11 +25,11 @@ function init () {
   const container = document.createElement('div')
   document.body.appendChild(container)
 
-  /* const distance = 1100
+  const distance = 1100
   cameras.perspective.position.x = distance
   cameras.perspective.position.y = distance
   cameras.perspective.position.z = distance
-  controls.perspective.update() */
+  controls.perspective.update()
 
   objects.orthographicHelper.visible = config.showOrthographicHelper
   controls.perspective.enablePan = false

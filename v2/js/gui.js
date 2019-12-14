@@ -4,12 +4,19 @@ import { config, cameras, objects } from './data.js'
 import { loadMeshes } from './meshes.js'
 import { newGeometry } from './geometry.js'
 import { materials } from './materials.js'
+import { textures } from './render.js'
 
 export function setupGUI (scene) {
   const gui = new GUI({ width: 350 })
 
   gui.add(config, 'distribution', { Grille: 'grid', Crystal: 'crystal', Aléatoire: 'random' }).name('Répartition').onChange(() => loadMeshes(scene, newGeometry(config)))
-  gui.add(config, 'density', 2, 200).step(1).name('Densité').onChange(() => loadMeshes(scene, newGeometry(config)))
+  gui.add(config, 'density', 2, 200).step(1).name('Densité').onChange((value) => {
+    loadMeshes(scene, newGeometry(config))
+    for (const key in textures) {
+      const texture = textures[key]
+      texture.resize(value)
+    }
+  })
 
   const clipFolder = gui.addFolder('Section plan')
   clipFolder.add(config, 'clipping').name('Activé').onChange((value) => {

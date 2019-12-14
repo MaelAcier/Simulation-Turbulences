@@ -1,21 +1,18 @@
 precision highp float;
 uniform mat4 modelViewMatrix;
 uniform mat4 projectionMatrix;
-uniform float time;
+uniform float density;
+uniform sampler2D textureMap;
 attribute vec2 uv;
 attribute vec3 translate;
-varying vec3 position;
+varying vec3 vPosition;
 varying vec2 vUv;
-varying float vScale;
 
 void main() {
 	vec4 mvPosition = modelViewMatrix * vec4( translate, 1.0 );
-	vec3 trTime = vec3(translate.x + time,translate.y + time,translate.z + time);
-	float scale =  sin( trTime.x * 2.1 ) + sin( trTime.y * 3.2 ) + sin( trTime.z * 4.3 );
-	vScale = scale;
-	scale = scale * 10.0 + 10.0;
-	mvPosition.xyz += vec3(uv, 0.0) * scale;
+	vec4 data = texture2D( textureMap, vec2((translate.x / density + translate.z * ((density - 1.) / density) + 1.) / 2., (translate.y + 1.) / 2.));
+	mvPosition.xyz += vec3(uv, 0.0) * data.w;
 	vUv = uv;
-	position = translate;
+	vPosition = translate;
 	gl_Position = projectionMatrix * mvPosition;
 }

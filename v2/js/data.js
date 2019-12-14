@@ -14,10 +14,10 @@ export const config = {
 }
 
 export const cameras = {
-  // perspective: new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 50000),
+  perspective: new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 50000),
   orthographic: new THREE.OrthographicCamera(500 * window.innerWidth / window.innerHeight / -2, 500 * window.innerWidth / window.innerHeight / 2, 500, -500, 0, 50),
-  perspective: new THREE.OrthographicCamera(500 * window.innerWidth / window.innerHeight / -2, 500 * window.innerWidth / window.innerHeight / 2, 500, -500, 0, 500000),
-  texture: new THREE.OrthographicCamera(500 * window.innerWidth / window.innerHeight / -2, 500 * window.innerWidth / window.innerHeight / 2, 500, -500, 0, 500000)
+  // perspective: new THREE.OrthographicCamera(500 * window.innerWidth / window.innerHeight / -2, 500 * window.innerWidth / window.innerHeight / 2, 500, -500, 0, 50),
+  texture: new THREE.OrthographicCamera(500 * window.innerWidth / window.innerHeight / -2, 500 * window.innerWidth / window.innerHeight / 2, 500, -500, 0, 50)
 }
 
 export const objects = {

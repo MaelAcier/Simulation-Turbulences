@@ -4,7 +4,8 @@ export const programs = {
   sin: {
     uniforms: {
       map: { value: new THREE.TextureLoader().load('circle3.png') },
-      time: { value: 0.0 }
+      time: { value: 0.0 },
+      density: { value: 0.0 }
     },
     vertexShader: 'sin.vs',
     fragmentShader: 'sin.fs'
@@ -13,6 +14,7 @@ export const programs = {
     uniforms: {
       map: { value: new THREE.TextureLoader().load('circle3.png') },
       time: { value: 0.0 },
+      density: { value: 0.0 },
       textureMap: { value: null }
     },
     vertexShader: 'main.vs',

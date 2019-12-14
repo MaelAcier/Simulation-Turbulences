@@ -3,39 +3,48 @@ import * as THREE from '../lib/three.module.js'
 import { materials } from './materials.js'
 import { config, cameras, scene, renderer, controls } from './data.js'
 
-let oldTexture = new THREE.WebGLRenderTarget(config.density, config.density ** 2)
+class Texture {
+  constructor (size) {
+    this.resize(size)
+  }
 
-oldTexture.background = new THREE.Color(0x000000)
+  resize (size) {
+    this.oldTexture = new THREE.WebGLRenderTarget(size ** 2, size, { type: THREE.FloatType })
+    this.currentTexture = new THREE.WebGLRenderTarget(size ** 2, size, { type: THREE.FloatType })
+  }
 
-let newTexture = new THREE.WebGLRenderTarget(config.density, config.density ** 2)
+  swap () {
+    const buffer = this.oldTexture
+    this.oldTexture = this.newTexture
+    this.newTexture = buffer
+  }
+}
 
-newTexture.background = new THREE.Color(0x000000)
+export const textures = {
+  1: new Texture(config.density)
+}
 
 let time = 0
 export function render () {
   time += 0.005
 
-  step('sin', (material) => {
+  step('sin', 1, (material) => {
     material.uniforms.time.value = time
-  }, true)
-
-  step('main', (material) => {
-    material.uniforms.time.value = time
-    material.uniforms.textureMap.value = newTexture.texture
+    material.uniforms.density.value = config.density
   })
+
+  step('main', 1, (material) => {
+    material.uniforms.time.value = time
+    material.uniforms.density.value = config.density
+    material.uniforms.textureMap.value = textures[1].newTexture.texture
+  }, true)
 
   if (config.autoRotation) {
     controls.perspective.update()
   }
 }
 
-function swapTextures () {
-  const swap = oldTexture
-  oldTexture = newTexture
-  newTexture = swap
-}
-
-function step (material, update, visible) {
+function step (material, textureID, update, visible) {
   materials[material].visible = true
 
   if (!config.pause) {
@@ -54,11 +63,11 @@ function step (material, update, visible) {
       renderer.render(scene, cameras.perspective)
     }
   } else {
-    renderer.setRenderTarget(oldTexture)
+    renderer.setRenderTarget(textures[textureID].oldTexture)
     renderer.render(scene, cameras.texture)
   }
 
   materials[material].visible = false
 
-  swapTextures()
+  textures[textureID].swap()
 }

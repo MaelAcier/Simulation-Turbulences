@@ -1,13 +1,14 @@
 precision highp float;
+uniform float density;
 uniform sampler2D map;
-varying vec2 vUv;
-varying vec3 position;
-varying float vScale;
 uniform sampler2D textureMap;
-// HSL to RGB Convertion helpers
+varying float vScale;
+varying vec2 vUv;
+varying vec3 vPosition;
+
 void main() {
 	vec4 circleColor = texture2D( map, vUv );
-	vec4 data = texture2D( textureMap, vec2(position.x, (position.y + 40.0 * position.z)/40.));
+	vec4 data = texture2D( textureMap, vec2((vPosition.x / density + vPosition.z * ((density - 1.) / density) + 1.) / 2., (vPosition.y + 1.) / 2.));
 	if ( circleColor.w < 0.5 ) discard;
 	gl_FragColor = vec4( circleColor.xyz * data.xyz, circleColor.w );
 }
