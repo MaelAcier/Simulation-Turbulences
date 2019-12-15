@@ -15,8 +15,8 @@ class Texture {
 
   swap () {
     const buffer = this.oldTexture
-    this.oldTexture = this.newTexture
-    this.newTexture = buffer
+    this.oldTexture = this.currentTexture
+    this.currentTexture = buffer
   }
 }
 
@@ -31,39 +31,49 @@ export function render () {
   step('sin', 1, (material) => {
     material.uniforms.time.value = time
     material.uniforms.density.value = config.density
+    material.uniforms.aspect.value = window.innerWidth / window.innerHeight
   })
 
   step('main', 1, (material) => {
     material.uniforms.time.value = time
     material.uniforms.density.value = config.density
-    material.uniforms.textureMap.value = textures[1].newTexture.texture
-  }, true)
+    material.uniforms.textureMap.value = textures[1].currentTexture.texture
+  })
 
   if (config.autoRotation) {
     controls.perspective.update()
   }
 }
 
-function step (material, textureID, update, visible) {
+function step (material, textureID, update, visible = config.renderTarget === material) {
   materials[material].visible = true
 
   if (!config.pause) {
     update(materials[material])
   }
 
-  if (visible) {
-    renderer.setRenderTarget(null)
-    if (config.clipping) {
-      renderer.setViewport(0, 0, window.innerWidth / 2, window.innerHeight)
-      renderer.render(scene, cameras.perspective)
-      renderer.setViewport(window.innerWidth / 2, 0, window.innerWidth / 2, window.innerHeight)
-      renderer.render(scene, cameras.orthographic)
+  if (config.renderTarget === 'main') {
+    if (visible) {
+      renderer.setRenderTarget(null)
+      if (config.clipping) {
+        renderer.setViewport(0, 0, window.innerWidth / 2, window.innerHeight)
+        renderer.render(scene, cameras.perspective)
+        renderer.setViewport(window.innerWidth / 2, 0, window.innerWidth / 2, window.innerHeight)
+        renderer.render(scene, cameras.orthographic)
+      } else {
+        renderer.setViewport(0, 0, window.innerWidth, window.innerHeight)
+        renderer.render(scene, cameras.perspective)
+      }
     } else {
-      renderer.setViewport(0, 0, window.innerWidth, window.innerHeight)
-      renderer.render(scene, cameras.perspective)
+      renderer.setRenderTarget(textures[textureID].oldTexture)
+      renderer.render(scene, cameras.texture)
     }
   } else {
-    renderer.setRenderTarget(textures[textureID].oldTexture)
+    if (visible) {
+      renderer.setRenderTarget(null)
+    } else {
+      renderer.setRenderTarget(textures[textureID].oldTexture)
+    }
     renderer.render(scene, cameras.texture)
   }
 

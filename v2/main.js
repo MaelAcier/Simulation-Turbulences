@@ -25,10 +25,9 @@ function init () {
   const container = document.createElement('div')
   document.body.appendChild(container)
 
-  const distance = 1100
-  cameras.perspective.position.x = distance
-  cameras.perspective.position.y = distance
-  cameras.perspective.position.z = distance
+  cameras.perspective.position.x = config.distance
+  cameras.perspective.position.y = config.distance
+  cameras.perspective.position.z = config.distance
   controls.perspective.update()
 
   objects.orthographicHelper.visible = config.showOrthographicHelper
@@ -36,6 +35,9 @@ function init () {
   controls.perspective.autoRotate = true
   controls.orthographic.enablePan = false
   controls.orthographic.enableRotate = false
+  controls.texture.enablePan = false
+  controls.texture.enableRotate = false
+  controls.texture.enableZoom = false
 
   renderer.autoClear = false
   renderer.setPixelRatio(window.devicePixelRatio)

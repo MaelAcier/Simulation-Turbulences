@@ -5,7 +5,8 @@ export const programs = {
     uniforms: {
       map: { value: new THREE.TextureLoader().load('circle3.png') },
       time: { value: 0.0 },
-      density: { value: 0.0 }
+      density: { value: 0.0 },
+      aspect: { value: 0.0 }
     },
     vertexShader: 'sin.vs',
     fragmentShader: 'sin.fs'
