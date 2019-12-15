@@ -10,7 +10,7 @@ varying vec2 vUv;
 varying float vScale;
 
 void main() {
-	vec4 mvPosition = modelViewMatrix * vec4((translate.x+ density * translate.z) / density , translate.y, 0., 1.0 );
+	vec4 mvPosition = modelViewMatrix * vec4((translate.x + density * translate.z) / density, translate.y, 0., 1.0 );
 	vec3 trTime = vec3(translate.x + time,translate.y + time,translate.z + time);
 	float scale =  sin( trTime.x * 2.1 ) + sin( trTime.y * 3.2 ) + sin( trTime.z * 4.3 );
 	vScale = scale;

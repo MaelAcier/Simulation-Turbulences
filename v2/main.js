@@ -59,6 +59,8 @@ function onWindowResize () {
   cameras.perspective.updateProjectionMatrix()
   cameras.orthographic.aspect = window.innerWidth / window.innerHeight
   cameras.orthographic.updateProjectionMatrix()
+  cameras.texture.aspect = window.innerWidth / window.innerHeight
+  cameras.texture.updateProjectionMatrix()
   renderer.setSize(window.innerWidth, window.innerHeight)
 }
 
