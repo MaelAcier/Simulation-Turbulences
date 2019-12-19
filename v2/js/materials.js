@@ -16,7 +16,7 @@ export function loadMaterials (callback) {
           vertexShader,
           fragmentShader,
           depthTest: true,
-          depthWrite: true
+          depthWrite: true,
         })
         shaderLoaded++
         if (shaderLoaded === shaderCount) {

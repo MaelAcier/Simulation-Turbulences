@@ -53,7 +53,9 @@ function init () {
   loadMeshes(scene, newGeometry({ density: config.density }))
   setupGUI(scene)
 
-  return true
+  const gl = renderer.domElement.getContext('webgl') || renderer.domElement.getContext('experimental-webgl')
+  gl.getExtension('WEBGL_color_buffer_float')
+  gl.getExtension('EXT_float_blend')
 }
 
 function onWindowResize () {
