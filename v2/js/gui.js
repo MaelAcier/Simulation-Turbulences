@@ -1,12 +1,10 @@
-import * as THREE from '../lib/three.module.js'
 import { GUI } from '../lib/dat.gui.module.js'
 
-import { config, cameras, objects, controls } from './data.js'
+import { config, cameras, objects } from './data.js'
 import { loadMeshes } from './meshes.js'
 import { newGeometry } from './geometry.js'
 import { materials } from './materials.js'
-import { textures } from './render.js'
-import { programs } from './programs.js'
+import { textures, renderingPipeline } from './render.js'
 
 export function setupGUI (scene) {
   const gui = new GUI({ width: 350 })
@@ -57,7 +55,12 @@ export function setupGUI (scene) {
     cameras.orthographic.position[config.cameraClipAxis] = value
   })
 
-  gui.add(config, 'renderTarget', mapKeys(programs, (val, key) => key)).name('Rendu')
+  console.log()
+
+  gui.add(config, 'renderTarget', renderingPipeline.ids.reduce((acc, current) => {
+    acc[current] = current
+    return acc
+  }, {})).name('Rendu').listen()
 
   gui.add(config, 'transparent').name('Transparence').onChange((value) => {
     materials.main.transparent = value
@@ -66,10 +69,3 @@ export function setupGUI (scene) {
   gui.add(config, 'pause').name('Pause')
   gui.add(config, 'autoRotation').name('Rotation automatique')
 }
-
-const mapKeys = (obj, fn) =>
-  Object.keys(obj).reduce((acc, k) => {
-    const val = fn(obj[k], k)
-    acc[k] = val
-    return acc
-  }, {})

@@ -12,13 +12,13 @@ export const config = {
   transparent: false,
   pause: false,
   autoRotation: false,
-  renderTarget: 'main'
+  renderTarget: ''
 }
 
 export const cameras = {
   perspective: new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 50000),
   orthographic: new THREE.OrthographicCamera(500 * window.innerWidth / window.innerHeight / -2, 500 * window.innerWidth / window.innerHeight / 2, 500, -500, 0, 50),
-  texture: new THREE.OrthographicCamera(500 * window.innerWidth / window.innerHeight / -2, 500 * window.innerWidth / window.innerHeight / 2, 500, -500, 0, 1)
+  texture: new THREE.OrthographicCamera(-500, 500, 500, -500, 0, 1)
 }
 
 export const objects = {

@@ -5,7 +5,7 @@ import { loadMeshes } from './js/meshes.js'
 import { setupGUI } from './js/gui.js'
 import { loadMaterials } from './js/materials.js'
 import { newGeometry } from './js/geometry.js'
-import { render } from './js/render.js'
+import { renderingPipeline } from './js/render.js'
 
 /* global requestAnimationFrame */
 
@@ -53,6 +53,8 @@ function init () {
   loadMeshes(scene, newGeometry({ density: config.density }))
   setupGUI(scene)
 
+  config.renderTarget = renderingPipeline.ids[renderingPipeline.ids.length - 1]
+
   const gl = renderer.domElement.getContext('webgl') || renderer.domElement.getContext('experimental-webgl')
   gl.getExtension('WEBGL_color_buffer_float')
   gl.getExtension('EXT_float_blend')
@@ -63,15 +65,14 @@ function onWindowResize () {
   cameras.perspective.updateProjectionMatrix()
   cameras.orthographic.aspect = window.innerWidth / window.innerHeight
   cameras.orthographic.updateProjectionMatrix()
-  cameras.texture.aspect = window.innerWidth / window.innerHeight
-  cameras.texture.updateProjectionMatrix()
   renderer.setSize(window.innerWidth, window.innerHeight)
 }
 
 function animate () {
   requestAnimationFrame(animate)
   stats.update()
-  render()
+  // render()
+  renderingPipeline.run()
 }
 
 window.addEventListener('keydown', (event) => {
