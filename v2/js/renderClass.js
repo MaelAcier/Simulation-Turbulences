@@ -51,7 +51,7 @@ export class Pipeline {
         step.fun(materials[step.material])
       }
 
-      if (/main/.test(config.renderTarget)) {
+      if (/cube/.test(config.renderTarget)) {
         if (config.renderTarget === step.id) {
           renderer.setRenderTarget(null)
           if (config.clipping) {

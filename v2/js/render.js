@@ -26,7 +26,7 @@ renderingPipeline.addStep({
 })
 
 renderingPipeline.addStep({
-  material: 'main',
+  material: 'cube',
   textureID: 1,
   fun: (material) => {
     material.uniforms.time.value = time

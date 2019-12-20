@@ -20,14 +20,14 @@ export const programs = {
     vertexShader: 'test.vs',
     fragmentShader: 'test.fs'
   },
-  main: {
+  cube: {
     uniforms: {
       map: { value: new THREE.TextureLoader().load('circle3.png') },
       time: { value: 0.0 },
       density: { value: 0.0 },
       textureMap: { value: null }
     },
-    vertexShader: 'main.vs',
-    fragmentShader: 'main.fs'
+    vertexShader: 'cube.vs',
+    fragmentShader: 'cube.fs'
   }
 }
