@@ -11,6 +11,15 @@ export const programs = {
     vertexShader: 'sin.vs',
     fragmentShader: 'sin.fs'
   },
+  test: {
+    uniforms: {
+      map: { value: new THREE.TextureLoader().load('circle3.png') },
+      density: { value: 0.0 },
+      aspect: { value: 0.0 }
+    },
+    vertexShader: 'test.vs',
+    fragmentShader: 'test.fs'
+  },
   main: {
     uniforms: {
       map: { value: new THREE.TextureLoader().load('circle3.png') },

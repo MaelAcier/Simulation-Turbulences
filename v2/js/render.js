@@ -28,11 +28,15 @@ let time = 0
 export function render () {
   time += 0.005
 
-  step('sin', 1, (material) => {
-    material.uniforms.time.value = time
+  step('test', 1, (material) => {
     material.uniforms.density.value = config.density
     material.uniforms.aspect.value = window.innerWidth / window.innerHeight
   })
+  // step('sin', 1, (material) => {
+  //   material.uniforms.time.value = time
+  //   material.uniforms.density.value = config.density
+  //   material.uniforms.aspect.value = window.innerWidth / window.innerHeight
+  // })
 
   step('main', 1, (material) => {
     material.uniforms.time.value = time

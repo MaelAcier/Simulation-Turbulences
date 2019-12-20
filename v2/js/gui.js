@@ -60,10 +60,7 @@ export function setupGUI (scene) {
   gui.add(config, 'renderTarget', mapKeys(programs, (val, key) => key)).name('Rendu')
 
   gui.add(config, 'transparent').name('Transparence').onChange((value) => {
-    for (const key in materials) {
-      const material = materials[key]
-      material.transparent = value
-    }
+    materials.main.transparent = value
   })
 
   gui.add(config, 'pause').name('Pause')
