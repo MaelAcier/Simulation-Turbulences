@@ -24,6 +24,14 @@ renderingPipeline.addStep({
     material.uniforms.aspect.value = window.innerWidth / window.innerHeight
   }
 })
+/* renderingPipeline.addStep({
+  material: 'test',
+  textureID: 1,
+  fun: (material) => {
+    material.uniforms.density.value = config.density
+    material.uniforms.aspect.value = window.innerWidth / window.innerHeight
+  }
+}) */
 
 renderingPipeline.addStep({
   material: 'cube',

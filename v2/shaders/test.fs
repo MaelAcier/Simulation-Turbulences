@@ -17,5 +17,5 @@ vec3 HSLtoRGB(vec3 HSL){
 	return (RGB - 0.5) * C + HSL.z;
 }
 void main() {
-	gl_FragColor = vec4( floor(mod(vPosition.z * density, 3.)/2.), floor(mod(vPosition.z * density + 1., 3.)/2.), floor(mod(vPosition.z * density +2., 3.)/2.), 10. );
+	gl_FragColor = vec4( floor(mod(vPosition.x * density, 3.)/2.), floor(mod(vPosition.x * density + 1., 3.)/2.), floor(mod(vPosition.x * density +2., 3.)/2.), 10. );
 }
