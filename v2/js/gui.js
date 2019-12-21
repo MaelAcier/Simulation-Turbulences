@@ -63,7 +63,7 @@ export function setupGUI (scene) {
   }, {})).name('Rendu').listen()
 
   gui.add(config, 'transparent').name('Transparence').onChange((value) => {
-    materials.main.transparent = value
+    materials.cube.transparent = value
   })
 
   gui.add(config, 'pause').name('Pause')
