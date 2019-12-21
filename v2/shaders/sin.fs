@@ -1,5 +1,4 @@
 precision highp float;
-uniform sampler2D map;
 varying vec2 vUv;
 varying float vScale;
 // HSL to RGB Convertion helpers

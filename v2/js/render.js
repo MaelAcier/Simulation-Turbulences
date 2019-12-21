@@ -9,9 +9,19 @@ export const renderingPipeline = new Pipeline()
 
 let time = 0
 
+// material.uniforms.aspect.value = window.innerWidth / window.innerHeight
+
 renderingPipeline.addExtraStep(() => {
   if (!config.pause) {
     time += 0.005
+  }
+})
+
+renderingPipeline.addStep({
+  material: 'test',
+  textureID: 1,
+  fun: (material) => {
+    material.uniforms.density.value = config.density
   }
 })
 
@@ -21,17 +31,17 @@ renderingPipeline.addStep({
   fun: (material) => {
     material.uniforms.time.value = time
     material.uniforms.density.value = config.density
-    material.uniforms.aspect.value = window.innerWidth / window.innerHeight
   }
 })
-/* renderingPipeline.addStep({
-  material: 'test',
+
+renderingPipeline.addStep({
+  material: 'identity',
   textureID: 1,
   fun: (material) => {
     material.uniforms.density.value = config.density
-    material.uniforms.aspect.value = window.innerWidth / window.innerHeight
+    material.uniforms.textureMap.value = textures[1].currentTexture.texture
   }
-}) */
+})
 
 renderingPipeline.addStep({
   material: 'cube',
