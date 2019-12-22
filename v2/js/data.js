@@ -12,7 +12,8 @@ export const config = {
   transparent: false,
   pause: false,
   autoRotation: false,
-  renderTarget: ''
+  renderTarget: 'cube',
+  splatRadius: 0.0025
 }
 
 export const cameras = {

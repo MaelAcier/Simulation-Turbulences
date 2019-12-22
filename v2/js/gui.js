@@ -4,7 +4,8 @@ import { config, cameras, objects } from './data.js'
 import { loadMeshes } from './meshes.js'
 import { newGeometry } from './geometry.js'
 import { materials } from './materials.js'
-import { textures, renderingPipeline } from './render.js'
+import { textures, registeredIDs } from './render.js'
+import { multipleSplats } from './splats.js'
 
 export function setupGUI (scene) {
   const gui = new GUI({ width: 350 })
@@ -57,10 +58,7 @@ export function setupGUI (scene) {
 
   console.log()
 
-  gui.add(config, 'renderTarget', renderingPipeline.ids.reduce((acc, current) => {
-    acc[current] = current
-    return acc
-  }, {})).name('Rendu').listen()
+  gui.add(config, 'renderTarget', registeredIDs).name('Rendu').listen()
 
   gui.add(config, 'transparent').name('Transparence').onChange((value) => {
     materials.cube.transparent = value
@@ -68,4 +66,10 @@ export function setupGUI (scene) {
 
   gui.add(config, 'pause').name('Pause')
   gui.add(config, 'autoRotation').name('Rotation automatique')
+
+  gui.add({
+    fun: () => {
+      multipleSplats(parseInt(Math.random() * 2) + 5)
+    }
+  }, 'fun').name('Splash')
 }

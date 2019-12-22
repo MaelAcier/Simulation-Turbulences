@@ -53,8 +53,6 @@ function init () {
   loadMeshes(scene, newGeometry({ density: config.density }))
   setupGUI(scene)
 
-  config.renderTarget = renderingPipeline.ids[renderingPipeline.ids.length - 1]
-
   const gl = renderer.domElement.getContext('webgl') || renderer.domElement.getContext('experimental-webgl')
   gl.getExtension('WEBGL_color_buffer_float')
   gl.getExtension('EXT_float_blend')
@@ -72,7 +70,7 @@ function animate () {
   requestAnimationFrame(animate)
   stats.update()
   // render()
-  renderingPipeline.run()
+  renderingPipeline()
 }
 
 window.addEventListener('keydown', (event) => {
