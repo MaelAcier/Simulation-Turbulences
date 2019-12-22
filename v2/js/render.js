@@ -2,7 +2,17 @@ import { Texture, Pipeline } from './renderClass.js'
 import { config, controls } from './data.js'
 
 export const textures = {
-  1: new Texture(config.density)
+  1: new Texture(),
+  2: new Texture(),
+  dye: new Texture(),
+  velocity: new Texture(),
+  divergence: new Texture(),
+  curl: new Texture(),
+  pressure: new Texture(),
+  bloom: new Texture(),
+  bloomFramebuffers: new Texture(),
+  sunrays: new Texture(),
+  sunraysTemp: new Texture()
 }
 
 export const renderingPipeline = new Pipeline()
@@ -19,7 +29,7 @@ renderingPipeline.addExtraStep(() => {
 
 renderingPipeline.addStep({
   material: 'test',
-  textureID: 1,
+  textureID: 2,
   fun: (material) => {
     material.uniforms.density.value = config.density
   }

@@ -10,7 +10,7 @@ export function setupGUI (scene) {
   const gui = new GUI({ width: 350 })
 
   gui.add(config, 'distribution', { Grille: 'grid', Crystal: 'crystal', Aléatoire: 'random' }).name('Répartition').onChange(() => loadMeshes(scene, newGeometry(config)))
-  gui.add(config, 'density', 2, 200).step(1).name('Densité').onChange((value) => {
+  gui.add(config, 'density', 2, 128).step(1).name('Densité').onChange((value) => {
     loadMeshes(scene, newGeometry(config))
     for (const key in textures) {
       const texture = textures[key]

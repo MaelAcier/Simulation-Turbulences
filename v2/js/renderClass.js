@@ -5,7 +5,7 @@ import { config, cameras, scene, renderer } from './data.js'
 import { textures } from './render.js'
 
 export class Texture {
-  constructor (size) {
+  constructor (size = config.density) {
     this.resize(size)
   }
 
