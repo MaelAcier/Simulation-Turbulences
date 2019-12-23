@@ -16,7 +16,9 @@ export const config = {
   splatRadius: 0.0025,
   curl: 30.0,
   pressure: 0.8,
-  pressureIterations: 3
+  pressureIterations: 3,
+  velocityDissipation: 2.0,
+  densityDissipation: 1
 }
 
 export const cameras = {

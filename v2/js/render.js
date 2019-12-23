@@ -78,6 +78,8 @@ export const registeredIDs = {
   clear: 'clear',
   pressure: 'pressure',
   gradientSubtract: 'gradientSubtract',
+  'advection - velocity': 'advection - velocity',
+  'advection - dye': 'advection - dye',
   cube: 'cube'
 }
 
@@ -159,6 +161,32 @@ export function renderingPipeline () {
       material.uniforms.sPressure.value = textures.pressure.currentTexture.texture
       material.uniforms.sVelocity.value = textures.velocity.currentTexture.texture
       material.uniforms.uDensity.value = config.density
+    }
+  })
+
+  step({
+    material: 'advection',
+    textureID: 'velocity',
+    id: 'advection - velocity',
+    fun: (material, textures) => {
+      material.uniforms.sVelocity.value = textures.velocity.currentTexture.texture
+      material.uniforms.sSource.value = textures.velocity.currentTexture.texture
+      material.uniforms.uDensity.value = config.density
+      material.uniforms.uDt.value = time
+      material.uniforms.uDissipation.value = config.velocityDissipation
+    }
+  })
+
+  step({
+    material: 'advection',
+    textureID: 'dye',
+    id: 'advection - dye',
+    fun: (material, textures) => {
+      material.uniforms.sVelocity.value = textures.velocity.currentTexture.texture
+      material.uniforms.sSource.value = textures.dye.currentTexture.texture
+      material.uniforms.uDensity.value = config.density
+      material.uniforms.uDt.value = time
+      material.uniforms.uDissipation.value = config.densityDissipation
     }
   })
 

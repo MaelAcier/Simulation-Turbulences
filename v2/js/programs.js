@@ -99,6 +99,18 @@ export const programs = {
     fragmentShader: 'gradientSubtract.fs'
   },
 
+  advection: {
+    uniforms: {
+      sVelocity: { value: new THREE.Texture() },
+      sSource: { value: new THREE.Texture() },
+      uDensity: { value: 0.0 },
+      uDt: { value: 0.0 },
+      uDissipation: { value: 0.0 }
+    },
+    vertexShader: 'identity.vs',
+    fragmentShader: 'advection.fs'
+  },
+
   cube: {
     uniforms: {
       sTexture: { value: new THREE.Texture() },
