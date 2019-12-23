@@ -18,6 +18,7 @@ export function setupGUI (scene) {
       texture.resize(value)
     }
   })
+  gui.add(config, 'curl', 0, 10000).name('Tourbillons')
 
   const clipFolder = gui.addFolder('Section plan')
   clipFolder.add(config, 'clipping').name('Activé').onChange((value) => {

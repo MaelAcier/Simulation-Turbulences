@@ -13,7 +13,10 @@ export const config = {
   pause: false,
   autoRotation: false,
   renderTarget: 'cube',
-  splatRadius: 0.0025
+  splatRadius: 0.0025,
+  curl: 30.0,
+  pressure: 0.8,
+  pressureIterations: 3
 }
 
 export const cameras = {

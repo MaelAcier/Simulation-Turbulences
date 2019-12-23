@@ -67,21 +67,36 @@ export const textures = {
   bloom: new Texture(),
   bloomFramebuffers: new Texture(),
   sunrays: new Texture(),
-  sunraysTemp: new Texture()
+  sunraysTemp: new Texture(),
+  vorticity: new Texture()
 }
 
 export const registeredIDs = {
-  curl: 'curl',
   sin: 'sin',
-  identity: 'identity',
   'splat - dye': 'splat - dye',
   'splat - velocity': 'splat - velocity',
+  curl: 'curl',
+  vorticity: 'vorticity',
+  divergence: 'divergence',
+  clear: 'clear',
+  pressure: 'pressure',
   cube: 'cube'
 }
 
 let time = 0
+/* let lastUpdateTime = Date.now()
+
+function calcDeltaTime () {
+  const now = Date.now()
+  let dt = (now - lastUpdateTime) / 1000
+  dt = Math.min(dt, 0.016666)
+  lastUpdateTime = now
+  return dt
+} */
 
 export function renderingPipeline () {
+  // const dt = calcDeltaTime()
+
   if (!config.pause) {
     time += 0.005
   }
@@ -90,26 +105,61 @@ export function renderingPipeline () {
     material: 'curl',
     textureID: 'curl',
     fun: (material, textures) => {
-      material.uniforms.density.value = config.density
-      material.uniforms.uVelocity.value = textures.velocity.currentTexture.texture
+      material.uniforms.sVelocity.value = textures.velocity.currentTexture.texture
+      material.uniforms.uDensity.value = config.density
     }
   })
+
+  step({
+    material: 'vorticity',
+    textureID: 'vorticity',
+    fun: (material, textures) => {
+      material.uniforms.sVelocity.value = textures.velocity.currentTexture.texture
+      material.uniforms.sCurl.value = textures.curl.currentTexture.texture
+      material.uniforms.uDensity.value = config.density
+      material.uniforms.uCurl.value = config.curl
+      material.uniforms.uDt.value = time
+    }
+  })
+
+  step({
+    material: 'divergence',
+    textureID: 'divergence',
+    fun: (material, textures) => {
+      material.uniforms.sVelocity.value = textures.velocity.currentTexture.texture
+      material.uniforms.uDensity.value = config.density
+    }
+  })
+
+  step({
+    material: 'clear',
+    textureID: 'pressure',
+    fun: (material, textures) => {
+      material.uniforms.sPressure.value = textures.pressure.currentTexture.texture
+      material.uniforms.uDensity.value = config.density
+      material.uniforms.uPressure.value = config.pressure
+    }
+  })
+
+  for (let i = 0; i < config.pressureIterations; i++) {
+    step({
+      material: 'pressure',
+      textureID: 'pressure',
+      id: i === config.pressureIterations - 1 ? 'pressure' : '',
+      fun: (material, textures) => {
+        material.uniforms.sPressure.value = textures.pressure.currentTexture.texture
+        material.uniforms.sDivergence.value = textures.divergence.currentTexture.texture
+        material.uniforms.uDensity.value = config.density
+      }
+    })
+  }
 
   step({
     material: 'sin',
     textureID: 1,
     fun: (material) => {
-      material.uniforms.time.value = time
-      material.uniforms.density.value = config.density
-    }
-  })
-
-  step({
-    material: 'identity',
-    textureID: 1,
-    fun: (material, textures) => {
-      material.uniforms.density.value = config.density
-      material.uniforms.textureMap.value = textures[1].currentTexture.texture
+      material.uniforms.uDensity.value = config.density
+      material.uniforms.uTime.value = time
     }
   })
 
@@ -117,9 +167,8 @@ export function renderingPipeline () {
     material: 'cube',
     textureID: 1,
     fun: (material, textures) => {
-      material.uniforms.time.value = time
-      material.uniforms.density.value = config.density
-      material.uniforms.textureMap.value = textures[1].currentTexture.texture
+      material.uniforms.sTexture.value = textures[1].currentTexture.texture
+      material.uniforms.uDensity.value = config.density
     }
   })
 

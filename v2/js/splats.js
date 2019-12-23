@@ -32,11 +32,11 @@ export function splat (x, y, z, dx, dy, dz, color, show) {
     textureID: 'velocity',
     id: show ? 'splat - velocity' : '',
     fun: (material, textures) => {
-      material.uniforms.density.value = config.density
-      material.uniforms.uTarget.value = textures.velocity.currentTexture.texture
-      material.uniforms.point.value = new THREE.Vector3(x, y, z)
-      material.uniforms.color.value = new THREE.Vector3(dx, dy, dz)
-      material.uniforms.radius.value = config.splatRadius
+      material.uniforms.sTarget.value = textures.velocity.currentTexture.texture
+      material.uniforms.uDensity.value = config.density
+      material.uniforms.uPoint.value = new THREE.Vector3(x, y, z)
+      material.uniforms.uColor.value = new THREE.Vector3(dx, dy, dz)
+      material.uniforms.uRadius.value = config.splatRadius
     }
   })
 
@@ -45,11 +45,11 @@ export function splat (x, y, z, dx, dy, dz, color, show) {
     textureID: 'dye',
     id: show ? 'splat - dye' : '',
     fun: (material, textures) => {
-      material.uniforms.density.value = config.density
-      material.uniforms.uTarget.value = textures.dye.currentTexture.texture
-      material.uniforms.point.value = new THREE.Vector3(x, y, z)
-      material.uniforms.color.value = new THREE.Vector3(color.r, color.g, color.b)
-      material.uniforms.radius.value = config.splatRadius
+      material.uniforms.sTarget.value = textures.dye.currentTexture.texture
+      material.uniforms.uDensity.value = config.density
+      material.uniforms.uPoint.value = new THREE.Vector3(x, y, z)
+      material.uniforms.uColor.value = new THREE.Vector3(color.r, color.g, color.b)
+      material.uniforms.uRadius.value = config.splatRadius
     }
   })
 }

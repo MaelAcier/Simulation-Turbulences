@@ -1,7 +1,7 @@
 precision highp float;
+
 varying vec2 vUv;
 varying float vScale;
-// HSL to RGB Convertion helpers
 
 vec3 HUEtoRGB(float H){
 	H = mod(H,1.0);
@@ -18,5 +18,5 @@ vec3 HSLtoRGB(vec3 HSL){
 }
 
 void main() {
-	gl_FragColor = vec4( HSLtoRGB(vec3(vScale/5.0, 1.0, 0.5)), vScale * 10. + 10. );
+	gl_FragColor = vec4( HSLtoRGB(vec3(vScale / 5.0, 1.0, 0.5)), vScale * 10. + 10. );
 }
