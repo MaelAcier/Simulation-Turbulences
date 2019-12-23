@@ -64,10 +64,7 @@ export const textures = {
   divergence: new Texture(),
   curl: new Texture(),
   pressure: new Texture(),
-  bloom: new Texture(),
-  bloomFramebuffers: new Texture(),
-  sunrays: new Texture(),
-  sunraysTemp: new Texture(),
+  gradientSubtract: new Texture(),
   vorticity: new Texture()
 }
 
@@ -80,6 +77,7 @@ export const registeredIDs = {
   divergence: 'divergence',
   clear: 'clear',
   pressure: 'pressure',
+  gradientSubtract: 'gradientSubtract',
   cube: 'cube'
 }
 
@@ -153,6 +151,16 @@ export function renderingPipeline () {
       }
     })
   }
+
+  step({
+    material: 'gradientSubtract',
+    textureID: 'gradientSubtract',
+    fun: (material, textures) => {
+      material.uniforms.sPressure.value = textures.pressure.currentTexture.texture
+      material.uniforms.sVelocity.value = textures.velocity.currentTexture.texture
+      material.uniforms.uDensity.value = config.density
+    }
+  })
 
   step({
     material: 'sin',

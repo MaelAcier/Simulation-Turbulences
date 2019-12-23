@@ -89,6 +89,16 @@ export const programs = {
     fragmentShader: 'pressure.fs'
   },
 
+  gradientSubtract: {
+    uniforms: {
+      sPressure: { value: new THREE.Texture() },
+      sVelocity: { value: new THREE.Texture() },
+      uDensity: { value: 0.0 }
+    },
+    vertexShader: 'identity.vs',
+    fragmentShader: 'gradientSubtract.fs'
+  },
+
   cube: {
     uniforms: {
       sTexture: { value: new THREE.Texture() },
