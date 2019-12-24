@@ -80,6 +80,7 @@ export const registeredIDs = {
   gradientSubtract: 'gradientSubtract',
   'advection - velocity': 'advection - velocity',
   'advection - dye': 'advection - dye',
+  display: 'display',
   cube: 'cube'
 }
 
@@ -111,23 +112,23 @@ export function renderingPipeline () {
   })
 
   step({
+    material: 'divergence',
+    textureID: 'divergence',
+    fun: (material, textures) => {
+      material.uniforms.sVelocity.value = textures.velocity.currentTexture.texture
+      material.uniforms.uDensity.value = config.density
+    }
+  })
+
+  step({
     material: 'vorticity',
-    textureID: 'vorticity',
+    textureID: 'velocity',
     fun: (material, textures) => {
       material.uniforms.sVelocity.value = textures.velocity.currentTexture.texture
       material.uniforms.sCurl.value = textures.curl.currentTexture.texture
       material.uniforms.uDensity.value = config.density
       material.uniforms.uCurl.value = config.curl
       material.uniforms.uDt.value = time
-    }
-  })
-
-  step({
-    material: 'divergence',
-    textureID: 'divergence',
-    fun: (material, textures) => {
-      material.uniforms.sVelocity.value = textures.velocity.currentTexture.texture
-      material.uniforms.uDensity.value = config.density
     }
   })
 
@@ -156,7 +157,7 @@ export function renderingPipeline () {
 
   step({
     material: 'gradientSubtract',
-    textureID: 'gradientSubtract',
+    textureID: 'velocity',
     fun: (material, textures) => {
       material.uniforms.sPressure.value = textures.pressure.currentTexture.texture
       material.uniforms.sVelocity.value = textures.velocity.currentTexture.texture
@@ -187,6 +188,15 @@ export function renderingPipeline () {
       material.uniforms.uDensity.value = config.density
       material.uniforms.uDt.value = time
       material.uniforms.uDissipation.value = config.densityDissipation
+    }
+  })
+
+  step({
+    material: 'display',
+    textureID: 1,
+    fun: (material, textures) => {
+      material.uniforms.sTexture.value = textures.dye.currentTexture.texture
+      material.uniforms.uDensity.value = config.density
     }
   })
 

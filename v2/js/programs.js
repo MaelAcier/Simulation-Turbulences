@@ -111,6 +111,15 @@ export const programs = {
     fragmentShader: 'advection.fs'
   },
 
+  display: {
+    uniforms: {
+      sTexture: { value: new THREE.Texture() },
+      uDensity: { value: 0.0 }
+    },
+    vertexShader: 'identity.vs',
+    fragmentShader: 'display.fs'
+  },
+
   cube: {
     uniforms: {
       sTexture: { value: new THREE.Texture() },

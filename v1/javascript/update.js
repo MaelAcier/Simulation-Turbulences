@@ -52,6 +52,11 @@ function step (webGLContext, dt) {
   gl.uniform1i(programs.curl.uniforms.uVelocity, buffers.velocity.read.attach(0))
   blit(gl, buffers.curl.fbo)
 
+  programs.divergence.bind()
+  gl.uniform2f(programs.divergence.uniforms.texelSize, buffers.velocity.texelSizeX, buffers.velocity.texelSizeY)
+  gl.uniform1i(programs.divergence.uniforms.uVelocity, buffers.velocity.read.attach(0))
+  blit(gl, buffers.divergence.fbo)
+
   programs.vorticity.bind()
   gl.uniform2f(programs.vorticity.uniforms.texelSize, buffers.velocity.texelSizeX, buffers.velocity.texelSizeY)
   gl.uniform1i(programs.vorticity.uniforms.uVelocity, buffers.velocity.read.attach(0))
@@ -60,11 +65,6 @@ function step (webGLContext, dt) {
   gl.uniform1f(programs.vorticity.uniforms.dt, dt)
   blit(gl, buffers.velocity.write.fbo)
   buffers.velocity.swap()
-
-  programs.divergence.bind()
-  gl.uniform2f(programs.divergence.uniforms.texelSize, buffers.velocity.texelSizeX, buffers.velocity.texelSizeY)
-  gl.uniform1i(programs.divergence.uniforms.uVelocity, buffers.velocity.read.attach(0))
-  blit(gl, buffers.divergence.fbo)
 
   programs.clear.bind()
   gl.uniform1i(programs.clear.uniforms.uTexture, buffers.pressure.read.attach(0))
