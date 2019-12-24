@@ -58,7 +58,6 @@ export function step ({ material, textureID, fun, id = material }) {
 
 export const textures = {
   1: new Texture(),
-  2: new Texture(),
   dye: new Texture(),
   velocity: new Texture(),
   divergence: new Texture(),
@@ -84,8 +83,8 @@ export const registeredIDs = {
   cube: 'cube'
 }
 
-let time = 0
-/* let lastUpdateTime = Date.now()
+// let time = 0
+let lastUpdateTime = Date.now()
 
 function calcDeltaTime () {
   const now = Date.now()
@@ -93,121 +92,119 @@ function calcDeltaTime () {
   dt = Math.min(dt, 0.016666)
   lastUpdateTime = now
   return dt
-} */
+}
 
 export function renderingPipeline () {
-  // const dt = calcDeltaTime()
+  const dt = calcDeltaTime()
 
   if (!config.pause) {
-    time += 0.005
-  }
-
-  step({
-    material: 'curl',
-    textureID: 'curl',
-    fun: (material, textures) => {
-      material.uniforms.sVelocity.value = textures.velocity.currentTexture.texture
-      material.uniforms.uDensity.value = config.density
-    }
-  })
-
-  step({
-    material: 'divergence',
-    textureID: 'divergence',
-    fun: (material, textures) => {
-      material.uniforms.sVelocity.value = textures.velocity.currentTexture.texture
-      material.uniforms.uDensity.value = config.density
-    }
-  })
-
-  step({
-    material: 'vorticity',
-    textureID: 'velocity',
-    fun: (material, textures) => {
-      material.uniforms.sVelocity.value = textures.velocity.currentTexture.texture
-      material.uniforms.sCurl.value = textures.curl.currentTexture.texture
-      material.uniforms.uDensity.value = config.density
-      material.uniforms.uCurl.value = config.curl
-      material.uniforms.uDt.value = time
-    }
-  })
-
-  step({
-    material: 'clear',
-    textureID: 'pressure',
-    fun: (material, textures) => {
-      material.uniforms.sPressure.value = textures.pressure.currentTexture.texture
-      material.uniforms.uDensity.value = config.density
-      material.uniforms.uPressure.value = config.pressure
-    }
-  })
-
-  for (let i = 0; i < config.pressureIterations; i++) {
     step({
-      material: 'pressure',
+      material: 'curl',
+      textureID: 'curl',
+      fun: (material, textures) => {
+        material.uniforms.sVelocity.value = textures.velocity.currentTexture.texture
+        material.uniforms.uDensity.value = config.density
+      }
+    })
+
+    step({
+      material: 'divergence',
+      textureID: 'divergence',
+      fun: (material, textures) => {
+        material.uniforms.sVelocity.value = textures.velocity.currentTexture.texture
+        material.uniforms.uDensity.value = config.density
+      }
+    })
+
+    step({
+      material: 'vorticity',
+      textureID: 'velocity',
+      fun: (material, textures) => {
+        material.uniforms.sVelocity.value = textures.velocity.currentTexture.texture
+        material.uniforms.sCurl.value = textures.curl.currentTexture.texture
+        material.uniforms.uDensity.value = config.density
+        material.uniforms.uCurl.value = config.curl
+        material.uniforms.uDt.value = dt
+      }
+    })
+
+    step({
+      material: 'clear',
       textureID: 'pressure',
-      id: i === config.pressureIterations - 1 ? 'pressure' : '',
       fun: (material, textures) => {
         material.uniforms.sPressure.value = textures.pressure.currentTexture.texture
-        material.uniforms.sDivergence.value = textures.divergence.currentTexture.texture
+        material.uniforms.uDensity.value = config.density
+        material.uniforms.uPressure.value = config.pressure
+      }
+    })
+
+    for (let i = 0; i < config.pressureIterations; i++) {
+      step({
+        material: 'pressure',
+        textureID: 'pressure',
+        id: i === config.pressureIterations - 1 ? 'pressure' : '',
+        fun: (material, textures) => {
+          material.uniforms.sPressure.value = textures.pressure.currentTexture.texture
+          material.uniforms.sDivergence.value = textures.divergence.currentTexture.texture
+          material.uniforms.uDensity.value = config.density
+        }
+      })
+    }
+
+    step({
+      material: 'gradientSubtract',
+      textureID: 'velocity',
+      fun: (material, textures) => {
+        material.uniforms.sPressure.value = textures.pressure.currentTexture.texture
+        material.uniforms.sVelocity.value = textures.velocity.currentTexture.texture
+        material.uniforms.uDensity.value = config.density
+      }
+    })
+
+    step({
+      material: 'advection',
+      textureID: 'velocity',
+      id: 'advection - velocity',
+      fun: (material, textures) => {
+        material.uniforms.sVelocity.value = textures.velocity.currentTexture.texture
+        material.uniforms.sSource.value = textures.velocity.currentTexture.texture
+        material.uniforms.uDensity.value = config.density
+        material.uniforms.uDt.value = dt
+        material.uniforms.uDissipation.value = config.velocityDissipation
+      }
+    })
+
+    step({
+      material: 'advection',
+      textureID: 'dye',
+      id: 'advection - dye',
+      fun: (material, textures) => {
+        material.uniforms.sVelocity.value = textures.velocity.currentTexture.texture
+        material.uniforms.sSource.value = textures.dye.currentTexture.texture
+        material.uniforms.uDensity.value = config.density
+        material.uniforms.uDt.value = dt
+        material.uniforms.uDissipation.value = config.densityDissipation
+      }
+    })
+
+    step({
+      material: 'display',
+      textureID: 1,
+      fun: (material, textures) => {
+        material.uniforms.sTexture.value = textures.dye.currentTexture.texture
         material.uniforms.uDensity.value = config.density
       }
     })
   }
 
-  step({
-    material: 'gradientSubtract',
-    textureID: 'velocity',
-    fun: (material, textures) => {
-      material.uniforms.sPressure.value = textures.pressure.currentTexture.texture
-      material.uniforms.sVelocity.value = textures.velocity.currentTexture.texture
-      material.uniforms.uDensity.value = config.density
-    }
-  })
-
-  step({
-    material: 'advection',
-    textureID: 'velocity',
-    id: 'advection - velocity',
-    fun: (material, textures) => {
-      material.uniforms.sVelocity.value = textures.velocity.currentTexture.texture
-      material.uniforms.sSource.value = textures.velocity.currentTexture.texture
-      material.uniforms.uDensity.value = config.density
-      material.uniforms.uDt.value = time
-      material.uniforms.uDissipation.value = config.velocityDissipation
-    }
-  })
-
-  step({
-    material: 'advection',
-    textureID: 'dye',
-    id: 'advection - dye',
-    fun: (material, textures) => {
-      material.uniforms.sVelocity.value = textures.velocity.currentTexture.texture
-      material.uniforms.sSource.value = textures.dye.currentTexture.texture
-      material.uniforms.uDensity.value = config.density
-      material.uniforms.uDt.value = time
-      material.uniforms.uDissipation.value = config.densityDissipation
-    }
-  })
-
-  step({
-    material: 'display',
-    textureID: 1,
-    fun: (material, textures) => {
-      material.uniforms.sTexture.value = textures.dye.currentTexture.texture
-      material.uniforms.uDensity.value = config.density
-    }
-  })
-
-  step({
+  /*  step({
     material: 'sin',
     textureID: 1,
     fun: (material) => {
       material.uniforms.uDensity.value = config.density
       material.uniforms.uTime.value = time
     }
-  })
+  }) */
 
   step({
     material: 'cube',

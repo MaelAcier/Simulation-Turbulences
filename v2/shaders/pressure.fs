@@ -24,7 +24,6 @@ void main () {
     float Y_ = read(sPressure, vY_).x;
     float Z  = read(sPressure, vZ ).x;
     float Z_ = read(sPressure, vZ_).x;
-    float C  = read(sPressure, vTranslate).x;
 
     float divergence = read(sDivergence, vTranslate).x;
     float pressure = (X + X_ + Y + Y_ + Z + Z_ - divergence) * 0.25;

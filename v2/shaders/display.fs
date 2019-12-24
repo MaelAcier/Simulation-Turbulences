@@ -13,6 +13,6 @@ vec4 read(sampler2D texture, vec3 translate) {
 void main () {
     vec3 c = read(sTexture, vTranslate).rgb;
 
-    float a = max(c.r, max(c.g, c.b));
+    float a = max(c.r, max(c.g, c.b)) * 20.;
     gl_FragColor = vec4(c, a);
 }
