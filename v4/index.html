@@ -11,30 +11,22 @@
             precision highp float;
             uniform mat4 modelViewMatrix;
             uniform mat4 projectionMatrix;
-            uniform float time;
 
             attribute vec3 position;
-            attribute vec2 uv;
     
-            varying vec2 vUv;
             varying vec3 vPosition;
-            varying float vScale;
     
             void main() {
-                vec3 trTime = vec3(position.x + time, position.y + time, position.z + time);
-                float scale =  sin( trTime.x * 2.1 ) + sin( trTime.y * 3.2 ) + sin( trTime.z * 4.3 );
-                vScale = scale;
                 vPosition = position;
-                vUv = uv;
                 gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
             }
         </script>
         <script id="fshader" type="x-shader/x-fragment">
             precision highp float;
+
+            uniform float time;
     
-            varying vec2 vUv;
             varying vec3 vPosition;
-            varying float vScale;
     
             // HSL to RGB Convertion helpers
             vec3 HUEtoRGB(float H){
@@ -52,10 +44,13 @@
             }
     
             void main() {
-                if (vPosition.x > 1.3) {
+                vec3 trTime = vec3(vPosition.x + time, vPosition.y + time, vPosition.z + time);
+                float color = sin( trTime.x * 2.1 ) + sin( trTime.y * 3.2 ) + sin( trTime.z * 4.3 );
+
+                /*if (sqrt(vPosition.x * vPosition.x + vPosition.y * vPosition.y) > 1.) {
                     discard;
-                }
-                gl_FragColor = vec4( HSLtoRGB(vec3(vScale/5.0, 1.0, 0.5)), 1. );
+                }*/
+                gl_FragColor = vec4( HSLtoRGB(vec3(color/5.0, 1.0, 0.5)), 1. );
             }
         </script>
 		<script type="module" src="main.js"></script>
