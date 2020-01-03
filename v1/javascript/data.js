@@ -35,7 +35,7 @@ export const config = {
   BLOOM_INTENSITY: 0.8,
   BLOOM_THRESHOLD: 0.6,
   BLOOM_SOFT_KNEE: 0.7,
-  SUNRAYS: true,
+  SUNRAYS: false,
   SUNRAYS_RESOLUTION: 196,
   SUNRAYS_WEIGHT: 1.0
 }

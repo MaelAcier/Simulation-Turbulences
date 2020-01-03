@@ -24,13 +24,13 @@ vec4 bilerp (sampler2D sam, vec2 uv, vec2 tsize) {
 }
 
 void main () {
-#ifdef MANUAL_FILTERING
+/* #ifdef MANUAL_FILTERING
     vec2 coord = vUv - dt * bilerp(uVelocity, vUv, texelSize).xy * texelSize;
     vec4 result = bilerp(uSource, coord, dyeTexelSize);
-#else
+#else */
     vec2 coord = vUv - dt * texture2D(uVelocity, vUv).xy * texelSize;
     vec4 result = texture2D(uSource, coord);
-#endif
+// #endif
     float decay = 1.0 + dissipation * dt;
     gl_FragColor = result / decay;
 }

@@ -18,6 +18,8 @@ const canvas = document.getElementById('glCanvas')
 const webGLContext = getWebGLContext(canvas)
 const gl = webGLContext.gl
 
+console.log(gl.MAX_SAMPLES)
+
 gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer())
 gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, -1, 1, 1, 1, 1, -1]), gl.STATIC_DRAW)
 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer())

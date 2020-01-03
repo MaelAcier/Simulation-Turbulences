@@ -21,11 +21,11 @@ export function drawCheckerboard (webGLContext, fbo) {
 
 export function drawDisplay (gl, config, fbo, width, height) {
   displayMaterial.bind()
-  if (config.SHADING) {
+  /* if (config.SHADING) {
     gl.uniform2f(displayMaterial.uniforms.texelSize, 1.0 / width, 1.0 / height)
-  }
+  } */
   gl.uniform1i(displayMaterial.uniforms.uTexture, buffers.dye.read.attach(0))
-  if (config.BLOOM) {
+  /* if (config.BLOOM) {
     ditheringTexture = ditheringTexture || createTextureAsync(gl, 'LDR_LLL1_0.png')
     gl.uniform1i(displayMaterial.uniforms.uBloom, buffers.bloom.attach(1))
     gl.uniform1i(displayMaterial.uniforms.uDithering, ditheringTexture.attach(2))
@@ -34,7 +34,7 @@ export function drawDisplay (gl, config, fbo, width, height) {
   }
   if (config.SUNRAYS) {
     gl.uniform1i(displayMaterial.uniforms.uSunrays, buffers.sunrays.attach(3))
-  }
+  } */
   blit(gl, fbo)
 }
 

@@ -5,20 +5,20 @@ import blit from './blit.js'
 
 export default function render (webGLContext, config, target) {
   const gl = webGLContext.gl
-  if (config.BLOOM) {
+  /* if (config.BLOOM) {
     applyBloom(gl, config, buffers.dye.read, buffers.bloom)
   }
   if (config.SUNRAYS) {
     applySunrays(gl, config, buffers.dye.read, buffers.dye.write, buffers.sunrays)
     blur(gl, buffers.sunrays, buffers.sunraysTemp, 1)
-  }
+  } */
 
-  if (target == null || !config.TRANSPARENT) {
+  /* if (target == null || !config.TRANSPARENT) {
     gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA)
     gl.enable(gl.BLEND)
   } else {
     gl.disable(gl.BLEND)
-  }
+  } */
 
   const width = target == null ? gl.drawingBufferWidth : target.width
   const height = target == null ? gl.drawingBufferHeight : target.height
@@ -28,9 +28,9 @@ export default function render (webGLContext, config, target) {
   if (!config.TRANSPARENT) {
     drawColor(gl, fbo, normalizeColor(config.BACK_COLOR))
   }
-  if (target == null && config.TRANSPARENT) {
+  /* if (target == null && config.TRANSPARENT) {
     drawCheckerboard(webGLContext, fbo)
-  }
+  } */
   drawDisplay(gl, config, fbo, width, height)
 }
 
