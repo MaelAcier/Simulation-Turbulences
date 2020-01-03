@@ -6,7 +6,6 @@ import { config, cameras, scene, renderer, controls } from './data.js'
 export class Texture {
   constructor (size = config.density) {
     this.resize(size)
-    // console.log(this.currentTexture.texture.image)
   }
 
   resize (size) {
@@ -18,6 +17,36 @@ export class Texture {
     const buffer = this.oldTexture
     this.oldTexture = this.currentTexture
     this.currentTexture = buffer
+  }
+}
+
+class Buffer {
+  constructor (size = config.density) {
+    this.resize(size)
+  }
+
+  resize (size) {
+    this.oldTextures = Array.from(Array(size), () => new THREE.WebGLRenderTarget(size, size, { type: THREE.FloatType }))
+    this.currentTextures = Array.from(Array(size), () => new THREE.WebGLRenderTarget(size, size, { type: THREE.FloatType }))
+    this.size = size
+  }
+
+  swap () {
+    const temp = this.oldTextures
+    this.oldTextures = this.currentTextures
+    this.currentTextures = temp
+  }
+
+  toTexture2dArray () {
+    const pixelBuffers = Array.from(Array(this.size), () => new Float32Array(this.size ** 2 * 4))
+    for (let i = 0; i < this.size; i++) {
+      renderer.readRenderTargetPixels(this.currentTextures[i], 0, 0, 20 ** 2, 20, pixelBuffers[i])
+    }
+    const array = new Float32Array(0).concat(...pixelBuffers)
+    const texture = new THREE.DataTexture2DArray(array, this.size, this.size, this.size)
+    texture.format = THREE.RGBAFormat
+    texture.type = THREE.FloatType
+    return texture
   }
 }
 
@@ -51,13 +80,6 @@ export function step ({ material, textureID, fun, id = material }) {
       renderer.setRenderTarget(textures[textureID].oldTexture)
     }
     renderer.render(scene, cameras.texture)
-  }
-
-  if (config.textureOutput) {
-    var pixelBuffer = new Float32Array()
-    renderer.readRenderTargetPixels(textures[1].oldTexture, 0, 0, 2, 2, pixelBuffer)
-    console.log(pixelBuffer)
-    config.textureOutput = false
   }
 
   materials[material].visible = false
@@ -105,8 +127,8 @@ function calcDeltaTime () {
 export function renderingPipeline () {
   const dt = calcDeltaTime()
 
-  /* if (!config.pause) {
-      step({
+  if (!config.pause) {
+    step({
       material: 'curl',
       textureID: 'curl',
       fun: (material, textures) => {
@@ -203,18 +225,16 @@ export function renderingPipeline () {
         material.uniforms.uDensity.value = config.density
       }
     })
-  } */
+  }
 
-  var time = performance.now() * 0.0005
-
-  step({
+  /*  step({
     material: 'sin',
     textureID: 1,
     fun: (material) => {
       material.uniforms.uDensity.value = config.density
       material.uniforms.uTime.value = time
     }
-  })
+  }) */
 
   step({
     material: 'cube',

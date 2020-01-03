@@ -1,8 +1,7 @@
 import { GUI } from '../lib/dat.gui.module.js'
 
-import { config, cameras, objects } from './data.js'
+import { config, cameras, objects, scene } from './data.js'
 import { loadMeshes } from './meshes.js'
-import { newGeometry } from './geometry.js'
 import { materials } from './materials.js'
 import { textures, registeredIDs } from './render.js'
 import { multipleSplats } from './splats.js'
@@ -10,7 +9,7 @@ import { multipleSplats } from './splats.js'
 export function setupGUI (scene) {
   const gui = new GUI({ width: 350 })
 
-  gui.add(config, 'distribution', { Grille: 'grid', Crystal: 'crystal', Aléatoire: 'random' }).name('Répartition').onChange(() => loadMeshes(scene, newGeometry(config)))
+  /* gui.add(config, 'distribution', { Grille: 'grid', Crystal: 'crystal', Aléatoire: 'random' }).name('Répartition').onChange(() => loadMeshes(scene, newGeometry(config)))
   gui.add(config, 'density', 2, 128).step(1).name('Densité').onChange((value) => {
     loadMeshes(scene, newGeometry(config))
     for (const key in textures) {
@@ -57,8 +56,6 @@ export function setupGUI (scene) {
     cameras.orthographic.position[config.cameraClipAxis] = value
   })
 
-  console.log()
-
   gui.add(config, 'renderTarget', registeredIDs).name('Rendu').listen()
 
   gui.add(config, 'transparent').name('Transparence').onChange((value) => {
@@ -72,10 +69,5 @@ export function setupGUI (scene) {
     fun: () => {
       multipleSplats(parseInt(Math.random() * 2) + 5)
     }
-  }, 'fun').name('Splash')
-  gui.add({
-    fun: () => {
-      config.textureOutput = true
-    }
-  }, 'fun').name('texture')
+  }, 'fun').name('Splash') */
 }

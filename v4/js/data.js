@@ -7,7 +7,7 @@ export const config = {
   cameraClipOffset: 0,
   clipping: false,
   distance: 1100,
-  density: 40,
+  density: 64,
   distribution: 'grid',
   transparent: false,
   pause: false,
@@ -18,12 +18,11 @@ export const config = {
   pressure: 0.8,
   pressureIterations: 3,
   velocityDissipation: 2.0,
-  densityDissipation: 1,
-  textureOutput: false
+  densityDissipation: 1
 }
 
 export const cameras = {
-  perspective: new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 50000),
+  perspective: new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 50000),
   orthographic: new THREE.OrthographicCamera(500 * window.innerWidth / window.innerHeight / -2, 500 * window.innerWidth / window.innerHeight / 2, 500, -500, 0, 50),
   texture: new THREE.OrthographicCamera(-500, 500, 500, -500, 0, 1)
 }
@@ -33,7 +32,7 @@ export const objects = {
 }
 
 export const scene = new THREE.Scene()
-export const renderer = new THREE.WebGLRenderer()
+export const renderer = new THREE.WebGLRenderer({ antialias: true })
 export const controls = {
   perspective: new OrbitControls(cameras.perspective, renderer.domElement),
   orthographic: new OrbitControls(cameras.orthographic, renderer.domElement),

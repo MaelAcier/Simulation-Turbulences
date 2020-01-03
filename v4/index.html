@@ -1,58 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
-	<head>
-		<title>v4</title>
+<html lang="fr">
+
+    <head>
 		<meta charset="utf-8">
+		<meta http-equiv="Content-Type" content="text/html">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-		<link type="text/css" rel="stylesheet" href="./css/main.css">
-	</head>
-	<body>
-        <script id="vshader" type="x-shader/x-vertex">
-            precision highp float;
-            uniform mat4 modelViewMatrix;
-            uniform mat4 projectionMatrix;
 
-            attribute vec3 position;
-    
-            varying vec3 vPosition;
-    
-            void main() {
-                vPosition = position;
-                gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
-            }
-        </script>
-        <script id="fshader" type="x-shader/x-fragment">
-            precision highp float;
+		<title>TIPE Fluide & Turbulences</title>
+		<meta name="description" content="Simulateur de turbulences">
+		
+		<link rel="stylesheet" href="css/main.css" type="text/css">
+		<link rel="stylesheet" href="css/dat-gui-theme.css" type="text/css">
 
-            uniform float time;
-    
-            varying vec3 vPosition;
-    
-            // HSL to RGB Convertion helpers
-            vec3 HUEtoRGB(float H){
-                H = mod(H,1.0);
-                float R = abs(H * 6.0 - 3.0) - 1.0;
-                float G = 2.0 - abs(H * 6.0 - 2.0);
-                float B = 2.0 - abs(H * 6.0 - 4.0);
-                return clamp(vec3(R,G,B),0.0,1.0);
-            }
-    
-            vec3 HSLtoRGB(vec3 HSL){
-                vec3 RGB = HUEtoRGB(HSL.x);
-                float C = (1.0 - abs(2.0 * HSL.z - 1.0)) * HSL.y;
-                return (RGB - 0.5) * C + HSL.z;
-            }
-    
-            void main() {
-                vec3 trTime = vec3(vPosition.x + time, vPosition.y + time, vPosition.z + time);
-                float color = sin( trTime.x * 2.1 ) + sin( trTime.y * 3.2 ) + sin( trTime.z * 4.3 );
+    </head>
 
-                /*if (sqrt(vPosition.x * vPosition.x + vPosition.y * vPosition.y) > 1.) {
-                    discard;
-                }*/
-                gl_FragColor = vec4( HSLtoRGB(vec3(color/5.0, 1.0, 0.5)), 1. );
-            }
-        </script>
-		<script type="module" src="main.js"></script>
-	</body>
+    <body>
+
+        <div id="info">
+            TIPE Fluide & Turbulences
+            <div id="notSupported" style="display:none">Votre carte graphique et votre navigateur ne supportent pas l'instanciation matérielle.</div>
+        </div>
+
+    	<script type="module" src="main.js"></script>
+
+    </body>
+
 </html>

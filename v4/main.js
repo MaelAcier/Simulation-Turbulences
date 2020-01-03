@@ -1,76 +1,45 @@
 import * as THREE from './lib/three.module.js'
 
 import Stats from './lib/stats.module.js'
-import { GUI } from './lib/dat.gui.module.js'
-import { OrbitControls } from './lib/OrbitControls.js'
+
+import { config, objects, cameras, scene, renderer, controls } from './js/data.js'
+import { loadMaterials, materials } from './js/materials.js'
+import { setupGUI } from './js/gui.js'
+import { loadMeshes } from './js/meshes.js'
 
 /* global requestAnimationFrame, performance */
 
-var camera, scene, renderer, stats
+const stats = new Stats()
 
-var material
-var amount = 40
+loadMaterials(() => {
+  init()
+  animate()
+})
 
-init()
-animate()
-
-function init() {
-  camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100)
-  camera.position.set(2, 2, 2)
-  camera.lookAt(0, 0, 0)
-
-  scene = new THREE.Scene()
-
-  material = new THREE.RawShaderMaterial({
-    uniforms: {
-      time: { value: 0.0 }
-    },
-    vertexShader: document.getElementById('vshader').textContent,
-    fragmentShader: document.getElementById('fshader').textContent,
-    depthTest: true,
-    depthWrite: true,
-    side: THREE.DoubleSide
-  })
-
-  for (let x = 0; x < amount; x++) {
-    const offset = x / amount
-    const geometry = new THREE.BufferGeometry()
-    var vertices = new Float32Array([
-      0, 0, offset,
-      1, 0, offset,
-      1, 1, offset,
-
-      1, 1, offset,
-      0, 1, offset,
-      0, 0, offset
-    ])
-    geometry.setAttribute('position', new THREE.BufferAttribute( vertices, 3))
-    const mesh = new THREE.Mesh(geometry, material)
-    mesh.position.set(-0.5, -0.5, -0.5)
-    scene.add(mesh)
+function init () {
+  if (renderer.extensions.get('ANGLE_instanced_arrays') === null) {
+    document.getElementById('notSupported').style.display = ''
+    return false
   }
 
-  //
+  cameras.perspective.position.set(2, 2, 2)
+  cameras.perspective.lookAt(0, 0, 0)
 
-  var gui = new GUI()
-  // gui.add(mesh, 'count', 0, amount)
+  loadMeshes()
+  setupGUI(scene)
 
-  renderer = new THREE.WebGLRenderer({ antialias: true })
   renderer.setPixelRatio(window.devicePixelRatio)
   renderer.setSize(window.innerWidth, window.innerHeight)
   document.body.appendChild(renderer.domElement)
 
-  new OrbitControls(camera, renderer.domElement)
-
-  stats = new Stats()
   document.body.appendChild(stats.dom)
 
   window.addEventListener('resize', onWindowResize, false)
 }
 
 function onWindowResize () {
-  camera.aspect = window.innerWidth / window.innerHeight
-  camera.updateProjectionMatrix()
+  cameras.perspective.aspect = window.innerWidth / window.innerHeight
+  cameras.perspective.updateProjectionMatrix()
 
   renderer.setSize(window.innerWidth, window.innerHeight)
 }
@@ -83,8 +52,9 @@ function animate () {
 function render () {
   var time = performance.now() * 0.0005
 
-  material.uniforms.time.value = time
+  materials.planeArray.uniforms.uTime.value = time
+  materials.sin.uniforms.uTime.value = time
 
-  renderer.render(scene, camera)
+  renderer.render(scene, cameras.perspective)
   stats.update()
 }
