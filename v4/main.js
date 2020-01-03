@@ -16,7 +16,7 @@ animate()
 
 function init() {
   camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100)
-  camera.position.set(1, 1, 1)
+  camera.position.set(2, 2, 2)
   camera.lookAt(0, 0, 0)
 
   scene = new THREE.Scene()
@@ -33,19 +33,20 @@ function init() {
   })
 
   for (let x = 0; x < amount; x++) {
-    const offset = x / amount - 0.5
+    const offset = x / amount
     const geometry = new THREE.BufferGeometry()
     var vertices = new Float32Array([
-      -0.5, -0.5, offset,
-      0.5, -0.5, offset,
-      0.5, 0.5, offset,
+      0, 0, offset,
+      1, 0, offset,
+      1, 1, offset,
 
-      0.5, 0.5, offset,
-      -0.5, 0.5, offset,
-      -0.5, -0.5, offset
+      1, 1, offset,
+      0, 1, offset,
+      0, 0, offset
     ])
     geometry.setAttribute('position', new THREE.BufferAttribute( vertices, 3))
     const mesh = new THREE.Mesh(geometry, material)
+    mesh.position.set(-0.5, -0.5, -0.5)
     scene.add(mesh)
   }
 
