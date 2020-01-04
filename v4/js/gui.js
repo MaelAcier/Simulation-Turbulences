@@ -1,23 +1,24 @@
 import { GUI } from '../lib/dat.gui.module.js'
 
-import { config, cameras, objects, scene } from './data.js'
+import { config, cameras, objects/* , scene */ } from './data.js'
 import { loadMeshes } from './meshes.js'
-import { materials } from './materials.js'
-import { textures, registeredIDs } from './render.js'
-import { multipleSplats } from './splats.js'
+// import { materials } from './materials.js'
+import { buffers, registeredIDs } from './render.js'
+// import { multipleSplats } from './splats.js'
 
-export function setupGUI (scene) {
+export function setupGUI () {
   const gui = new GUI({ width: 350 })
 
-  /* gui.add(config, 'distribution', { Grille: 'grid', Crystal: 'crystal', Aléatoire: 'random' }).name('Répartition').onChange(() => loadMeshes(scene, newGeometry(config)))
+  // gui.add(config, 'distribution', { Grille: 'grid', Crystal: 'crystal', Aléatoire: 'random' }).name('Répartition').onChange(() => loadMeshes(scene, newGeometry(config)))
   gui.add(config, 'density', 2, 128).step(1).name('Densité').onChange((value) => {
-    loadMeshes(scene, newGeometry(config))
-    for (const key in textures) {
-      const texture = textures[key]
-      texture.resize(value)
+    loadMeshes()
+    for (const key in buffers) {
+      const buffer = buffers[key]
+      buffer.resize(value)
     }
   })
-  gui.add(config, 'curl', 0, 10000).name('Tourbillons')
+
+  // gui.add(config, 'curl', 0, 10000).name('Tourbillons')
 
   const clipFolder = gui.addFolder('Section plan')
   clipFolder.add(config, 'clipping').name('Activé').onChange((value) => {
@@ -58,14 +59,14 @@ export function setupGUI (scene) {
 
   gui.add(config, 'renderTarget', registeredIDs).name('Rendu').listen()
 
-  gui.add(config, 'transparent').name('Transparence').onChange((value) => {
+  /* gui.add(config, 'transparent').name('Transparence').onChange((value) => {
     materials.cube.transparent = value
-  })
+  }) */
 
   gui.add(config, 'pause').name('Pause')
   gui.add(config, 'autoRotation').name('Rotation automatique')
 
-  gui.add({
+  /* gui.add({
     fun: () => {
       multipleSplats(parseInt(Math.random() * 2) + 5)
     }

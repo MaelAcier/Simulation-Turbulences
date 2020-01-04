@@ -1,21 +1,21 @@
-// import * as THREE from '../lib/three.module.js'
+import * as THREE from '../lib/three.module.js'
 
 export const programs = {
-  planeArray: {
+  sin: {
     uniforms: {
-      uDensity: { value: 0.0 },
-      uTime: { value: 0.0 }
+      uTime: { value: 0.0 },
+      uZ: { value: 0.0 }
     },
     vertexShader: 'sin.vs',
     fragmentShader: 'sin.fs'
   },
-  sin: {
+
+  planeArray: {
     uniforms: {
-      uDensity: { value: 0.0 },
-      uTime: { value: 0.0 }
+      sBuffer: { value: new THREE.DataTexture2DArray() }
     },
-    vertexShader: 'sin.vs',
-    fragmentShader: 'sin.fs'
+    vertexShader: 'planeArray.vs',
+    fragmentShader: 'planeArray.fs'
   }
 
   /* test: {

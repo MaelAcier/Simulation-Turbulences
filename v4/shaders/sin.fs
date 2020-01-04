@@ -1,5 +1,6 @@
 precision highp float;
 
+uniform float uZ;
 uniform float uTime;
     
 varying vec3 vPosition;
@@ -20,11 +21,8 @@ vec3 HSLtoRGB(vec3 HSL){
 }
     
 void main() {
-    vec3 trTime = vec3(vPosition.x + uTime, vPosition.y + uTime, vPosition.z + uTime);
+    vec3 trTime = vec3(vPosition.x + uTime, vPosition.y + uTime, uZ + uTime);
     float color = sin( trTime.x * 2.1 ) + sin( trTime.y * 3.2 ) + sin( trTime.z * 4.3 );
 
-    /*if (sqrt(vPosition.x * vPosition.x + vPosition.y * vPosition.y) > 1.) {
-        discard;
-    }*/
     gl_FragColor = vec4( HSLtoRGB(vec3(color/5.0, 1.0, 0.5)), 1. );
 }

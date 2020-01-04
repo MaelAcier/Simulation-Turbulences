@@ -47,9 +47,9 @@ export function step ({ material, textureID, fun, id = material }) {
   } else {
     if (config.renderTarget === id) {
       renderer.setRenderTarget(null)
-    } else {
-      renderer.setRenderTarget(textures[textureID].oldTexture)
+      renderer.render(scene, cameras.texture)
     }
+    renderer.setRenderTarget(textures[textureID].oldTexture)
     renderer.render(scene, cameras.texture)
   }
 
@@ -105,7 +105,7 @@ function calcDeltaTime () {
 export function renderingPipeline () {
   const dt = calcDeltaTime()
 
-  /* if (!config.pause) {
+  if (!config.pause) {
       step({
       material: 'curl',
       textureID: 'curl',
@@ -203,18 +203,18 @@ export function renderingPipeline () {
         material.uniforms.uDensity.value = config.density
       }
     })
-  } */
+  }
 
-  var time = performance.now() * 0.0005
+  // var time = performance.now() * 0.0005
 
-  step({
+  /* step({
     material: 'sin',
     textureID: 1,
     fun: (material) => {
       material.uniforms.uDensity.value = config.density
       material.uniforms.uTime.value = time
     }
-  })
+  }) */
 
   step({
     material: 'cube',

@@ -40,13 +40,13 @@ export function loadMeshes () {
   const except = ['planeArray']
 
   for (const key in materials) {
-    if (!except.includes(key)) {
+    if (except.includes(key) === false) {
       const material = materials[key]
       if (meshes[key]) {
         scene.remove(meshes[key])
       }
       meshes[key] = new THREE.Mesh(geometry, material)
-      meshes[key].position.set(-1.5, -0.5, -0.5)
+      meshes[key].position.set(-0.5, -0.5, -0.5)
       scene.add(meshes[key])
     }
   }
