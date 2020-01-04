@@ -22,8 +22,8 @@ export const config = {
 
 export const cameras = {
   perspective: new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 50000),
-  orthographic: new THREE.OrthographicCamera(window.innerWidth / window.innerHeight / -2, window.innerWidth / window.innerHeight / 2, 1, -1, 0, 50),
-  texture: new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1)
+  orthographic: new THREE.OrthographicCamera(window.innerWidth / window.innerHeight / -2, window.innerWidth / window.innerHeight / 2, 1, -1, 0, 0.1),
+  texture: new THREE.OrthographicCamera(-0.5, 0.5, 0.5, -0.5, 0, 1)
 }
 
 export const objects = {
@@ -34,7 +34,7 @@ const canvas = document.createElement('canvas')
 const context = canvas.getContext('webgl2', { alpha: false, antialias: false })
 
 export const scene = new THREE.Scene()
-export const renderer = new THREE.WebGLRenderer({ context })
+export const renderer = new THREE.WebGLRenderer({ canvas, context })
 export const controls = {
   perspective: new OrbitControls(cameras.perspective, renderer.domElement),
   orthographic: new OrbitControls(cameras.orthographic, renderer.domElement),

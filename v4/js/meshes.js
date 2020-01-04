@@ -5,6 +5,9 @@ import { scene, config } from './data.js'
 export const meshes = {}
 
 export function loadMeshes () {
+  if (meshes.planeArray) {
+    scene.remove(meshes.planeArray)
+  }
   meshes.planeArray = new THREE.Group()
   for (let x = 0; x < config.density; x++) {
     const offset = x / config.density
@@ -37,17 +40,22 @@ export function loadMeshes () {
   ])
   geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3))
 
-  const except = ['planeArray']
+  const mesh = new THREE.Mesh(geometry, materials.sin)
+  mesh.position.set(-0.5, -0.5, -0.5)
+  scene.add(mesh)
+
+  /* const displayMaterials = ['planeArray']
 
   for (const key in materials) {
-    if (except.includes(key) === false) {
-      const material = materials[key]
-      if (meshes[key]) {
-        scene.remove(meshes[key])
-      }
-      meshes[key] = new THREE.Mesh(geometry, material)
-      meshes[key].position.set(-0.5, -0.5, -0.5)
-      scene.add(meshes[key])
+    if (displayMaterials.includes(key) === false) continue
+
+    const material = materials[key]
+    if (meshes[key]) {
+      scene.remove(meshes[key])
     }
-  }
+
+    meshes[key] = new THREE.Mesh(geometry, material)
+    meshes[key].position.set(-0.5, -0.5, -0.5)
+    scene.add(meshes[key])
+  } */
 }

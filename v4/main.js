@@ -17,9 +17,9 @@ loadMaterials(() => {
 })
 
 function init () {
-  if (WEBGL.isWebGL2Available() === false) {
+  /* if (WEBGL.isWebGL2Available() === false) {
     document.body.appendChild(WEBGL.getWebGL2ErrorMessage())
-  }
+  } */
 
   /* if (renderer.extensions.get('ANGLE_instanced_arrays') === null) {
     document.getElementById('notSupported').style.display = ''
@@ -52,9 +52,9 @@ function init () {
   loadMeshes()
   setupGUI(scene)
 
-  const gl = renderer.domElement.getContext('webgl') || renderer.domElement.getContext('experimental-webgl')
+  /* const gl = renderer.domElement.getContext('webgl') || renderer.domElement.getContext('experimental-webgl')
   gl.getExtension('WEBGL_color_buffer_float')
-  gl.getExtension('EXT_float_blend')
+  gl.getExtension('EXT_float_blend') */
 }
 
 function onWindowResize () {

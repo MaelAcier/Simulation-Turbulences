@@ -1,4 +1,9 @@
 import * as THREE from '../lib/three.module.js'
+import { config } from './data.js'
+
+const texture = new THREE.DataTexture2DArray(new Float32Array((config.density ** 2 * 4) * config.density), config.density, config.density, config.density)
+texture.format = THREE.RGBAFormat
+texture.type = THREE.FloatType
 
 export const programs = {
   sin: {
@@ -12,7 +17,8 @@ export const programs = {
 
   planeArray: {
     uniforms: {
-      sBuffer: { value: new THREE.DataTexture2DArray() }
+      uDensity: { value: 0 },
+      sBuffer: { value: texture }
     },
     vertexShader: 'planeArray.vs',
     fragmentShader: 'planeArray.fs'

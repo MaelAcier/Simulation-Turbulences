@@ -1,9 +1,13 @@
+#version 300 es
+
 precision highp float;
 
 uniform float uZ;
 uniform float uTime;
     
-varying vec3 vPosition;
+in vec3 vPosition;
+
+out vec4 out_FragColor;
     
 // HSL to RGB Convertion helpers
 vec3 HUEtoRGB(float H){
@@ -24,5 +28,5 @@ void main() {
     vec3 trTime = vec3(vPosition.x + uTime, vPosition.y + uTime, uZ + uTime);
     float color = sin( trTime.x * 2.1 ) + sin( trTime.y * 3.2 ) + sin( trTime.z * 4.3 );
 
-    gl_FragColor = vec4( HSLtoRGB(vec3(color/5.0, 1.0, 0.5)), 1. );
+    out_FragColor = vec4( HSLtoRGB(vec3(color/5.0, 1.0, 0.5)), 1. );
 }

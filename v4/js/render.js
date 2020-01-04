@@ -4,11 +4,11 @@ import { materials } from './materials.js'
 import { config, cameras, scene, renderer, controls } from './data.js'
 
 class Buffer {
-  constructor (size = config.density) {
+  constructor (size) {
     this.resize(size)
   }
 
-  resize (size) {
+  resize (size = config.density) {
     this.oldTextures = Array.from(Array(size), () => new THREE.WebGLRenderTarget(size, size, { type: THREE.FloatType }))
     this.currentTextures = Array.from(Array(size), () => new THREE.WebGLRenderTarget(size, size, { type: THREE.FloatType }))
     this.size = size
@@ -24,18 +24,16 @@ class Buffer {
     const planeSize = (this.size ** 2 * 4)
     const pixelBuffers = Array.from(Array(this.size), () => new Float32Array(planeSize))
     for (let i = 0; i < this.size; i++) {
-      renderer.readRenderTargetPixels(this.currentTextures[i], 0, 0, 20 ** 2, 20, pixelBuffers[i])
+      renderer.readRenderTargetPixels(this.currentTextures[i], 0, 0, this.size, this.size, pixelBuffers[i])
     }
-    // const array = new Float32Array(0).concat(...pixelBuffers)
     const array = new Float32Array(planeSize * this.size)
     for (let i = 0; i < this.size; i++) {
       array.set(pixelBuffers[i], i * planeSize)
     }
-    // console.log(array)
     const texture = new THREE.DataTexture2DArray(array, this.size, this.size, this.size)
     texture.format = THREE.RGBAFormat
     texture.type = THREE.FloatType
-    return texture
+    this.texture2dArray = texture
   }
 }
 
@@ -52,7 +50,7 @@ export function computeStep ({ material, bufferOutput, setup, id = material }) {
   for (let i = 0; i < config.density; i++) {
     materials[material].uniforms.uZ.value = i / config.density
 
-    if (config.renderTarget === id && i === 0) {
+    if (config.renderTarget === id && i === 5) {
       renderer.setRenderTarget(null)
       renderer.render(scene, cameras.texture)
     }
@@ -61,6 +59,7 @@ export function computeStep ({ material, bufferOutput, setup, id = material }) {
   }
 
   buffers[bufferOutput].swap()
+  buffers[bufferOutput].toTexture2dArray()
   materials[material].visible = false
 }
 
@@ -108,7 +107,7 @@ export function renderingPipeline () {
   // const dt = calcDeltaTime()
 
   if (!config.pause) {
-    time += 0.0005
+    time += 0.005
 
     computeStep({
       material: 'sin',
@@ -121,7 +120,8 @@ export function renderingPipeline () {
     displayStep({
       material: 'planeArray',
       setup: (material) => {
-        material.uniforms.sBuffer.value = buffers.display.toTexture2dArray()
+        material.uniforms.uDensity.value = config.density
+        material.uniforms.sBuffer.value = buffers.display.texture2dArray
       }
     })
   }
