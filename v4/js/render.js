@@ -20,20 +20,27 @@ class Buffer {
     this.currentTextures = temp
   }
 
-  toTexture2dArray () {
+  toTexture () {
     const planeSize = (this.size ** 2 * 4)
     const pixelBuffers = Array.from(Array(this.size), () => new Float32Array(planeSize))
     for (let i = 0; i < this.size; i++) {
       renderer.readRenderTargetPixels(this.currentTextures[i], 0, 0, this.size, this.size, pixelBuffers[i])
     }
-    const array = new Float32Array(planeSize * this.size)
+    const data = new Float32Array(planeSize * this.size)
     for (let i = 0; i < this.size; i++) {
-      array.set(pixelBuffers[i], i * planeSize)
+      data.set(pixelBuffers[i], i * planeSize)
     }
-    const texture = new THREE.DataTexture2DArray(array, this.size, this.size, this.size)
+    const texture = new THREE.DataTexture2DArray(data, this.size, this.size, this.size)
     texture.format = THREE.RGBAFormat
     texture.type = THREE.FloatType
     this.texture2dArray = texture
+
+    const texture3D = new THREE.DataTexture3D(data, this.size, this.size, this.size)
+    texture3D.format = THREE.RGBAFormat
+    texture3D.type = THREE.FloatType
+    texture3D.minFilter = texture3D.magFilter = THREE.LinearFilter
+    texture3D.unpackAlignment = 1
+    this.texture3d = texture3D
   }
 }
 
@@ -59,7 +66,7 @@ export function computeStep ({ material, bufferOutput, setup, id = material }) {
   }
 
   buffers[bufferOutput].swap()
-  buffers[bufferOutput].toTexture2dArray()
+  buffers[bufferOutput].toTexture()
   materials[material].visible = false
 }
 
@@ -88,7 +95,8 @@ export function displayStep ({ material, setup }) {
 
 export const registeredIDs = {
   sin: 'sin',
-  planeArray: 'planeArray'
+  planeArray: 'planeArray',
+  volume3D: 'volume3D'
 }
 
 // let lastUpdateTime = Date.now()
@@ -124,6 +132,14 @@ export function renderingPipeline () {
         material.uniforms.sBuffer.value = buffers.display.texture2dArray
       }
     })
+
+    /* displayStep({
+      material: 'volume3D',
+      setup: (material) => {
+        material.uniforms.u_size.value = new THREE.Vector3(config.density, config.density, config.density)
+        material.uniforms.u_data.value = buffers.display.texture3d
+      }
+    }) */
   }
 
   if (config.autoRotation) {

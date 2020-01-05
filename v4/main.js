@@ -6,6 +6,7 @@ import { loadMaterials } from './js/materials.js'
 import { loadMeshes } from './js/meshes.js'
 import { setupGUI } from './js/gui.js'
 import { renderingPipeline } from './js/render.js'
+// import {} from './3d.js'
 
 /* global requestAnimationFrame */
 

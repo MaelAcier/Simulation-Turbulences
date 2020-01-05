@@ -17,7 +17,7 @@ export function loadMaterials (callback) {
           fragmentShader,
           depthTest: true,
           depthWrite: true,
-          side: THREE.DoubleSide
+          side: program === 'volume3D' ? THREE.BackSide : THREE.DoubleSide
         })
         shaderLoaded++
         if (shaderLoaded === shaderCount) {

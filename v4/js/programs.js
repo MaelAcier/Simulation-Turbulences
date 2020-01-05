@@ -1,9 +1,15 @@
 import * as THREE from '../lib/three.module.js'
-import { config } from './data.js'
+import { config/* , cmtextures */ } from './data.js'
 
-const texture = new THREE.DataTexture2DArray(new Float32Array((config.density ** 2 * 4) * config.density), config.density, config.density, config.density)
+const texture = new THREE.DataTexture2DArray(new Float32Array(config.density ** 3 * 4), config.density, config.density, config.density)
 texture.format = THREE.RGBAFormat
 texture.type = THREE.FloatType
+
+/* const texture3D = new THREE.DataTexture3D(new Float32Array(config.density ** 3 * 4), config.density, config.density, config.density)
+texture3D.format = THREE.RGBAFormat
+texture3D.type = THREE.FloatType
+texture3D.minFilter = texture3D.magFilter = THREE.LinearFilter
+texture3D.unpackAlignment = 1 */
 
 export const programs = {
   sin: {
@@ -22,7 +28,20 @@ export const programs = {
     },
     vertexShader: 'planeArray.vs',
     fragmentShader: 'planeArray.fs'
-  }
+  }/* ,
+
+  volume3D: {
+    uniforms: {
+      u_data: { value: texture3D },
+      u_size: { value: new THREE.Vector3(config.density, config.density, config.density) },
+      u_clim: { value: new THREE.Vector2(0, 1) },
+      u_renderstyle: { value: 0 },
+      u_renderthreshold: { value: null },
+      u_cmdata: { value: cmtextures.viridis }
+    },
+    vertexShader: 'volume3D.vs',
+    fragmentShader: 'volume3D.fs'
+  } */
 
   /* test: {
     uniforms: {
