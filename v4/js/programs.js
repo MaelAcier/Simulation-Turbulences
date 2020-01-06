@@ -1,5 +1,5 @@
 import * as THREE from '../lib/three.module.js'
-import { config/* , cmtextures */ } from './data.js'
+import { config, cmtextures } from './data.js'
 
 const texture = new THREE.DataTexture2DArray(new Float32Array(config.density ** 3 * 4), config.density, config.density, config.density)
 texture.format = THREE.RGBAFormat
@@ -28,20 +28,20 @@ export const programs = {
     },
     vertexShader: 'planeArray.vs',
     fragmentShader: 'planeArray.fs'
-  }/* ,
+  },
 
   volume3D: {
     uniforms: {
-      u_data: { value: texture3D },
-      u_size: { value: new THREE.Vector3(config.density, config.density, config.density) },
+      u_size: { value: new THREE.Vector3(1, 1, 1) },
+      u_renderstyle: { value: 0 }, // MIP
+      u_renderthreshold: { value: 0.5 },
       u_clim: { value: new THREE.Vector2(0, 1) },
-      u_renderstyle: { value: 0 },
-      u_renderthreshold: { value: null },
+      u_data: { value: null },
       u_cmdata: { value: cmtextures.viridis }
     },
     vertexShader: 'volume3D.vs',
     fragmentShader: 'volume3D.fs'
-  } */
+  }
 
   /* test: {
     uniforms: {

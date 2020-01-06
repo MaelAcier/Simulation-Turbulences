@@ -70,7 +70,7 @@ export function computeStep ({ material, bufferOutput, setup, id = material }) {
   materials[material].visible = false
 }
 
-export function displayStep ({ material, setup }) {
+export function displayStep ({ material, camera, setup }) {
   materials[material].visible = true
 
   if (!config.pause) {
@@ -81,12 +81,12 @@ export function displayStep ({ material, setup }) {
     renderer.setRenderTarget(null)
     if (config.clipping) {
       renderer.setViewport(0, 0, window.innerWidth / 2, window.innerHeight)
-      renderer.render(scene, cameras.perspective)
+      renderer.render(scene, camera)
       renderer.setViewport(window.innerWidth / 2, 0, window.innerWidth / 2, window.innerHeight)
       renderer.render(scene, cameras.orthographic)
     } else {
       renderer.setViewport(0, 0, window.innerWidth, window.innerHeight)
-      renderer.render(scene, cameras.perspective)
+      renderer.render(scene, camera)
     }
   }
 
@@ -127,9 +127,19 @@ export function renderingPipeline () {
 
     displayStep({
       material: 'planeArray',
+      camera: cameras.perspective,
       setup: (material) => {
         material.uniforms.uDensity.value = config.density
         material.uniforms.sBuffer.value = buffers.display.texture2dArray
+      }
+    })
+
+    displayStep({
+      material: 'volume3D',
+      camera: cameras.orthographic3D,
+      setup: (material) => {
+        material.uniforms.u_data.value = buffers.display.texture3d
+        material.uniforms.u_size.value.set(config.density, config.density, config.density)
       }
     })
 

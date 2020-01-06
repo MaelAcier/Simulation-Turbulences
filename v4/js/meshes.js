@@ -54,16 +54,17 @@ export function loadMeshes () {
   meshes.planeArray.position.set(-0.5, -0.5, -0.5)
   scene.add(meshes.planeArray)
 
-  /* {
-    if (meshes.volume3D) {
-      scene.remove(meshes.volume3D)
-    }
-    const geometry = new THREE.BoxBufferGeometry(config.density, config.density, config.density)
-    geometry.translate(config.density / 2 - 0.5, config.density / 2 - 0.5, config.density / 2 - 0.5)
-    meshes.volume3D = new THREE.Mesh(geometry, materials.volume3D)
-    meshes.volume3D.scale.set(1 / config.density, 1 / config.density, 1 / config.density)
-    scene.add(meshes.volume3D)
-  } */
+  if (meshes.volume3D) {
+    scene.remove(meshes.volume3D)
+  }
+
+  const geometry = new THREE.BoxBufferGeometry(config.density, config.density, config.density)
+  geometry.translate(config.density / 2 - 0.5, config.density / 2 - 0.5, config.density / 2 - 0.5)
+
+  meshes.volume3D = new THREE.Mesh(geometry, materials.volume3D)
+  meshes.volume3D.scale.set(1 / config.density, 1 / config.density, 1 / config.density)
+  meshes.volume3D.position.set(-0.5, -0.5, -0.5)
+  scene.add(meshes.volume3D)
 }
 
 function material2D (key) {

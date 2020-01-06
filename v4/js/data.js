@@ -20,8 +20,17 @@ export const config = {
   densityDissipation: 1
 }
 
+export const cmtextures = {
+  viridis: new THREE.TextureLoader().load('./cm_viridis.png', () => {}),
+  gray: new THREE.TextureLoader().load('./cm_gray.png', () => {})
+}
+
+const h = 1
+var aspect = window.innerWidth / window.innerHeight
+
 export const cameras = {
   perspective: new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 50000),
+  orthographic3D: new THREE.OrthographicCamera(-h * aspect / 2, h * aspect / 2, h / 2, -h / 2, 1, 1000),
   orthographic: new THREE.OrthographicCamera(window.innerWidth / window.innerHeight / -2, window.innerWidth / window.innerHeight / 2, 1, -1, 0, 0.1),
   texture: new THREE.OrthographicCamera(-0.5, 0.5, 0.5, -0.5, 0, 1)
 }
@@ -37,6 +46,7 @@ export const scene = new THREE.Scene()
 export const renderer = new THREE.WebGLRenderer({ canvas, context })
 export const controls = {
   perspective: new OrbitControls(cameras.perspective, renderer.domElement),
+  orthographic3D: new OrbitControls(cameras.orthographic3D, renderer.domElement),
   orthographic: new OrbitControls(cameras.orthographic, renderer.domElement),
   texture: new OrbitControls(cameras.texture, renderer.domElement)
 }
