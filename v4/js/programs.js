@@ -21,13 +21,13 @@ export const programs = {
     fragmentShader: 'sin.fs'
   },
 
-  planeArray: {
+  volume2D: {
     uniforms: {
       uDensity: { value: 0 },
       sBuffer: { value: texture }
     },
-    vertexShader: 'planeArray.vs',
-    fragmentShader: 'planeArray.fs'
+    vertexShader: 'volume2D.vs',
+    fragmentShader: 'volume2D.fs'
   },
 
   volume3D: {

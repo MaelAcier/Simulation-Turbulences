@@ -1,58 +1,25 @@
 import Stats from './lib/stats.module.js'
 import { WEBGL } from './lib/WebGL.js'
 
-import * as THREE from './lib/three.module.js'
-import { NRRDLoader } from './lib/3d/NRRDLoader.js'
-
 import { config, objects, cameras, scene, renderer, controls } from './js/data.js'
-import { loadMaterials, materials } from './js/materials.js'
+import { loadMaterials } from './js/materials.js'
 import { loadMeshes } from './js/meshes.js'
 import { setupGUI } from './js/gui.js'
 import { renderingPipeline } from './js/render.js'
-// import './3d.js'
 
 /* global requestAnimationFrame */
 
 const stats = new Stats()
 
-var cmtextures
-
 loadMaterials(() => {
-  /* new NRRDLoader().load('./stent.nrrd', function (volume) {
-    // Texture to hold the volume. We have scalars, so we put our data in the red channel.
-    // THREEJS will select R32F (33326) based on the THREE.RedFormat and THREE.FloatType.
-    // Also see https://www.khronos.org/registry/webgl/specs/latest/2.0/#TEXTURE_TYPES_FORMATS_FROM_DOM_ELEMENTS_TABLE
-    // TODO: look the dtype up in the volume metadata
-    // console.log(volume.data)
-
-    var texture = new THREE.DataTexture3D(volume.data, volume.xLength, volume.yLength, volume.zLength)
-    // var texture = new THREE.DataTexture3D(gradient, size, size, size);
-    texture.format = THREE.RGBAFormat
-    texture.format = THREE.RedFormat
-    texture.type = THREE.FloatType
-    texture.minFilter = texture.magFilter = THREE.LinearFilter
-    texture.unpackAlignment = 1
-
-    // Colormap textures
-    cmtextures = {
-      viridis: new THREE.TextureLoader().load('./cm_viridis.png', () => {}),
-      gray: new THREE.TextureLoader().load('./cm_gray.png', () => {})
-    }
-
-    materials.volume3D.uniforms.u_data.value = texture
-    materials.volume3D.uniforms.u_size.value.set(volume.xLength, volume.yLength, volume.zLength)
-    materials.volume3D.uniforms.u_clim.value.set(0, 1)
-    materials.volume3D.uniforms.u_renderstyle.value = 'mip' // 0: MIP, 1: ISO
-    materials.volume3D.uniforms.u_cmdata.value = cmtextures.viridis
-  }) */
   init()
   animate()
 })
 
 function init () {
-  /* if (WEBGL.isWebGL2Available() === false) {
+  if (WEBGL.isWebGL2Available() === false) {
     document.body.appendChild(WEBGL.getWebGL2ErrorMessage())
-  } */
+  }
 
   /* if (renderer.extensions.get('ANGLE_instanced_arrays') === null) {
     document.getElementById('notSupported').style.display = ''
@@ -70,8 +37,14 @@ function init () {
 
   controls.perspective.enablePan = false
   controls.perspective.autoRotate = true
+
   controls.orthographic.enablePan = false
   controls.orthographic.enableRotate = false
+
+  controls.orthographic3D.enablePan = false
+  controls.orthographic3D.enableRotate = true
+  controls.orthographic3D.autoRotate = true
+
   controls.texture.enablePan = false
   controls.texture.enableRotate = false
   controls.texture.enableZoom = false

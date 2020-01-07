@@ -30,17 +30,12 @@ class Buffer {
     for (let i = 0; i < this.size; i++) {
       data.set(pixelBuffers[i], i * planeSize)
     }
-    const texture = new THREE.DataTexture2DArray(data, this.size, this.size, this.size)
-    texture.format = THREE.RGBAFormat
-    texture.type = THREE.FloatType
-    this.texture2dArray = texture
 
     const texture3D = new THREE.DataTexture3D(data, this.size, this.size, this.size)
     texture3D.format = THREE.RGBAFormat
     texture3D.type = THREE.FloatType
-    texture3D.minFilter = texture3D.magFilter = THREE.LinearFilter
     texture3D.unpackAlignment = 1
-    this.texture3d = texture3D
+    this.texture3D = texture3D
   }
 }
 
@@ -73,11 +68,11 @@ export function computeStep ({ material, bufferOutput, setup, id = material }) {
 export function displayStep ({ material, camera, setup }) {
   materials[material].visible = true
 
-  if (!config.pause) {
-    setup(materials[material])
-  }
-
   if (config.renderTarget === material) {
+    if (!config.pause) {
+      setup(materials[material])
+    }
+
     renderer.setRenderTarget(null)
     if (config.clipping) {
       renderer.setViewport(0, 0, window.innerWidth / 2, window.innerHeight)
@@ -95,7 +90,7 @@ export function displayStep ({ material, camera, setup }) {
 
 export const registeredIDs = {
   sin: 'sin',
-  planeArray: 'planeArray',
+  volume2D: 'volume2D',
   volume3D: 'volume3D'
 }
 
@@ -124,33 +119,29 @@ export function renderingPipeline () {
         material.uniforms.uTime.value = time
       }
     })
-
-    displayStep({
-      material: 'planeArray',
-      camera: cameras.perspective,
-      setup: (material) => {
-        material.uniforms.uDensity.value = config.density
-        material.uniforms.sBuffer.value = buffers.display.texture2dArray
-      }
-    })
-
-    displayStep({
-      material: 'volume3D',
-      camera: cameras.orthographic3D,
-      setup: (material) => {
-        material.uniforms.u_data.value = buffers.display.texture3d
-        material.uniforms.u_size.value.set(config.density, config.density, config.density)
-      }
-    })
-
-    /* displayStep({
-      material: 'volume3D',
-      setup: (material) => {
-        material.uniforms.u_size.value = new THREE.Vector3(config.density, config.density, config.density)
-        material.uniforms.u_data.value = buffers.display.texture3d
-      }
-    }) */
   }
+
+  displayStep({
+    material: 'volume2D',
+    camera: cameras.perspective,
+    setup: (material) => {
+      buffers.display.texture3D.minFilter = THREE.NearestFilter
+      buffers.display.texture3D.magFilter = THREE.NearestFilter
+      material.uniforms.uDensity.value = config.density
+      material.uniforms.sBuffer.value = buffers.display.texture3D
+    }
+  })
+
+  displayStep({
+    material: 'volume3D',
+    camera: cameras.orthographic3D,
+    setup: (material) => {
+      buffers.display.texture3D.minFilter = THREE.LinearFilter
+      buffers.display.texture3D.magFilter = THREE.LinearFilter
+      material.uniforms.u_data.value = buffers.display.texture3D
+      material.uniforms.u_size.value.set(config.density, config.density, config.density)
+    }
+  })
 
   if (config.autoRotation) {
     controls.perspective.update()

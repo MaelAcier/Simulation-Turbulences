@@ -5,8 +5,14 @@ import { scene, config } from './data.js'
 export const meshes = {}
 
 export function loadMeshes () {
+  loadComputingPlans()
+  loadVolume2D()
+  loadVolume3D()
+}
+
+function loadComputingPlans () {
   for (const key in materials) {
-    if (material2D(key)) {
+    if (materialNeedComputing(key)) {
       const material = materials[key]
 
       if (meshes[key]) {
@@ -30,11 +36,14 @@ export function loadMeshes () {
       scene.add(meshes[key])
     }
   }
+}
 
-  if (meshes.planeArray) {
-    scene.remove(meshes.planeArray)
+function loadVolume2D () {
+  if (meshes.volume2D) {
+    scene.remove(meshes.volume2D)
   }
-  meshes.planeArray = new THREE.Group()
+
+  meshes.volume2D = new THREE.Group()
   for (let x = 0; x < config.density; x++) {
     const offset = x / config.density
     const geometry = new THREE.BufferGeometry()
@@ -48,12 +57,15 @@ export function loadMeshes () {
       0, 0, offset
     ])
     geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3))
-    const mesh = new THREE.Mesh(geometry, materials.planeArray)
-    meshes.planeArray.add(mesh)
+    const mesh = new THREE.Mesh(geometry, materials.volume2D)
+    meshes.volume2D.add(mesh)
   }
-  meshes.planeArray.position.set(-0.5, -0.5, -0.5)
-  scene.add(meshes.planeArray)
 
+  meshes.volume2D.position.set(-0.5, -0.5, -0.5)
+  scene.add(meshes.volume2D)
+}
+
+function loadVolume3D () {
   if (meshes.volume3D) {
     scene.remove(meshes.volume3D)
   }
@@ -67,6 +79,6 @@ export function loadMeshes () {
   scene.add(meshes.volume3D)
 }
 
-function material2D (key) {
-  return !['planeArray'].includes(key)
+function materialNeedComputing (key) {
+  return !['volume2D', 'volume3D'].includes(key)
 }

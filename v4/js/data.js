@@ -6,7 +6,7 @@ export const config = {
   density: 10,
   pause: false,
   clipping: false,
-  renderTarget: 'planeArray',
+  renderTarget: 'volume3D',
   autoRotation: false,
   showOrthographicHelper: false,
   cameraClipAxis: 'z',
@@ -26,12 +26,12 @@ export const cmtextures = {
 }
 
 const h = 1
-var aspect = window.innerWidth / window.innerHeight
+const aspect = window.innerWidth / window.innerHeight
 
 export const cameras = {
-  perspective: new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 50000),
-  orthographic3D: new THREE.OrthographicCamera(-h * aspect / 2, h * aspect / 2, h / 2, -h / 2, 1, 1000),
-  orthographic: new THREE.OrthographicCamera(window.innerWidth / window.innerHeight / -2, window.innerWidth / window.innerHeight / 2, 1, -1, 0, 0.1),
+  perspective: new THREE.PerspectiveCamera(50, aspect, 0.1, 50000),
+  orthographic3D: new THREE.OrthographicCamera(aspect / -2 * h, aspect / 2 * h, h / 2, -h / 2, 1, 1000),
+  orthographic: new THREE.OrthographicCamera(aspect / -2, aspect / 2, 1, -1, 0, 0.1),
   texture: new THREE.OrthographicCamera(-0.5, 0.5, 0.5, -0.5, 0, 1)
 }
 
