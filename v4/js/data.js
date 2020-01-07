@@ -3,7 +3,7 @@ import { OrbitControls } from '../lib/OrbitControls.js'
 
 export const config = {
   distance: 2,
-  density: 10,
+  density: 32,
   pause: false,
   clipping: false,
   renderTarget: 'volume3D',
