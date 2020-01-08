@@ -10,7 +10,7 @@ export function setupGUI () {
   const gui = new GUI({ width: 350 })
 
   // gui.add(config, 'distribution', { Grille: 'grid', Crystal: 'crystal', Aléatoire: 'random' }).name('Répartition').onChange(() => loadMeshes(scene, newGeometry(config)))
-  gui.add(config, 'density', 2, 128).step(1).name('Densité').onChange((value) => {
+  const density = gui.add(config, 'density', 2, 128).step(1).name('Densité').onChange((value) => {
     loadMeshes()
     for (const key in buffers) {
       const buffer = buffers[key]
@@ -71,4 +71,10 @@ export function setupGUI () {
       multipleSplats(parseInt(Math.random() * 2) + 5)
     }
   }, 'fun').name('Splash') */
+
+  return {
+    fixBlinking: () => {
+      density.setValue(config.density)
+    }
+  }
 }

@@ -58,7 +58,8 @@ function init () {
   document.body.appendChild(stats.dom)
 
   loadMeshes()
-  setupGUI(scene)
+  render()
+  setupGUI(scene).fixBlinking()
 
   /* const gl = renderer.domElement.getContext('webgl') || renderer.domElement.getContext('experimental-webgl')
   gl.getExtension('WEBGL_color_buffer_float')

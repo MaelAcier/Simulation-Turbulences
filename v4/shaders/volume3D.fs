@@ -64,16 +64,11 @@ void main() {
 
 	// For testing: show the number of steps. This helps to establish
 	// whether the rays are correctly oriented
-	// out_FragColor = vec4(0.0, float(nsteps) / 1.0 / u_size.x, 1.0, 1.0);
-	// return;
+	/* out_FragColor = vec4(0.0, float(nsteps) / 1.0 / u_size.x, 1.0, 1.0);
+	return; */
 	cast_mip(start_loc, step, nsteps, view_ray);
 	if (out_FragColor.a < 0.05)
 		discard;
-}
-
-float sample1(vec3 texcoords) {
-	/* Sample float value from a 3D texture. Assumes intensity data. */
-	return texture(u_data, texcoords.xyz).r;
 }
 
 vec4 apply_colormap(float val) {
@@ -81,99 +76,36 @@ vec4 apply_colormap(float val) {
 	return texture(u_cmdata, vec2(val, 0.5));
 }
 
+float sample1(vec3 texcoords) {
+	/* Sample float value from a 3D texture. Assumes intensity data. */
+	return texture(u_data, texcoords.xyz).a;
+}
+
 void cast_mip(vec3 start_loc, vec3 step, int nsteps, vec3 view_ray) {
 	float max_val = -1e6;
 	int max_i = 100;
 	vec3 loc = start_loc;
+	vec4 color = vec4(0.);
 
 	// Enter the raycasting loop. In WebGL 1 the loop index cannot be compared with
 	// non-constant expression. So we use a hard-coded max, and an additional condition
 	// inside the loop.
+	if (nsteps % 2 != 0)
+		nsteps += 1;
+
 	for (int iter=0; iter<MAX_STEPS; iter++) {
 		if (iter >= nsteps)
 			break;
-
-		// Sample from the 3D texture
-		float val = sample1(loc);
-		// Apply MIP operation
-		if (val > max_val) {
-			max_val = val;
-			max_i = iter;
-		}
+		
+		vec4 data = texture(u_data, loc);
+		float transmittance = (1. - color.a) * data.a;
+		color += vec4(data.rgb * transmittance, transmittance);
+		
 		// Advance location deeper into the volume
 		loc += step;
 	}
 
-	// Refine location, gives crispier images
-	vec3 iloc = start_loc + step * (float(max_i) - 0.5);
-	vec3 istep = step / float(REFINEMENT_STEPS);
-	for (int i=0; i<REFINEMENT_STEPS; i++) {
-		max_val = max(max_val, sample1(iloc));
-		iloc += istep;
-	}
-
 	// Resolve final color
-	out_FragColor = texture(u_data, iloc);
+	out_FragColor = color;
 	// out_FragColor = apply_colormap(max_val);
-}
-
-vec4 add_lighting(float val, vec3 loc, vec3 step, vec3 view_ray) {
-	// Calculate color by incorporating lighting
-
-	// View direction
-	vec3 V = normalize(view_ray);
-
-	// calculate normal vector from gradient
-	vec3 N;
-	float val1, val2;
-	val1 = sample1(loc + vec3(-step[0], 0.0, 0.0));
-	val2 = sample1(loc + vec3(+step[0], 0.0, 0.0));
-	N[0] = val1 - val2;
-	val = max(max(val1, val2), val);
-	val1 = sample1(loc + vec3(0.0, -step[1], 0.0));
-	val2 = sample1(loc + vec3(0.0, +step[1], 0.0));
-	N[1] = val1 - val2;
-	val = max(max(val1, val2), val);
-	val1 = sample1(loc + vec3(0.0, 0.0, -step[2]));
-	val2 = sample1(loc + vec3(0.0, 0.0, +step[2]));
-	N[2] = val1 - val2;
-	val = max(max(val1, val2), val);
-	float gm = length(N); // gradient magnitude
-	N = normalize(N);
-
-	// Flip normal so it points towards viewer
-	float Nselect = float(dot(N, V) > 0.0);
-	N = (2.0 * Nselect - 1.0) * N;  // ==   Nselect * N - (1.0-Nselect)*N;
-	
-	// Init colors
-	vec4 ambient_color = vec4(0.0, 0.0, 0.0, 0.0);
-	vec4 diffuse_color = vec4(0.0, 0.0, 0.0, 0.0);
-	vec4 specular_color = vec4(0.0, 0.0, 0.0, 0.0);
-
-	// note: could allow multiple lights
-	for (int i=0; i<1; i++) {
-		vec3 L = normalize(view_ray);   //lightDirs[i];
-		float lightEnabled = float( length(L) > 0.0 );
-		L = normalize(L + (1.0 - lightEnabled));
-
-		// Calculate lighting properties
-		float lambertTerm = clamp(dot(N, L), 0.0, 1.0);
-		vec3 H = normalize(L+V); // Halfway vector
-		float specularTerm = pow(max(dot(H, N), 0.0), shininess);
-
-		// Calculate mask
-		float mask1 = lightEnabled;
-
-		// Calculate colors
-		ambient_color +=        mask1 * ambient_color;  // * gl_LightSource[i].ambient;
-		diffuse_color +=        mask1 * lambertTerm;
-		specular_color += mask1 * specularTerm * specular_color;
-	}
-
-	// Calculate final color by componing different components
-	vec4 final_color;
-	vec4 color = apply_colormap(val);
-	final_color = color * (ambient_color + diffuse_color) + specular_color;
-	final_color.a = color.a;
-	return final_color;
 }
