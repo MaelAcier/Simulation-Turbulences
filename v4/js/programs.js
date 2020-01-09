@@ -1,7 +1,7 @@
 import * as THREE from '../lib/three.module.js'
 import { config, cmtextures } from './data.js'
 
-const texture = new THREE.DataTexture2DArray(new Float32Array(config.density ** 3 * 4), config.density, config.density, config.density)
+const texture = new THREE.DataTexture2DArray(new Float32Array(config.resolution ** 3 * 4), config.resolution, config.resolution, config.resolution)
 texture.format = THREE.RGBAFormat
 texture.type = THREE.FloatType
 
@@ -17,8 +17,26 @@ export const programs = {
       uTime: { value: 0.0 },
       uZ: { value: 0.0 }
     },
-    vertexShader: 'sin.vs',
+    vertexShader: 'base.vs',
     fragmentShader: 'sin.fs'
+  },
+
+  identity: {
+    uniforms: {
+      uZ: { value: 0.0 },
+      sBuffer: { value: texture }
+    },
+    vertexShader: 'base.vs',
+    fragmentShader: 'identity.fs'
+  },
+
+  experiments: {
+    uniforms: {
+      uZ: { value: 0.0 },
+      sBuffer: { value: texture }
+    },
+    vertexShader: 'base.vs',
+    fragmentShader: 'experiments.fs'
   },
 
   volume2D: {

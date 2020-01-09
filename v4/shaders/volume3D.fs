@@ -17,7 +17,7 @@ in vec4 v_farpos;
 out vec4 out_FragColor;
 
 // The maximum distance through our rendering volume is sqrt(3).
-const int MAX_STEPS = 887;      // 887 for 512^3, 1774 for 1024^3
+// const int MAX_STEPS = 887;
 const int REFINEMENT_STEPS = 4;
 const float relative_step_size = 1.0;
 const vec4 ambient_color = vec4(0.2, 0.4, 0.2, 1.0);
@@ -86,19 +86,22 @@ void cast_mip(vec3 start_loc, vec3 step, int nsteps, vec3 view_ray) {
 	int max_i = 100;
 	vec3 loc = start_loc;
 	vec4 color = vec4(0.);
+	float attenuation = pow(abs(u_size.x), 1./3.);
 
 	// Enter the raycasting loop. In WebGL 1 the loop index cannot be compared with
 	// non-constant expression. So we use a hard-coded max, and an additional condition
 	// inside the loop.
 	if (nsteps % 2 != 0)
 		nsteps += 1;
+	
+	int MAX_STEPS = int(pow(u_size.x, 3.));
 
 	for (int iter=0; iter<MAX_STEPS; iter++) {
 		if (iter >= nsteps)
 			break;
 		
 		vec4 data = texture(u_data, loc);
-		float transmittance = (1. - color.a) * data.a;
+		float transmittance = pow(abs((1. - color.a) * data.a), attenuation);
 		color += vec4(data.rgb * transmittance, transmittance);
 		
 		// Advance location deeper into the volume
@@ -107,5 +110,4 @@ void cast_mip(vec3 start_loc, vec3 step, int nsteps, vec3 view_ray) {
 
 	// Resolve final color
 	out_FragColor = color;
-	// out_FragColor = apply_colormap(max_val);
 }

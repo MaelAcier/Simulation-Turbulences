@@ -3,10 +3,11 @@ import { OrbitControls } from '../lib/OrbitControls.js'
 
 export const config = {
   distance: 2,
-  density: 32,
+  resolution: 32,
   pause: false,
   clipping: false,
   renderTarget: 'volume3D',
+  depth: 0,
   autoRotation: false,
   showOrthographicHelper: false,
   cameraClipAxis: 'z',
@@ -41,6 +42,8 @@ export const objects = {
 
 const canvas = document.createElement('canvas')
 const context = canvas.getContext('webgl2', { alpha: false, antialias: false })
+context.getExtension('WEBGL_color_buffer_float')
+context.getExtension('EXT_float_blend')
 
 export const scene = new THREE.Scene()
 export const renderer = new THREE.WebGLRenderer({ canvas, context })

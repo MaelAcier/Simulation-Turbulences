@@ -28,5 +28,5 @@ void main() {
     vec3 trTime = vec3(vPosition.x + uTime, vPosition.y + uTime, uZ + uTime);
     float color = sin( trTime.x * 2.1 ) + sin( trTime.y * 3.2 ) + sin( trTime.z * 4.3 );
 
-    out_FragColor = vec4( HSLtoRGB(vec3(color/5.0, 1.0, 0.5)), color / 3. + 1.5 );
+    out_FragColor = vec4( HSLtoRGB(vec3(color/5.0, 1.0, 0.5)), (color + 3.) / 6.);
 }

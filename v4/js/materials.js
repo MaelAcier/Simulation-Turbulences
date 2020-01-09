@@ -19,6 +19,7 @@ export function loadMaterials (callback) {
           depthWrite: true,
           side: program === 'volume3D' ? THREE.BackSide : THREE.DoubleSide
         })
+        materials[key].visible = false
         shaderLoaded++
         if (shaderLoaded === shaderCount) {
           callback()

@@ -8,7 +8,7 @@ class Buffer {
     this.resize(size)
   }
 
-  resize (size = config.density) {
+  resize (size = config.resolution) {
     this.oldTextures = Array.from(Array(size), () => new THREE.WebGLRenderTarget(size, size, { type: THREE.FloatType }))
     this.currentTextures = Array.from(Array(size), () => new THREE.WebGLRenderTarget(size, size, { type: THREE.FloatType }))
     this.size = size
@@ -47,12 +47,14 @@ export const buffers = {
 export function computeStep ({ material, bufferOutput, setup, id = material }) {
   materials[material].visible = true
 
-  setup(materials[material])
+  if (!config.pause) {
+    setup(materials[material].uniforms)
+  }
 
-  for (let i = 0; i < config.density; i++) {
-    materials[material].uniforms.uZ.value = i / config.density
+  for (let i = 0; i < config.resolution; i++) {
+    materials[material].uniforms.uZ.value = i / config.resolution
 
-    if (config.renderTarget === id && i === 5) {
+    if (config.renderTarget === id && i === config.depth) {
       renderer.setRenderTarget(null)
       renderer.render(scene, cameras.texture)
     }
@@ -69,9 +71,7 @@ export function displayStep ({ material, camera, setup }) {
   materials[material].visible = true
 
   if (config.renderTarget === material) {
-    if (!config.pause) {
-      setup(materials[material])
-    }
+    setup(materials[material].uniforms)
 
     renderer.setRenderTarget(null)
     if (config.clipping) {
@@ -90,6 +90,8 @@ export function displayStep ({ material, camera, setup }) {
 
 export const registeredIDs = {
   sin: 'sin',
+  identity: 'identity',
+  experiments: 'experiments',
   volume2D: 'volume2D',
   volume3D: 'volume3D'
 }
@@ -111,35 +113,51 @@ export function renderingPipeline () {
 
   if (!config.pause) {
     time += 0.005
-
-    computeStep({
-      material: 'sin',
-      bufferOutput: 'display',
-      setup: (material) => {
-        material.uniforms.uTime.value = time
-      }
-    })
   }
+
+  computeStep({
+    material: 'sin',
+    bufferOutput: 'display',
+    setup: (uniforms) => {
+      uniforms.uTime.value = time
+    }
+  })
+
+  computeStep({
+    material: 'identity',
+    bufferOutput: 'display',
+    setup: (uniforms) => {
+      uniforms.sBuffer.value = buffers.display.texture3D
+    }
+  })
+
+  computeStep({
+    material: 'experiments',
+    bufferOutput: 'display',
+    setup: (uniforms) => {
+      uniforms.sBuffer.value = buffers.display.texture3D
+    }
+  })
 
   displayStep({
     material: 'volume2D',
     camera: cameras.perspective,
-    setup: (material) => {
+    setup: (uniforms) => {
       buffers.display.texture3D.minFilter = THREE.NearestFilter
       buffers.display.texture3D.magFilter = THREE.NearestFilter
-      material.uniforms.uDensity.value = config.density
-      material.uniforms.sBuffer.value = buffers.display.texture3D
+      uniforms.uDensity.value = config.resolution
+      uniforms.sBuffer.value = buffers.display.texture3D
     }
   })
 
   displayStep({
     material: 'volume3D',
     camera: cameras.orthographic3D,
-    setup: (material) => {
+    setup: (uniforms) => {
       buffers.display.texture3D.minFilter = THREE.LinearFilter
       buffers.display.texture3D.magFilter = THREE.LinearFilter
-      material.uniforms.u_data.value = buffers.display.texture3D
-      material.uniforms.u_size.value.set(config.density, config.density, config.density)
+      uniforms.u_data.value = buffers.display.texture3D
+      uniforms.u_size.value.set(config.resolution, config.resolution, config.resolution)
     }
   })
 

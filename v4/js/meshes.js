@@ -44,8 +44,8 @@ function loadVolume2D () {
   }
 
   meshes.volume2D = new THREE.Group()
-  for (let x = 0; x < config.density; x++) {
-    const offset = x / config.density
+  for (let x = 0; x < config.resolution; x++) {
+    const offset = x / config.resolution
     const geometry = new THREE.BufferGeometry()
     const vertices = new Float32Array([
       0, 0, offset,
@@ -70,11 +70,11 @@ function loadVolume3D () {
     scene.remove(meshes.volume3D)
   }
 
-  const geometry = new THREE.BoxBufferGeometry(config.density, config.density, config.density)
-  geometry.translate(config.density / 2 - 0.5, config.density / 2 - 0.5, config.density / 2 - 0.5)
+  const geometry = new THREE.BoxBufferGeometry(config.resolution, config.resolution, config.resolution)
+  geometry.translate(config.resolution / 2 - 0.5, config.resolution / 2 - 0.5, config.resolution / 2 - 0.5)
 
   meshes.volume3D = new THREE.Mesh(geometry, materials.volume3D)
-  meshes.volume3D.scale.set(1 / config.density, 1 / config.density, 1 / config.density)
+  meshes.volume3D.scale.set(1 / config.resolution, 1 / config.resolution, 1 / config.resolution)
   meshes.volume3D.position.set(-0.5, -0.5, -0.5)
   scene.add(meshes.volume3D)
 }
