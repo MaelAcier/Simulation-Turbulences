@@ -1,9 +1,13 @@
 import * as THREE from '../lib/three.module.js'
 import { config, cmtextures } from './data.js'
 
-const texture = new THREE.DataTexture2DArray(new Float32Array(config.resolution ** 3 * 4), config.resolution, config.resolution, config.resolution)
-texture.format = THREE.RGBAFormat
-texture.type = THREE.FloatType
+const texture0 = new THREE.DataTexture2DArray(new Float32Array(config.resolutions[0] ** 3 * 4), config.resolutions[0], config.resolutions[0], config.resolutions[0])
+texture0.format = THREE.RGBAFormat
+texture0.type = THREE.FloatType
+
+const texture1 = new THREE.DataTexture2DArray(new Float32Array(config.resolutions[1] ** 3 * 4), config.resolutions[1], config.resolutions[1], config.resolutions[1])
+texture1.format = THREE.RGBAFormat
+texture1.type = THREE.FloatType
 
 /* const texture3D = new THREE.DataTexture3D(new Float32Array(config.density ** 3 * 4), config.density, config.density, config.density)
 texture3D.format = THREE.RGBAFormat
@@ -24,7 +28,7 @@ export const programs = {
   identity: {
     uniforms: {
       uZ: { value: 0.0 },
-      sBuffer: { value: texture }
+      sBuffer: { value: texture0 }
     },
     vertexShader: 'base.vs',
     fragmentShader: 'identity.fs'
@@ -33,7 +37,7 @@ export const programs = {
   experiments: {
     uniforms: {
       uZ: { value: 0.0 },
-      sBuffer: { value: texture }
+      sBuffer: { value: texture0 }
     },
     vertexShader: 'base.vs',
     fragmentShader: 'experiments.fs'
@@ -42,7 +46,7 @@ export const programs = {
   volume2D: {
     uniforms: {
       uDensity: { value: 0 },
-      sBuffer: { value: texture }
+      sBuffer: { value: texture1 }
     },
     vertexShader: 'volume2D.vs',
     fragmentShader: 'volume2D.fs'

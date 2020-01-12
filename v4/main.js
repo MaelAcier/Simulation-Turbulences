@@ -1,7 +1,7 @@
 import Stats from './lib/stats.module.js'
 import { WEBGL } from './lib/WebGL.js'
 
-import { config, objects, cameras, scene, renderer, controls } from './js/data.js'
+import { config, cameras, scene, renderer, controls } from './js/data.js'
 import { loadMaterials } from './js/materials.js'
 import { loadMeshes } from './js/meshes.js'
 import { setupGUI } from './js/gui.js'
@@ -32,17 +32,10 @@ function init () {
   cameras.orthographic3D.position.set(config.distance, config.distance, config.distance)
   controls.orthographic3D.update()
 
-  objects.orthographicHelper.visible = config.showOrthographicHelper
-  scene.add(objects.orthographicHelper)
-
   controls.perspective.enablePan = false
   controls.perspective.autoRotate = true
 
-  controls.orthographic.enablePan = false
-  controls.orthographic.enableRotate = false
-
   controls.orthographic3D.enablePan = false
-  controls.orthographic3D.enableRotate = true
   controls.orthographic3D.autoRotate = true
 
   controls.texture.enablePan = false
@@ -59,7 +52,7 @@ function init () {
 
   loadMeshes()
   render()
-  setupGUI(scene).fixBlinking()
+  setupGUI(scene)
 }
 
 function onWindowResize () {
@@ -83,12 +76,6 @@ function animate () {
 }
 
 function render () {
-  /* var time = performance.now() * 0.0005
-
-  materials.planeArray.uniforms.uTime.value = time
-  materials.sin.uniforms.uTime.value = time
-
-  renderer.render(scene, cameras.perspective) */
   renderingPipeline()
   stats.update()
 }
