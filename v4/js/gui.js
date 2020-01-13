@@ -1,6 +1,7 @@
 import { GUI } from '../lib/dat.gui.module.js'
+import * as THREE from '../lib/three.module.js'
 
-import { config } from './data.js'
+import { config, scene } from './data.js'
 import { loadMeshes } from './meshes.js'
 // import { materials } from './materials.js'
 import { registeredIDs } from './render.js'
@@ -23,6 +24,10 @@ export function setupGUI () {
   gui.add(config, 'pause').name('Pause')
   gui.add(config, 'autoRotation').name('Rotation automatique')
 
+  const backgroundColor = gui.addColor(config, 'backgroundColor').name('Couleur de fond').onChange((value) => {
+    scene.background = new THREE.Color(value)
+  })
+
   /* gui.add({
     fun: () => {
       multipleSplats(parseInt(Math.random() * 2) + 5)
@@ -30,6 +35,7 @@ export function setupGUI () {
   }, 'fun').name('Splash') */
 
   updateDepth(depth)
+  backgroundColor.setValue(config.backgroundColor)
 }
 
 function update (id) {

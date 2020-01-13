@@ -36,6 +36,7 @@ function init () {
   controls.perspective.autoRotate = true
 
   controls.orthographic3D.enablePan = false
+  controls.orthographic3D.enableRotate = true
   controls.orthographic3D.autoRotate = true
 
   controls.texture.enablePan = false
@@ -71,11 +72,17 @@ function onWindowResize () {
 }
 
 function animate () {
-  render()
   requestAnimationFrame(animate)
+  render()
 }
 
-function render () {
+export function render () {
+  /* var time = performance.now() * 0.0005
+
+  materials.planeArray.uniforms.uTime.value = time
+  materials.sin.uniforms.uTime.value = time
+
+  renderer.render(scene, cameras.perspective) */
   renderingPipeline()
   stats.update()
 }

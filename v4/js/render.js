@@ -13,6 +13,7 @@ export function computeStep ({ material, bufferOutput, setup, id = material }) {
 
   const sizeID = buffers[bufferOutput].sizeID
   const size = config.resolutions[sizeID]
+  console.time('compute')
 
   for (let i = 0; i < size; i++) {
     materials[material].uniforms.uZ.value = i / size
@@ -24,6 +25,8 @@ export function computeStep ({ material, bufferOutput, setup, id = material }) {
     renderer.setRenderTarget(textureIndex[sizeID].oldTextures[i])
     renderer.render(scene, cameras.texture)
   }
+  console.timeEnd('compute')
+
   buffers[bufferOutput].texture3D = texture2Dto3D(textureIndex[sizeID])
   materials[material].visible = false
 }

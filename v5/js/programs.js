@@ -5,11 +5,124 @@ const texture0 = new THREE.DataTexture2DArray(new Float32Array(config.resolution
 texture0.format = THREE.RGBAFormat
 texture0.type = THREE.FloatType
 
+const texture1 = new THREE.DataTexture2DArray(new Float32Array(config.resolutions[1] ** 3 * 4), config.resolutions[1], config.resolutions[1], config.resolutions[1])
+texture1.format = THREE.RGBAFormat
+texture1.type = THREE.FloatType
+
+/* const texture3D = new THREE.DataTexture3D(new Float32Array(config.density ** 3 * 4), config.density, config.density, config.density)
+texture3D.format = THREE.RGBAFormat
+texture3D.type = THREE.FloatType
+texture3D.minFilter = texture3D.magFilter = THREE.LinearFilter
+texture3D.unpackAlignment = 1 */
+
 export const programs = {
+  /* curl: {
+    uniforms: {
+      texelSize: { value: new THREE.Vector2(1, 1) },
+      uZ: { value: 0.0 },
+      sVelocity: { value: texture }
+    },
+    vertexShader: 'base.vs',
+    fragmentShader: 'curl.fs'
+  },
+
+  divergence: {
+    uniforms: {
+      texelSize: { value: new THREE.Vector2(1, 1) },
+      uZ: { value: 0.0 },
+      sVelocity: { value: texture }
+    },
+    vertexShader: 'base.vs',
+    fragmentShader: 'divergence.fs'
+  },
+
+  splat: {
+    uniforms: {
+      texelSize: { value: new THREE.Vector2(1, 1) },
+      uZ: { value: 0.0 },
+      sTarget: { value: texture },
+      aspectRatio: { value: 1 },
+      point: { value: new THREE.Vector2(1, 1) },
+      color: { value: new THREE.Vector2(1, 1) },
+      radius: { value: 0.0 }
+    },
+    vertexShader: 'base.vs',
+    fragmentShader: 'splat.fs'
+  },
+
+  vorticity: {
+    uniforms: {
+      texelSize: { value: new THREE.Vector2(1, 1) },
+      uZ: { value: 0.0 },
+      sVelocity: { value: texture },
+      sCurl: { value: texture },
+      curl: { value: 0.0 },
+      dt: { value: 0.0 }
+    },
+    vertexShader: 'base.vs',
+    fragmentShader: 'vorticity.fs'
+  },
+
+  clear: {
+    uniforms: {
+      texelSize: { value: new THREE.Vector2(1, 1) },
+      uZ: { value: 0.0 },
+      sTexture: { value: texture },
+      value: { value: 0.0 }
+    },
+    vertexShader: 'base.vs',
+    fragmentShader: 'clear.fs'
+  },
+
+  pressure: {
+    uniforms: {
+      texelSize: { value: new THREE.Vector2(1, 1) },
+      uZ: { value: 0.0 },
+      sDivergence: { value: texture },
+      sPressure: { value: texture }
+    },
+    vertexShader: 'base.vs',
+    fragmentShader: 'pressure.fs'
+  },
+
+  gradientSubtract: {
+    uniforms: {
+      texelSize: { value: new THREE.Vector2(1, 1) },
+      uZ: { value: 0.0 },
+      sVelocity: { value: texture },
+      sPressure: { value: texture }
+    },
+    vertexShader: 'base.vs',
+    fragmentShader: 'gradientSubtract.fs'
+  },
+
+  advection: {
+    uniforms: {
+      texelSize: { value: new THREE.Vector2(1, 1) },
+      uZ: { value: 0.0 },
+      sVelocity: { value: texture },
+      sSource: { value: texture },
+      dissipation: { value: 0.0 },
+      dt: { value: 0.0 }
+    },
+    vertexShader: 'base.vs',
+    fragmentShader: 'advection.fs'
+  }, */
+
+  display: {
+    uniforms: {
+      texelSize: { value: new THREE.Vector2(1, 1) },
+      uZ: { value: 0.0 },
+      sTexture: { value: texture1 }
+    },
+    vertexShader: 'base.vs',
+    fragmentShader: 'display.fs'
+  },
   sin: {
     uniforms: {
-      uTime: { value: 0.0 },
-      uZ: { value: 0.0 }
+      texelSize: { value: new THREE.Vector2(1, 1) },
+      uZ: { value: 0.0 },
+      uTime: { value: 0.0 }
     },
     vertexShader: 'base.vs',
     fragmentShader: 'sin.fs'
@@ -17,8 +130,9 @@ export const programs = {
 
   identity: {
     uniforms: {
+      texelSize: { value: new THREE.Vector2(1, 1) },
       uZ: { value: 0.0 },
-      sBuffer: { value: null }
+      sBuffer: { value: texture0 }
     },
     vertexShader: 'base.vs',
     fragmentShader: 'identity.fs'
@@ -26,8 +140,9 @@ export const programs = {
 
   experiments: {
     uniforms: {
+      texelSize: { value: new THREE.Vector2(1, 1) },
       uZ: { value: 0.0 },
-      sBuffer: { value: null }
+      sBuffer: { value: texture0 }
     },
     vertexShader: 'base.vs',
     fragmentShader: 'experiments.fs'
@@ -36,7 +151,7 @@ export const programs = {
   volume2D: {
     uniforms: {
       uDensity: { value: 0 },
-      sBuffer: { value: null }
+      sBuffer: { value: texture1 }
     },
     vertexShader: 'volume2D.vs',
     fragmentShader: 'volume2D.fs'
@@ -61,7 +176,7 @@ export const programs = {
     },
     vertexShader: 'test.vs',
     fragmentShader: 'test.fs'
-  },
+  }
 
   identity: {
     uniforms: {

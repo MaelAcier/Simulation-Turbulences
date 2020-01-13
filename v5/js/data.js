@@ -2,13 +2,20 @@ import * as THREE from '../lib/three.module.js'
 import { OrbitControls } from '../lib/OrbitControls.js'
 
 export const config = {
-  distance: 1,
-  resolutions: [32, 64, 16],
-  renderTarget: 'volume2D',
-  depth: 0,
+  distance: 2,
+  resolutions: {
+    0: 32,
+    1: 64
+  },
   pause: false,
+  clipping: false,
+  renderTarget: 'volume2D',
+  backgroundColor: '#FF0000',
+  depth: 0,
   autoRotation: false,
-  backgroundColor: '#000000',
+  transparent: false,
+  SIM_RESOLUTION: 128,
+  DYE_RESOLUTION: 1024,
   CAPTURE_RESOLUTION: 512,
   DENSITY_DISSIPATION: 1,
   VELOCITY_DISSIPATION: 0.2,
@@ -48,13 +55,13 @@ export const cameras = {
   texture: new THREE.OrthographicCamera(-0.5, 0.5, 0.5, -0.5, 0, 1)
 }
 
-const canvas = document.createElement('canvas')
+export const canvas = document.createElement('canvas')
 const context = canvas.getContext('webgl2', { alpha: false, antialias: false })
 context.getExtension('WEBGL_color_buffer_float')
 context.getExtension('EXT_float_blend')
 
 export const scene = new THREE.Scene()
-export const renderer = new THREE.WebGLRenderer({ canvas, context })
+export const renderer = new THREE.WebGLRenderer({ canvas, context, powerPreference: 'high-performance' })
 export const controls = {
   perspective: new OrbitControls(cameras.perspective, renderer.domElement),
   orthographic3D: new OrbitControls(cameras.orthographic3D, renderer.domElement),

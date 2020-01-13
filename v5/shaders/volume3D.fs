@@ -91,13 +91,13 @@ void cast_mip(vec3 start_loc, vec3 step, int nsteps, vec3 view_ray) {
 	// Enter the raycasting loop. In WebGL 1 the loop index cannot be compared with
 	// non-constant expression. So we use a hard-coded max, and an additional condition
 	// inside the loop.
-	// if (nsteps % 2 != 0)
-	// 	nsteps += 1;
+	if (nsteps % 2 != 0)
+		nsteps += 1;
 	
 	int MAX_STEPS = int(pow(u_size.x, 3.));
 
 	for (int iter=0; iter<MAX_STEPS; iter++) {
-		if (iter >= nsteps || color.a >= 0.7)
+		if (iter >= nsteps)
 			break;
 		
 		vec4 data = texture(u_data, loc);
