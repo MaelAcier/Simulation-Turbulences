@@ -9,25 +9,29 @@ export const programs = {
   sin: {
     uniforms: {
       uTime: { value: 0.0 },
-      uZ: { value: 0.0 }
+      uZ: { value: 0.0 },
+      projectionSize: { value: 0 }
     },
     vertexShader: 'base.vs',
-    fragmentShader: 'sin.fs'
+    fragmentShader: 'sin2.fs'
   },
 
   identity: {
     uniforms: {
+      uTime: { value: 0.0 },
       uZ: { value: 0.0 },
-      sBuffer: { value: null }
+      sBuffer: { value: null },
+      projectionSize: { value: 0 }
     },
     vertexShader: 'base.vs',
-    fragmentShader: 'identity.fs'
+    fragmentShader: 'identity2.fs'
   },
 
   experiments: {
     uniforms: {
       uZ: { value: 0.0 },
-      sBuffer: { value: null }
+      sBuffer: { value: null },
+      sideLength: { value: 0 }
     },
     vertexShader: 'base.vs',
     fragmentShader: 'experiments.fs'

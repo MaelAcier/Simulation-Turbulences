@@ -6,8 +6,13 @@ import { config, cameras, scene, renderer, controls } from './data.js'
 export class Buffer {
   constructor (sizeID) {
     this.sizeID = sizeID
-    const size = config.resolutions[sizeID]
-    this.texture3D = new THREE.DataTexture3D(new Float32Array(size ** 3 * 4), size, size, size)
+    this.resize()
+  }
+
+  resize () {
+    const cubeSize = config.resolutions[this.sizeID]
+    const textureSize = cubeSize * Math.sqrt(cubeSize)
+    this.renderTarget = new THREE.WebGLRenderTarget(textureSize, textureSize, { type: THREE.FloatType })
   }
 }
 
@@ -19,31 +24,21 @@ export function computeStep ({ material, bufferOutput, setup, id = material }) {
   }
 
   const sizeID = buffers[bufferOutput].sizeID
-  const size = config.resolutions[sizeID]
-  const texture2D = new THREE.WebGLRenderTarget(size, size, { type: THREE.FloatType })
-  const planeSize = (size ** 2 * 4)
-  const pixelBuffers = Array.from(Array(size), () => new Float32Array(planeSize))
+  const cubeSize = config.resolutions[sizeID]
+  const textureSize = cubeSize * Math.sqrt(cubeSize)
 
-  const data = new Float32Array(planeSize * size)
-  for (let i = 0; i < size; i++) {
-    materials[material].uniforms.uZ.value = i / size
+  materials[material].uniforms.projectionSize.value = Math.sqrt(cubeSize)
 
-    if (config.renderTarget === id && i === config.depth) {
-      renderer.setRenderTarget(null)
-      renderer.render(scene, cameras.texture)
-    }
-    renderer.setRenderTarget(texture2D)
+  if (config.renderTarget === id) {
+    renderer.setRenderTarget(null)
+    // renderer.setScissorTest(true)
+    // renderer.setScissor(0, 0, textureSize, textureSize)
     renderer.render(scene, cameras.texture)
-
-    renderer.readRenderTargetPixels(texture2D, 0, 0, size, size, pixelBuffers[i])
-    data.set(pixelBuffers[i], i * planeSize)
   }
+  renderer.setRenderTarget(buffers[bufferOutput].renderTarget)
+  renderer.render(scene, cameras.texture)
 
-  const texture3D = new THREE.DataTexture3D(data, size, size, size)
-  texture3D.format = THREE.RGBAFormat
-  texture3D.type = THREE.FloatType
-  texture3D.unpackAlignment = 1
-  buffers[bufferOutput].texture3D = texture3D
+  buffers[bufferOutput].texture2D = buffers[bufferOutput].renderTarget.texture
 
   materials[material].visible = false
 }
@@ -74,7 +69,7 @@ export const registeredIDs = {
 
 export const buffers = {
   sin: new Buffer(0),
-  display: new Buffer(2)
+  display: new Buffer(1)
 }
 
 // let lastUpdateTime = Date.now()
@@ -109,18 +104,19 @@ export function renderingPipeline () {
     bufferOutput: 'display',
     id: 'id1',
     setup: (uniforms) => {
-      uniforms.sBuffer.value = buffers.sin.texture3D
+      uniforms.uTime.value = time
+      uniforms.sBuffer.value = buffers.sin.renderTarget.texture
     }
   })
 
-  computeStep({
+/*   computeStep({
     material: 'identity',
     bufferOutput: 'display',
     id: 'id2',
     setup: (uniforms) => {
-      uniforms.sBuffer.value = buffers.display.texture3D
+      uniforms.sBuffer.value = buffers.display.texture2D
     }
-  })
+  }) */
 
   /* computeStep({
     material: 'experiments',
@@ -130,7 +126,7 @@ export function renderingPipeline () {
     }
   }) */
 
-  displayStep({
+ /*  displayStep({
     material: 'volume2D',
     camera: cameras.perspective,
     setup: (uniforms) => {
@@ -150,7 +146,7 @@ export function renderingPipeline () {
       uniforms.u_data.value = buffers.display.texture3D
       uniforms.u_size.value.set(config.resolutions[1], config.resolutions[1], config.resolutions[1])
     }
-  })
+  }) */
 
   if (config.autoRotation) {
     controls.perspective.update()

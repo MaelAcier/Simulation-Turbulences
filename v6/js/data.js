@@ -2,9 +2,10 @@ import * as THREE from '../lib/three.module.js'
 import { OrbitControls } from '../lib/OrbitControls.js'
 
 export const config = {
+  test: 16,
   distance: 1,
-  resolutions: [32, 64, 16],
-  renderTarget: 'volume2D',
+  resolutions: [64, 64, 64],
+  renderTarget: 'sin',
   depth: 0,
   pause: false,
   autoRotation: false,

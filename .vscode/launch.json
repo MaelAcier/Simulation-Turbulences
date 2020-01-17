@@ -10,7 +10,13 @@
             "reAttach": true,
             "name": "Launch Firefox",
             "url": "http://localhost:5510",
-            "webRoot": "${workspaceFolder}"
+            "webRoot": "${workspaceFolder}",
+            "pathMappings": [
+                {
+                    "url": "http://localhost:5510",
+                    "path": "${workspaceFolder}"
+                }
+            ]
         },
         {
             "type": "chrome",
