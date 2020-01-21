@@ -2,12 +2,14 @@
 
 precision highp float;
 
-uniform int projectionSize;
+uniform int uProjectionSize;
 uniform sampler2D sBuffer;
 
 out vec4 out_FragColor;
 
-uvec3 getCurrentPosition() {
+uvec3 getCurrentPosition(sampler2D texture) {
+    int texture_size = textureSize(texture, 0).x;
+    uint projectionSize = uint(pow(float(texture_size),2./3.));
     uint cubeSize = uint(projectionSize * projectionSize);
     uvec2 src2D = uvec2(gl_FragCoord.xy);
     return uvec3(
@@ -17,18 +19,17 @@ uvec3 getCurrentPosition() {
 }
 
 vec4 getData(sampler2D texture, uvec3 position) {
-    int textureLength = textureSize(texture, 0).x;
-    uint projectionSize = uint(pow(float(textureLength),2./3.));
-    uint cubeSize = projectionSize * projectionSize;
+    uint cubeSize = uint(uProjectionSize * uProjectionSize);
     ivec2 src2D = ivec2(
-      position.x + (position.z % projectionSize) * cubeSize,
-      position.y + (position.z / projectionSize) * cubeSize);
+      position.x + (position.z % uint(uProjectionSize)) * cubeSize,
+      position.y + (position.z / uint(uProjectionSize)) * cubeSize);
     return texelFetch(texture, src2D, 0);
-} 
+}
     
 void main() {
-    vec4 data = getData(sBuffer, getCurrentPosition());
+    uvec3 pos = getCurrentPosition(sBuffer);
+    vec4 data = getData(sBuffer, pos/uint(1));
 
     out_FragColor = data;
-    // out_FragColor = texelFetch(sBuffer, ivec2(gl_FragCoord.xy), 0);
+    // out_FragColor = vec4(getCurrentPosition(sBuffer),uProjectionSize) / float(uProjectionSize * uProjectionSize * uProjectionSize * uProjectionSize);
 }
