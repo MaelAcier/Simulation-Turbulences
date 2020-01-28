@@ -4,8 +4,8 @@ import { OrbitControls } from '../lib/OrbitControls.js'
 export const config = {
   test: 16,
   distance: 1,
-  resolutions: [64, 64, 64],
-  renderTarget: 'sin',
+  resolutions: [256, 256, 64],
+  renderTarget: 'volume3D',
   depth: 0,
   pause: false,
   autoRotation: false,
@@ -33,11 +33,6 @@ export const config = {
   SUNRAYS: false,
   SUNRAYS_RESOLUTION: 196,
   SUNRAYS_WEIGHT: 1.0
-}
-
-export const cmtextures = {
-  viridis: new THREE.TextureLoader().load('./cm_viridis.png', () => {}),
-  gray: new THREE.TextureLoader().load('./cm_gray.png', () => {})
 }
 
 const h = 1

@@ -27,12 +27,12 @@ export function computeStep ({ material, bufferOutput, setup, id = material }) {
   const cubeSize = config.resolutions[sizeID]
   const textureSize = cubeSize * Math.sqrt(cubeSize)
 
-  materials[material].uniforms.projectionSize.value = Math.sqrt(cubeSize)
+  materials[material].uniforms.uProjectionSize.value = Math.sqrt(cubeSize)
 
   if (config.renderTarget === id) {
     renderer.setRenderTarget(null)
-    // renderer.setScissorTest(true)
-    // renderer.setScissor(0, 0, textureSize, textureSize)
+    renderer.setScissorTest(true)
+    renderer.setScissor(0, 0, textureSize, textureSize)
     renderer.render(scene, cameras.texture)
   }
   renderer.setRenderTarget(buffers[bufferOutput].renderTarget)
@@ -49,6 +49,7 @@ export function displayStep ({ material, camera, setup }) {
   if (config.renderTarget === material) {
     setup(materials[material].uniforms)
 
+    renderer.setScissorTest(false)
     renderer.setRenderTarget(null)
     renderer.setViewport(0, 0, window.innerWidth, window.innerHeight)
     renderer.render(scene, camera)
@@ -109,7 +110,7 @@ export function renderingPipeline () {
     }
   })
 
-/*   computeStep({
+  /*   computeStep({
     material: 'identity',
     bufferOutput: 'display',
     id: 'id2',
@@ -126,14 +127,11 @@ export function renderingPipeline () {
     }
   }) */
 
- /*  displayStep({
+  displayStep({
     material: 'volume2D',
     camera: cameras.perspective,
     setup: (uniforms) => {
-      buffers.display.texture3D.minFilter = THREE.NearestFilter
-      buffers.display.texture3D.magFilter = THREE.NearestFilter
-      uniforms.uDensity.value = config.resolutions[1]
-      uniforms.sBuffer.value = buffers.display.texture3D
+      uniforms.sBuffer.value = buffers.display.renderTarget.texture
     }
   })
 
@@ -141,12 +139,9 @@ export function renderingPipeline () {
     material: 'volume3D',
     camera: cameras.orthographic3D,
     setup: (uniforms) => {
-      buffers.display.texture3D.minFilter = THREE.LinearFilter
-      buffers.display.texture3D.magFilter = THREE.LinearFilter
-      uniforms.u_data.value = buffers.display.texture3D
-      uniforms.u_size.value.set(config.resolutions[1], config.resolutions[1], config.resolutions[1])
+      uniforms.sBuffer.value = buffers.display.renderTarget.texture
     }
-  }) */
+  })
 
   if (config.autoRotation) {
     controls.perspective.update()

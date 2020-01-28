@@ -1,5 +1,5 @@
 import * as THREE from '../lib/three.module.js'
-import { config, cmtextures } from './data.js'
+import { config } from './data.js'
 
 const texture0 = new THREE.DataTexture2DArray(new Float32Array(config.resolutions[0] ** 3 * 4), config.resolutions[0], config.resolutions[0], config.resolutions[0])
 texture0.format = THREE.RGBAFormat
@@ -10,7 +10,7 @@ export const programs = {
     uniforms: {
       uTime: { value: 0.0 },
       uZ: { value: 0.0 },
-      projectionSize: { value: 0 }
+      uProjectionSize: { value: 0 }
     },
     vertexShader: 'base.vs',
     fragmentShader: 'sin2.fs'
@@ -21,7 +21,7 @@ export const programs = {
       uTime: { value: 0.0 },
       uZ: { value: 0.0 },
       sBuffer: { value: null },
-      projectionSize: { value: 0 }
+      uProjectionSize: { value: 0 }
     },
     vertexShader: 'base.vs',
     fragmentShader: 'identity2.fs'
@@ -42,21 +42,16 @@ export const programs = {
       uDensity: { value: 0 },
       sBuffer: { value: null }
     },
-    vertexShader: 'volume2D.vs',
-    fragmentShader: 'volume2D.fs'
+    vertexShader: 'volume2D2.vs',
+    fragmentShader: 'volume2D2.fs'
   },
 
   volume3D: {
     uniforms: {
-      u_size: { value: new THREE.Vector3(1, 1, 1) },
-      u_renderstyle: { value: 0 }, // MIP
-      u_renderthreshold: { value: 0.5 },
-      u_clim: { value: new THREE.Vector2(0, 1) },
-      u_data: { value: null },
-      u_cmdata: { value: cmtextures.viridis }
+      sBuffer: { value: null }
     },
-    vertexShader: 'volume3D.vs',
-    fragmentShader: 'volume3D.fs'
+    vertexShader: 'volume3D2.vs',
+    fragmentShader: 'volume3D2.fs'
   }
 
   /* test: {

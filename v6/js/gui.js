@@ -47,10 +47,10 @@ function updateDepth (depth) {
 }
 
 function toPerfectSquare (value, slider) {
+  const power2 = Math.ceil(Math.sqrt(value)) ** 2 || 1
+  if (config.resolutions[slider] !== power2) config.resolutions[slider] = power2
   for (const key in buffers) {
     const buffer = buffers[key]
     buffer.resize()
   }
-  const power2 = Math.ceil(Math.sqrt(value)) ** 2 || 1
-  if (config.resolutions[slider] !== power2) config.resolutions[slider] = power2
 }

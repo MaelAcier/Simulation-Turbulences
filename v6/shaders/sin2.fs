@@ -2,18 +2,18 @@
 
 precision highp float;
 
-uniform int projectionSize;
+uniform int uProjectionSize;
 uniform float uTime;
 
 out vec4 out_FragColor;
 
-uvec3 getCurrentPosition() {
-    uint cubeSize = uint(projectionSize * projectionSize);
-    uvec2 current = uvec2(gl_FragCoord.xy);
-    return uvec3(
-        current.x % cubeSize,
-        current.y % cubeSize,
-        current.x / cubeSize + (current.y / cubeSize) * uint(projectionSize));
+ivec3 getCurrentPosition() {
+    uint cubeSize = uint(uProjectionSize * uProjectionSize);
+    uvec2 src2D = uvec2(gl_FragCoord.xy);
+    return ivec3(
+        src2D.x % cubeSize,
+        src2D.y % cubeSize,
+        src2D.x / cubeSize + (src2D.y / cubeSize) * uint(uProjectionSize));
 }
 
 // HSL to RGB Convertion helpers
