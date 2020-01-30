@@ -23,7 +23,8 @@ export function setupGUI () {
 
   gui.add({
     fun: () => {
-      multipleSplats(parseInt(Math.random() * 2) + 1)
+      // multipleSplats(parseInt(Math.random() * 2) + 1)
+      multipleSplats(3)
     }
   }, 'fun').name('Splash')
 
