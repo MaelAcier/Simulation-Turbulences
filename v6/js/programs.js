@@ -38,6 +38,15 @@ export const programs = {
     fragmentShader: 'splat.fs'
   },
 
+  curl: {
+    uniforms: {
+      uProjectionSize: { value: 0 },
+      sVelocity: { value: blankTexture }
+    },
+    vertexShader: 'base.vs',
+    fragmentShader: 'curl.fs'
+  },
+
   volume2D: {
     uniforms: {
       sData: { value: blankTexture }

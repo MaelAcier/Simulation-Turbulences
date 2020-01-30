@@ -66,6 +66,7 @@ export function displayStep ({ material, camera, setup }) {
 export const registeredIDs = {
   sin: 'sin',
   identity: 'identity',
+  curl: 'curl',
   'splat - velocity': 'splat - velocity',
   'splat - dye': 'splat - dye',
   volume2D: 'volume2D',
@@ -74,6 +75,7 @@ export const registeredIDs = {
 
 export const buffers = {
   sin: new Buffer(0),
+  curl: new Buffer(0),
   velocity: new Buffer(0),
   dye: new Buffer(1),
   display: new Buffer(1)
@@ -113,6 +115,14 @@ export function renderingPipeline () {
     bufferOutput: 'display',
     setup: (uniforms) => {
       uniforms.sData.value = buffers.sin.data.texture
+    }
+  })
+
+  computeStep({
+    material: 'curl',
+    bufferOutput: 'curl',
+    setup: (uniforms) => {
+      uniforms.sVelocity.value = buffers.velocity.data.texture
     }
   })
 

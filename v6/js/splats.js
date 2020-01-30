@@ -1,6 +1,6 @@
 import * as THREE from '../lib/three.module.js'
 import { computeStep, buffers } from './render.js'
-import { config } from './data.js'
+import { config, renderer } from './data.js'
 
 export function generateColor () {
   const c = HSVtoRGB(Math.random(), 1.0, 1.0)
@@ -35,6 +35,7 @@ function HSVtoRGB (h, s, v) {
 }
 
 export function multipleSplats (amount) {
+  renderer.setScissorTest(true)
   for (let i = 0; i < amount; i++) {
     const color = generateColor()
     color.r *= 10.0
@@ -46,6 +47,7 @@ export function multipleSplats (amount) {
     const dy = 1000 * (Math.random() - 0.5)
     splat(x, y, dx, dy, color, i === amount - 1)
   }
+  renderer.setScissorTest(false)
 }
 
 export function splat (x, y, dx, dy, color, show) {

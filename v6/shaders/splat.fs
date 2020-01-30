@@ -15,11 +15,11 @@ uvec3 clampVector(ivec3 pos, uint maxVal);
 vec4 getData(sampler2D texture, ivec3 pos);
     
 void main() {
-    ivec2 pos = getCurrentPosition().xy;
+    ivec3 pos = getCurrentPosition();
 
-    vec2 p = (vec2(pos) - uPoint) / float(uProjectionSize * uProjectionSize);
+    vec2 p = (vec2(pos.xy) - uPoint) / float(uProjectionSize * uProjectionSize);
     vec3 splat = exp(-dot(p, p) / uRadius) * uColor;
-    vec3 base =  getData(sTarget, ivec3(pos, 0)).xyz;
+    vec3 base =  getData(sTarget, ivec3(pos.xy, 0)).xyz;
 
     out_FragColor = vec4(base + splat, 1.0);
 }
