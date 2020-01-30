@@ -1,176 +1,44 @@
 import * as THREE from '../lib/three.module.js'
 import { config } from './data.js'
 
-const texture0 = new THREE.DataTexture2DArray(new Float32Array(config.resolutions[0] ** 3 * 4), config.resolutions[0], config.resolutions[0], config.resolutions[0])
-texture0.format = THREE.RGBAFormat
-texture0.type = THREE.FloatType
+const cubeSize = config.resolutions[0]
+const textureSize = cubeSize * Math.sqrt(cubeSize)
+const blankTexture = new THREE.DataTexture2DArray(new Float32Array(cubeSize ** 3 * 4), textureSize, textureSize, textureSize)
+blankTexture.format = THREE.RGBAFormat
+blankTexture.type = THREE.FloatType
 
 export const programs = {
   sin: {
     uniforms: {
-      uTime: { value: 0.0 },
-      uZ: { value: 0.0 },
-      uProjectionSize: { value: 0 }
+      uProjectionSize: { value: 0 },
+      uTime: { value: 0.0 }
     },
     vertexShader: 'base.vs',
-    fragmentShader: 'sin2.fs'
+    fragmentShader: 'sin.fs'
   },
 
   identity: {
     uniforms: {
-      uTime: { value: 0.0 },
-      uZ: { value: 0.0 },
-      sBuffer: { value: null },
-      uProjectionSize: { value: 0 }
+      uProjectionSize: { value: 0 },
+      sData: { value: blankTexture }
     },
     vertexShader: 'base.vs',
-    fragmentShader: 'identity2.fs'
-  },
-
-  experiments: {
-    uniforms: {
-      uZ: { value: 0.0 },
-      sBuffer: { value: null },
-      sideLength: { value: 0 }
-    },
-    vertexShader: 'base.vs',
-    fragmentShader: 'experiments.fs'
+    fragmentShader: 'identity.fs'
   },
 
   volume2D: {
     uniforms: {
-      uDensity: { value: 0 },
-      sBuffer: { value: null }
+      sData: { value: blankTexture }
     },
-    vertexShader: 'volume2D2.vs',
-    fragmentShader: 'volume2D2.fs'
+    vertexShader: 'volume2D.vs',
+    fragmentShader: 'volume2D.fs'
   },
 
   volume3D: {
     uniforms: {
-      sBuffer: { value: null }
+      sData: { value: blankTexture }
     },
-    vertexShader: 'volume3D2.vs',
-    fragmentShader: 'volume3D2.fs'
+    vertexShader: 'volume3D.vs',
+    fragmentShader: 'volume3D.fs'
   }
-
-  /* test: {
-    uniforms: {
-      uDensity: { value: 0.0 }
-    },
-    vertexShader: 'test.vs',
-    fragmentShader: 'test.fs'
-  },
-
-  identity: {
-    uniforms: {
-      sTexture: { value: new THREE.Texture() },
-      uDensity: { value: 0.0 }
-    },
-    vertexShader: 'identity.vs',
-    fragmentShader: 'identity.fs'
-  },
-
-  splat: {
-    uniforms: {
-      sTarget: { value: new THREE.Texture() },
-      uDensity: { value: 0.0 },
-      uPoint: { value: new THREE.Vector3() },
-      uColor: { value: new THREE.Vector3() },
-      uRadius: { value: 0.0 }
-    },
-    vertexShader: 'identity.vs',
-    fragmentShader: 'splat.fs'
-  },
-
-  curl: {
-    uniforms: {
-      sVelocity: { value: new THREE.Texture() },
-      uDensity: { value: 0.0 }
-    },
-    vertexShader: 'identity.vs',
-    fragmentShader: 'curl.fs'
-  },
-
-  vorticity: {
-    uniforms: {
-      sVelocity: { value: new THREE.Texture() },
-      sCurl: { value: new THREE.Texture() },
-      uDensity: { value: 0.0 },
-      uCurl: { value: 0.0 },
-      uDt: { value: 0.0 }
-    },
-    vertexShader: 'identity.vs',
-    fragmentShader: 'vorticity.fs'
-  },
-
-  divergence: {
-    uniforms: {
-      sVelocity: { value: new THREE.Texture() },
-      uDensity: { value: 0.0 }
-    },
-    vertexShader: 'identity.vs',
-    fragmentShader: 'divergence.fs'
-  },
-
-  clear: {
-    uniforms: {
-      sPressure: { value: new THREE.Texture() },
-      uDensity: { value: 0.0 },
-      uPressure: { value: 0.0 }
-    },
-    vertexShader: 'identity.vs',
-    fragmentShader: 'clear.fs'
-  },
-
-  pressure: {
-    uniforms: {
-      sPressure: { value: new THREE.Texture() },
-      sDivergence: { value: new THREE.Texture() },
-      uDensity: { value: 0.0 }
-    },
-    vertexShader: 'identity.vs',
-    fragmentShader: 'pressure.fs'
-  },
-
-  gradientSubtract: {
-    uniforms: {
-      sPressure: { value: new THREE.Texture() },
-      sVelocity: { value: new THREE.Texture() },
-      uDensity: { value: 0.0 }
-    },
-    vertexShader: 'identity.vs',
-    fragmentShader: 'gradientSubtract.fs'
-  },
-
-  advection: {
-    uniforms: {
-      sVelocity: { value: new THREE.Texture() },
-      sSource: { value: new THREE.Texture() },
-      uDensity: { value: 0.0 },
-      uDt: { value: 0.0 },
-      uDissipation: { value: 0.0 }
-    },
-    vertexShader: 'identity.vs',
-    fragmentShader: 'advection.fs'
-  },
-
-  display: {
-    uniforms: {
-      sTexture: { value: new THREE.Texture() },
-      uDensity: { value: 0.0 }
-    },
-    vertexShader: 'identity.vs',
-    fragmentShader: 'display.fs'
-  },
-
-  cube: {
-    uniforms: {
-      sTexture: { value: new THREE.Texture() },
-      sCircleTexture: { value: new THREE.TextureLoader().load('circle3.png') },
-      uDensity: { value: 0.0 }
-    },
-    vertexShader: 'cube.vs',
-    fragmentShader: 'cube.fs'
-  } */
 }

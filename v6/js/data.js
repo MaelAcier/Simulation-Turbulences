@@ -4,9 +4,8 @@ import { OrbitControls } from '../lib/OrbitControls.js'
 export const config = {
   test: 16,
   distance: 1,
-  resolutions: [256, 256, 64],
+  resolutions: [64, 64],
   renderTarget: 'volume3D',
-  depth: 0,
   pause: false,
   autoRotation: false,
   backgroundColor: '#000000',

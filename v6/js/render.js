@@ -31,7 +31,6 @@ export function computeStep ({ material, bufferOutput, setup, id = material }) {
 
   if (config.renderTarget === id) {
     renderer.setRenderTarget(null)
-    renderer.setScissorTest(true)
     renderer.setScissor(0, 0, textureSize, textureSize)
     renderer.render(scene, cameras.texture)
   }
@@ -49,7 +48,6 @@ export function displayStep ({ material, camera, setup }) {
   if (config.renderTarget === material) {
     setup(materials[material].uniforms)
 
-    renderer.setScissorTest(false)
     renderer.setRenderTarget(null)
     renderer.setViewport(0, 0, window.innerWidth, window.innerHeight)
     renderer.render(scene, camera)
@@ -60,10 +58,7 @@ export function displayStep ({ material, camera, setup }) {
 
 export const registeredIDs = {
   sin: 'sin',
-  // identity: 'identity',
-  id1: 'id1',
-  id2: 'id2',
-  experiments: 'experiments',
+  identity: 'identity',
   volume2D: 'volume2D',
   volume3D: 'volume3D'
 }
@@ -92,6 +87,8 @@ export function renderingPipeline () {
     time += 0.005
   }
 
+  renderer.setScissorTest(true)
+
   computeStep({
     material: 'sin',
     bufferOutput: 'sin',
@@ -103,35 +100,18 @@ export function renderingPipeline () {
   computeStep({
     material: 'identity',
     bufferOutput: 'display',
-    id: 'id1',
     setup: (uniforms) => {
-      uniforms.uTime.value = time
-      uniforms.sBuffer.value = buffers.sin.renderTarget.texture
+      uniforms.sData.value = buffers.sin.renderTarget.texture
     }
   })
 
-  /*   computeStep({
-    material: 'identity',
-    bufferOutput: 'display',
-    id: 'id2',
-    setup: (uniforms) => {
-      uniforms.sBuffer.value = buffers.display.texture2D
-    }
-  }) */
-
-  /* computeStep({
-    material: 'experiments',
-    bufferOutput: 'display',
-    setup: (uniforms) => {
-      uniforms.sBuffer.value = buffers.display.texture3D
-    }
-  }) */
+  renderer.setScissorTest(false)
 
   displayStep({
     material: 'volume2D',
     camera: cameras.perspective,
     setup: (uniforms) => {
-      uniforms.sBuffer.value = buffers.display.renderTarget.texture
+      uniforms.sData.value = buffers.display.renderTarget.texture
     }
   })
 
@@ -139,7 +119,7 @@ export function renderingPipeline () {
     material: 'volume3D',
     camera: cameras.orthographic3D,
     setup: (uniforms) => {
-      uniforms.sBuffer.value = buffers.display.renderTarget.texture
+      uniforms.sData.value = buffers.display.renderTarget.texture
     }
   })
 

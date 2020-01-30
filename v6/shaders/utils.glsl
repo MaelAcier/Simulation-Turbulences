@@ -1,12 +1,5 @@
-#version 300 es
 
-precision highp float;
-
-uniform int uProjectionSize;
-uniform sampler2D sBuffer;
-
-out vec4 out_FragColor;
-
+#ifndef VOLUME
 ivec3 getCurrentPosition() {
     uint cubeSize = uint(uProjectionSize * uProjectionSize);
     uvec2 src2D = uvec2(gl_FragCoord.xy);
@@ -31,10 +24,4 @@ vec4 getData(sampler2D texture, ivec3 pos) {
       position.y + (position.z / projectionSize) * cubeSize);
     return texelFetch(texture, src2D, 0);
 }
-    
-void main() {
-    ivec3 pos = getCurrentPosition();
-    vec4 data = getData(sBuffer, pos);
-
-    out_FragColor = data;
-}
+#endif

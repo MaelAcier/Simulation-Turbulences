@@ -16,27 +16,24 @@ export function multipleSplats (amount) {
     color.r *= 10.0
     color.g *= 10.0
     color.b *= 10.0
-    const x = Math.random() * 2 - 1
-    const y = Math.random() * 2 - 1
-    const z = Math.random() * 2 - 1
+    const x = Math.random() * config.resolutions[0]
+    const y = Math.random() * config.resolutions[0]
     const dx = 1000 * (Math.random() - 0.5)
     const dy = 1000 * (Math.random() - 0.5)
-    const dz = 1000 * (Math.random() - 0.5)
-    splat(x, y, z, dx, dy, dz, color, i === amount - 1)
+    splat(x, y, dx, dy, color, i === amount - 1)
   }
 }
 
-export function splat (x, y, z, dx, dy, dz, color, show) {
+export function splat (x, y, dx, dy, color, show) {
   step({
     material: 'splat',
     textureID: 'velocity',
     id: show ? 'splat - velocity' : '',
     fun: (material, textures) => {
       material.uniforms.sTarget.value = textures.velocity.currentTexture.texture
-      material.uniforms.uDensity.value = config.density
-      material.uniforms.uPoint.value = new THREE.Vector3(x, y, z)
-      material.uniforms.uColor.value = new THREE.Vector3(dx, dy, dz)
-      material.uniforms.uRadius.value = config.splatRadius
+      material.uniforms.uPoint.value = new THREE.Vector2(x, y)
+      material.uniforms.uColor.value = new THREE.Vector2(dx, dy)
+      material.uniforms.uRadius.value = config.splatRadius / 100.0
     }
   })
 
@@ -47,9 +44,9 @@ export function splat (x, y, z, dx, dy, dz, color, show) {
     fun: (material, textures) => {
       material.uniforms.sTarget.value = textures.dye.currentTexture.texture
       material.uniforms.uDensity.value = config.density
-      material.uniforms.uPoint.value = new THREE.Vector3(x, y, z)
+      material.uniforms.uPoint.value = new THREE.Vector3(x, y)
       material.uniforms.uColor.value = new THREE.Vector3(color.r, color.g, color.b)
-      material.uniforms.uRadius.value = config.splatRadius
+      material.uniforms.uRadius.value = config.splatRadius / 100.0
     }
   })
 }

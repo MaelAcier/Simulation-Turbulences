@@ -7,27 +7,29 @@ export const materials = {}
 export function loadMaterials (callback) {
   let shaderCount = 0
   let shaderLoaded = 0
-  for (const key in programs) {
-    const program = programs[key]
-    loadShader(program.vertexShader, (vertexShader) => {
-      loadShader(program.fragmentShader, (fragmentShader) => {
-        materials[key] = new THREE.RawShaderMaterial({
-          uniforms: program.uniforms,
-          vertexShader,
-          fragmentShader,
-          depthTest: true,
-          depthWrite: true,
-          side: program === 'volume3D' ? THREE.BackSide : THREE.DoubleSide
+  loadShader('utils.glsl', (utils) => {
+    for (const key in programs) {
+      const program = programs[key]
+      loadShader(program.vertexShader, (vertexShader) => {
+        loadShader(program.fragmentShader, (fragmentShader) => {
+          materials[key] = new THREE.RawShaderMaterial({
+            uniforms: program.uniforms,
+            vertexShader,
+            fragmentShader: fragmentShader + utils,
+            depthTest: true,
+            depthWrite: true,
+            side: program === 'volume3D' ? THREE.BackSide : THREE.DoubleSide
+          })
+          materials[key].visible = false
+          shaderLoaded++
+          if (shaderLoaded === shaderCount) {
+            callback()
+          }
         })
-        materials[key].visible = false
-        shaderLoaded++
-        if (shaderLoaded === shaderCount) {
-          callback()
-        }
       })
-    })
-    shaderCount++
-  }
+      shaderCount++
+    }
+  })
 }
 
 function loadShader (file, callback) {

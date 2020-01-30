@@ -2,14 +2,15 @@
 
 precision highp float;
 
-uniform float uZ;
+uniform int uProjectionSize;
 uniform float uTime;
-    
-in vec3 vPosition;
 
 out vec4 out_FragColor;
-    
-// HSL to RGB Convertion helpers
+
+ivec3 getCurrentPosition();
+uvec3 clampVector(ivec3 pos, uint maxVal);
+vec4 getData(sampler2D texture, ivec3 pos);
+
 vec3 HUEtoRGB(float H){
     H = mod(H,1.0);
     float R = abs(H * 6.0 - 3.0) - 1.0;
@@ -25,8 +26,8 @@ vec3 HSLtoRGB(vec3 HSL){
 }
     
 void main() {
-    vec3 trTime = vec3(vPosition.x + uTime, vPosition.y + uTime, uZ + uTime);
+    vec3 trTime = vec3(getCurrentPosition()) / 100. + uTime;
     float color = sin( trTime.x * 2.1 ) + sin( trTime.y * 3.2 ) + sin( trTime.z * 4.3 );
 
-    out_FragColor = vec4( HSLtoRGB(vec3(color/5.0, 1.0, 0.5)), (color + 3.) / 6.);
+    out_FragColor = vec4( HSLtoRGB(vec3(color / 5.0, 1.0, 0.5)), (color + 3.) / 6.);
 }
