@@ -16,7 +16,7 @@ uvec3 clampVector(ivec3 pos, uint maxVal) {
 
 vec4 getData(sampler2D texture, vec3 pos) {
     int texture_size = textureSize(texture, 0).x;
-    uint projectionSize = uint(pow(float(texture_size),1./3.));
+    uint projectionSize = uint(pow(abs(float(texture_size)),1./3.));
     uint cubeSize = projectionSize * projectionSize;
     uvec3 position = clampVector(ivec3(pos * float(cubeSize)), cubeSize);
     ivec2 src2D = ivec2(

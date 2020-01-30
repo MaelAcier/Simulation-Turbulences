@@ -11,7 +11,7 @@ export const programs = {
   sin: {
     uniforms: {
       uProjectionSize: { value: 0 },
-      uTime: { value: 0.0 }
+      uTime: { value: 0 }
     },
     vertexShader: 'base.vs',
     fragmentShader: 'sin.fs'
@@ -24,6 +24,18 @@ export const programs = {
     },
     vertexShader: 'base.vs',
     fragmentShader: 'identity.fs'
+  },
+
+  splat: {
+    uniforms: {
+      uProjectionSize: { value: 0 },
+      sTarget: { value: blankTexture },
+      uPoint: { value: new THREE.Vector2(0, 0) },
+      uColor: { value: new THREE.Vector3(0, 0, 0) },
+      uRadius: { value: 0 }
+    },
+    vertexShader: 'base.vs',
+    fragmentShader: 'splat.fs'
   },
 
   volume2D: {

@@ -12,7 +12,14 @@ export class Buffer {
   resize () {
     const cubeSize = config.resolutions[this.sizeID]
     const textureSize = cubeSize * Math.sqrt(cubeSize)
+    this.data = new THREE.WebGLRenderTarget(textureSize, textureSize, { type: THREE.FloatType })
     this.renderTarget = new THREE.WebGLRenderTarget(textureSize, textureSize, { type: THREE.FloatType })
+  }
+
+  swap () {
+    const temp = this.data
+    this.data = this.renderTarget
+    this.renderTarget = temp
   }
 }
 
@@ -37,7 +44,7 @@ export function computeStep ({ material, bufferOutput, setup, id = material }) {
   renderer.setRenderTarget(buffers[bufferOutput].renderTarget)
   renderer.render(scene, cameras.texture)
 
-  buffers[bufferOutput].texture2D = buffers[bufferOutput].renderTarget.texture
+  buffers[bufferOutput].swap()
 
   materials[material].visible = false
 }
@@ -59,12 +66,16 @@ export function displayStep ({ material, camera, setup }) {
 export const registeredIDs = {
   sin: 'sin',
   identity: 'identity',
+  'splat - velocity': 'splat - velocity',
+  'splat - dye': 'splat - dye',
   volume2D: 'volume2D',
   volume3D: 'volume3D'
 }
 
 export const buffers = {
   sin: new Buffer(0),
+  velocity: new Buffer(0),
+  dye: new Buffer(1),
   display: new Buffer(1)
 }
 
@@ -101,7 +112,7 @@ export function renderingPipeline () {
     material: 'identity',
     bufferOutput: 'display',
     setup: (uniforms) => {
-      uniforms.sData.value = buffers.sin.renderTarget.texture
+      uniforms.sData.value = buffers.sin.data.texture
     }
   })
 
@@ -111,7 +122,7 @@ export function renderingPipeline () {
     material: 'volume2D',
     camera: cameras.perspective,
     setup: (uniforms) => {
-      uniforms.sData.value = buffers.display.renderTarget.texture
+      uniforms.sData.value = buffers.display.data.texture
     }
   })
 
@@ -119,7 +130,7 @@ export function renderingPipeline () {
     material: 'volume3D',
     camera: cameras.orthographic3D,
     setup: (uniforms) => {
-      uniforms.sData.value = buffers.display.renderTarget.texture
+      uniforms.sData.value = buffers.display.data.texture
     }
   })
 

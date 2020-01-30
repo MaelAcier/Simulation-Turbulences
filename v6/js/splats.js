@@ -1,5 +1,5 @@
 import * as THREE from '../lib/three.module.js'
-import { step } from './render.js'
+import { computeStep, buffers } from './render.js'
 import { config } from './data.js'
 
 function generateColor () {
@@ -25,28 +25,27 @@ export function multipleSplats (amount) {
 }
 
 export function splat (x, y, dx, dy, color, show) {
-  step({
+  computeStep({
     material: 'splat',
-    textureID: 'velocity',
+    bufferOutput: 'velocity',
     id: show ? 'splat - velocity' : '',
-    fun: (material, textures) => {
-      material.uniforms.sTarget.value = textures.velocity.currentTexture.texture
-      material.uniforms.uPoint.value = new THREE.Vector2(x, y)
-      material.uniforms.uColor.value = new THREE.Vector2(dx, dy)
-      material.uniforms.uRadius.value = config.splatRadius / 100.0
+    setup: (uniforms) => {
+      uniforms.sTarget.value = buffers.velocity.data.texture
+      uniforms.uPoint.value = new THREE.Vector2(x, y)
+      uniforms.uColor.value = new THREE.Vector3(dx, dy, 0.0)
+      uniforms.uRadius.value = config.splatRadius / 100.0
     }
   })
 
-  step({
+  computeStep({
     material: 'splat',
-    textureID: 'dye',
+    bufferOutput: 'dye',
     id: show ? 'splat - dye' : '',
-    fun: (material, textures) => {
-      material.uniforms.sTarget.value = textures.dye.currentTexture.texture
-      material.uniforms.uDensity.value = config.density
-      material.uniforms.uPoint.value = new THREE.Vector3(x, y)
-      material.uniforms.uColor.value = new THREE.Vector3(color.r, color.g, color.b)
-      material.uniforms.uRadius.value = config.splatRadius / 100.0
+    setup: (uniforms) => {
+      uniforms.sTarget.value = buffers.dye.data.texture
+      uniforms.uPoint.value = new THREE.Vector2(x, y)
+      uniforms.uColor.value = new THREE.Vector3(color.r, color.g, color.b)
+      uniforms.uRadius.value = config.splatRadius / 100.0
     }
   })
 }

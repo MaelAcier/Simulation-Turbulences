@@ -27,7 +27,7 @@ uvec3 clampVector(ivec3 pos, uint maxVal);
 
 void main() {
 	int texture_size = textureSize(sData, 0).x;
-    float projectionSize = pow(float(texture_size),1./3.);
+    float projectionSize = pow(abs(float(texture_size)),1./3.);
     float u_size = projectionSize * projectionSize;
 	// Normalize clipping plane info
 	vec3 farpos = v_farpos.xyz / v_farpos.w;
@@ -70,7 +70,7 @@ void main() {
 
 vec4 getData(sampler2D texture, vec3 pos) {
     int texture_size = textureSize(texture, 0).x;
-    uint projectionSize = uint(pow(float(texture_size),1./3.));
+    uint projectionSize = uint(pow(abs(float(texture_size)),1./3.));
     uint cubeSize = projectionSize * projectionSize;
     uvec3 position = clampVector(ivec3(pos * float(cubeSize)), cubeSize);
     ivec2 src2D = ivec2(
@@ -85,7 +85,7 @@ uvec3 clampVector(ivec3 pos, uint maxVal) {
 
 void cast_mip(vec3 start_loc, vec3 step, int nsteps, vec3 view_ray) {
 	int texture_size = textureSize(sData, 0).x;
-    float projectionSize = pow(float(texture_size),1./3.);
+    float projectionSize = pow(abs(float(texture_size)),1./3.);
     float u_size = projectionSize * projectionSize;
 	float max_val = -1e6;
 	int max_i = 100;
@@ -99,7 +99,7 @@ void cast_mip(vec3 start_loc, vec3 step, int nsteps, vec3 view_ray) {
 	// if (nsteps % 2 != 0)
 	// 	nsteps += 1;
 	
-	int MAX_STEPS = int(pow(u_size, 3.));
+	int MAX_STEPS = int(pow(abs(u_size), 3.));
 
 	for (int iter=0; iter<MAX_STEPS; iter++) {
 		if (iter >= nsteps || color.a >= 0.7)

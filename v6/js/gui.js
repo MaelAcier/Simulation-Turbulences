@@ -4,7 +4,7 @@ import * as THREE from '../lib/three.module.js'
 import { config, scene } from './data.js'
 import { loadMeshes } from './meshes.js'
 import { registeredIDs, buffers } from './render.js'
-// import { multipleSplats } from './splats.js'
+import { multipleSplats } from './splats.js'
 
 export function setupGUI () {
   const gui = new GUI({ width: 350 })
@@ -21,11 +21,11 @@ export function setupGUI () {
     scene.background = new THREE.Color(value)
   })
 
-  /* gui.add({
+  gui.add({
     fun: () => {
-      multipleSplats(parseInt(Math.random() * 2) + 5)
+      multipleSplats(parseInt(Math.random() * 2) + 1)
     }
-  }, 'fun').name('Splash') */
+  }, 'fun').name('Splash')
 
   backgroundColor.setValue(config.backgroundColor)
 }
