@@ -32,8 +32,9 @@ export function setupGUI () {
 }
 
 function updateValues (value, slider) {
-  const power2 = Math.ceil(Math.sqrt(value)) ** 2 || 1
-  if (config.resolutions[slider] !== power2) config.resolutions[slider] = power2
+  /* const power2 = Math.ceil(Math.sqrt(value)) ** 2 || 1
+  if (config.resolutions[slider] !== power2) config.resolutions[slider] = power2 */
+  config.resolutions[slider] = value
   for (const key in buffers) {
     const buffer = buffers[key]
     buffer.resize()

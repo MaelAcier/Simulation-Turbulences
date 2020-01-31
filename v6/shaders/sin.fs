@@ -2,14 +2,14 @@
 
 precision highp float;
 
-uniform int uProjectionSize;
+uniform int uCubeSize;
 uniform float uTime;
 
 out vec4 out_FragColor;
 
 ivec3 getCurrentPosition();
 uvec3 clampVector(ivec3 pos, uint maxVal);
-vec4 getData(sampler2D texture, ivec3 pos);
+vec4 getData(sampler2D texture, int cubeSize, ivec3 pos);
 
 vec3 HUEtoRGB(float H){
     H = mod(H,1.0);

@@ -3,6 +3,7 @@
 precision highp float;
 
 uniform sampler2D sData;
+uniform int uDataSize;
 
 in vec3 vPosition;
 

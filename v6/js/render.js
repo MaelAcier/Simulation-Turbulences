@@ -10,8 +10,8 @@ export class Buffer {
   }
 
   resize () {
-    const cubeSize = config.resolutions[this.sizeID]
-    const textureSize = cubeSize * Math.sqrt(cubeSize)
+    this.cubeSize = config.resolutions[this.sizeID]
+    const textureSize = this.cubeSize * Math.sqrt(this.cubeSize)
     this.data = new THREE.WebGLRenderTarget(textureSize, textureSize, { type: THREE.FloatType })
     this.renderTarget = new THREE.WebGLRenderTarget(textureSize, textureSize, { type: THREE.FloatType })
   }
@@ -32,9 +32,9 @@ export function computeStep ({ material, bufferOutput, setup, id = material }) {
 
   const sizeID = buffers[bufferOutput].sizeID
   const cubeSize = config.resolutions[sizeID]
-  const textureSize = cubeSize * Math.sqrt(cubeSize)
+  const textureSize = cubeSize * Math.ceil(Math.sqrt(cubeSize))
 
-  materials[material].uniforms.uProjectionSize.value = Math.sqrt(cubeSize)
+  materials[material].uniforms.uCubeSize.value = cubeSize
 
   if (config.renderTarget === id) {
     renderer.setRenderTarget(null)
@@ -115,6 +115,7 @@ export function renderingPipeline () {
     bufferOutput: 'display',
     setup: (uniforms) => {
       uniforms.sData.value = buffers.sin.data.texture
+      uniforms.uDataSize.value = buffers.sin.cubeSize
     }
   })
 
@@ -123,6 +124,7 @@ export function renderingPipeline () {
     bufferOutput: 'curl',
     setup: (uniforms) => {
       uniforms.sVelocity.value = buffers.velocity.data.texture
+      uniforms.uVelocitySize.value = buffers.velocity.cubeSize
     }
   })
 
@@ -133,6 +135,7 @@ export function renderingPipeline () {
     camera: cameras.perspective,
     setup: (uniforms) => {
       uniforms.sData.value = buffers.display.data.texture
+      uniforms.uDataSize.value = buffers.display.cubeSize
     }
   })
 
@@ -141,6 +144,7 @@ export function renderingPipeline () {
     camera: cameras.orthographic3D,
     setup: (uniforms) => {
       uniforms.sData.value = buffers.display.data.texture
+      uniforms.uDataSize.value = buffers.display.cubeSize
     }
   })
 

@@ -11,6 +11,7 @@ export const programs = {
   sin: {
     uniforms: {
       uProjectionSize: { value: 0 },
+      uCubeSize: { value: 0 },
       uTime: { value: 0 }
     },
     vertexShader: 'base.vs',
@@ -20,7 +21,9 @@ export const programs = {
   identity: {
     uniforms: {
       uProjectionSize: { value: 0 },
-      sData: { value: blankTexture }
+      uCubeSize: { value: 0 },
+      sData: { value: blankTexture },
+      uDataSize: { value: 0 }
     },
     vertexShader: 'base.vs',
     fragmentShader: 'identity.fs'
@@ -29,7 +32,9 @@ export const programs = {
   splat: {
     uniforms: {
       uProjectionSize: { value: 0 },
+      uCubeSize: { value: 0 },
       sTarget: { value: blankTexture },
+      uTargetSize: { value: 0 },
       uPoint: { value: new THREE.Vector2(0, 0) },
       uColor: { value: new THREE.Vector3(0, 0, 0) },
       uRadius: { value: 0 }
@@ -41,7 +46,9 @@ export const programs = {
   curl: {
     uniforms: {
       uProjectionSize: { value: 0 },
-      sVelocity: { value: blankTexture }
+      uCubeSize: { value: 0 },
+      sVelocity: { value: blankTexture },
+      uVelocitySize: { value: 0 }
     },
     vertexShader: 'base.vs',
     fragmentShader: 'curl.fs'
@@ -49,7 +56,8 @@ export const programs = {
 
   volume2D: {
     uniforms: {
-      sData: { value: blankTexture }
+      sData: { value: blankTexture },
+      uDataSize: { value: 0 }
     },
     vertexShader: 'volume2D.vs',
     fragmentShader: 'volume2D.fs'
@@ -57,7 +65,8 @@ export const programs = {
 
   volume3D: {
     uniforms: {
-      sData: { value: blankTexture }
+      sData: { value: blankTexture },
+      uDataSize: { value: 0 }
     },
     vertexShader: 'volume3D.vs',
     fragmentShader: 'volume3D.fs'

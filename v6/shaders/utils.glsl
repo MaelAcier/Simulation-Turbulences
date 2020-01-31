@@ -1,27 +1,32 @@
 
 #ifndef VOLUME
-ivec3 getCurrentPosition() {
-    uint cubeSize = uint(uProjectionSize * uProjectionSize);
-    uvec2 src2D = uvec2(gl_FragCoord.xy);
-    return ivec3(
-        src2D.x % cubeSize,
-        src2D.y % cubeSize,
-        src2D.x / cubeSize + (src2D.y / cubeSize) * uint(uProjectionSize));
-}
-
 uvec3 clampVector(ivec3 pos, uint maxVal) {
     return uvec3(clamp(pos.x, 0, int(maxVal)), clamp(pos.y, 0, int(maxVal)), clamp(pos.z, 0, int(maxVal)));
 }
 
-vec4 getData(sampler2D texture, ivec3 pos) {
-    int texture_size = textureSize(texture, 0).x;
-    uint projectionSize = uint(pow(abs(float(texture_size)),1./3.));
-    uint cubeSize = projectionSize * projectionSize;
-    pos = ivec3(vec3(pos) * float(projectionSize * projectionSize) / float(uProjectionSize * uProjectionSize));
-    uvec3 position = clampVector(pos, cubeSize);
+ivec3 getCurrentPosition() {
+    uint cubeSize = uint(uCubeSize);
+    uint column = uint(ceil(sqrt(float(cubeSize))));
+    uvec2 src2D = uvec2(gl_FragCoord.xy);
+    ivec3 pos = ivec3(
+        src2D.x % cubeSize,
+        src2D.y % cubeSize,
+        src2D.x / cubeSize + (src2D.y / cubeSize) * column);
+    int cubeSizei = int(cubeSize);
+    if (pos.x < 0 || pos.x > cubeSizei - 1) { discard; }
+    if (pos.y < 0 || pos.y > cubeSizei - 1) { discard; }
+    if (pos.z < 0 || pos.z > cubeSizei - 1) { discard; }
+    return pos;
+}
+
+vec4 getData(sampler2D texture, int cubeSize, ivec3 pos) {
+    uint cubeSizeu = uint(cubeSize);
+    uint column = uint(ceil(sqrt(float(cubeSizeu))));
+    pos = ivec3(vec3(pos) * float(cubeSizeu) / float(uCubeSize));
+    uvec3 position = clampVector(pos, cubeSizeu);
     ivec2 src2D = ivec2(
-      position.x + (position.z % projectionSize) * cubeSize,
-      position.y + (position.z / projectionSize) * cubeSize);
+      position.x + (position.z % column) * cubeSizeu,
+      position.y + (position.z / column) * cubeSizeu);
     return texelFetch(texture, src2D, 0);
 }
 
