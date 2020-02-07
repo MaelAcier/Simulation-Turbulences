@@ -57,6 +57,7 @@ export function splat (x, y, dx, dy, color, show) {
     id: show ? 'splat - velocity' : '',
     setup: (uniforms) => {
       uniforms.sTarget.value = buffers.velocity.data.texture
+      uniforms.uTargetSize.value = buffers.velocity.cubeSize
       uniforms.uPoint.value = new THREE.Vector2(x, y)
       uniforms.uColor.value = new THREE.Vector3(dx, dy, 0.0)
       uniforms.uRadius.value = config.SPLAT_RADIUS / 100.0
@@ -69,6 +70,7 @@ export function splat (x, y, dx, dy, color, show) {
     id: show ? 'splat - dye' : '',
     setup: (uniforms) => {
       uniforms.sTarget.value = buffers.dye.data.texture
+      uniforms.uTargetSize.value = buffers.dye.cubeSize
       uniforms.uPoint.value = new THREE.Vector2(x, y)
       uniforms.uColor.value = new THREE.Vector3(color.r, color.g, color.b)
       uniforms.uRadius.value = config.SPLAT_RADIUS / 100.0

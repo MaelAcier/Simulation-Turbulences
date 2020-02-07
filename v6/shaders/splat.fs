@@ -18,7 +18,7 @@ vec4 getData(sampler2D texture, int cubeSize, ivec3 pos);
 void main() {
     ivec3 pos = getCurrentPosition();
 
-    vec2 p = (vec2(pos.xy) - uPoint) / float(uProjectionSize * uProjectionSize);
+    vec2 p = (vec2(pos.xy) - uPoint) / float(uCubeSize);
     vec3 splat = exp(-dot(p, p) / uRadius) * uColor;
     vec3 base =  getData(sTarget, uTargetSize, ivec3(pos.xy, 0)).xyz;
 

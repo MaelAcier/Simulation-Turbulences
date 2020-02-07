@@ -34,5 +34,6 @@ ivec3 vR(ivec3 pos) { return ivec3(pos.x + 1, pos.y, 0); }
 ivec3 vL(ivec3 pos) { return ivec3(pos.x - 1, pos.y, 0); }
 ivec3 vT(ivec3 pos) { return ivec3(pos.x, pos.y + 1, 0); }
 ivec3 vB(ivec3 pos) { return ivec3(pos.x, pos.y - 1, 0); }
+ivec3 vUv(ivec3 pos) { return ivec3(pos.xy, 0); }
 
 #endif

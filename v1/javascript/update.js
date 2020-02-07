@@ -35,7 +35,7 @@ export default function update (webGLContext) {
   updateColors(pointers, dt)
   applyInputs(webGLContext, pointers)
   if (!config.PAUSED) { step(webGLContext, dt) }
-  render(webGLContext, config, null)
+  // render(webGLContext, config, null)
   stats.end()
   requestAnimationFrame(() => update(webGLContext))
 }
@@ -99,6 +99,7 @@ function step (webGLContext, dt) {
   gl.uniform1f(programs.advection.uniforms.dt, dt)
   gl.uniform1f(programs.advection.uniforms.dissipation, config.VELOCITY_DISSIPATION)
   blit(gl, buffers.velocity.write.fbo)
+  blit(gl, null)
   buffers.velocity.swap()
 
   gl.viewport(0, 0, buffers.dye.width, buffers.dye.height)
